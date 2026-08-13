@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Home from './pages/guest/Dashboard/Dashboard';
-import FindWork from './pages/guest/FindWork/FIndWork';
+import FindWork from './pages/guest/FindWork/FindWork';
 import HireWorkers from './pages/guest/HireWorkers/HireWorkers';
 import HowItWorks from './pages/guest/HowItWorks/HowItWorks';
 
