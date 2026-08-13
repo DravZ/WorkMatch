@@ -1,4 +1,87 @@
-.home {
-  min-height: 100vh;
-  padding: 2rem;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+.heroSection {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #f7fafc;
+  color: #1a202c;
+}
+
+.topBadge {
+  background-color: #e6f7f4;
+  border: 1px solid #b2ece1;
+  border-radius: 50px;
+  color: #0b9982;
+}
+
+.badgeNew {
+  background-color: #0b9982;
+  color: #ffffff;
+  font-size: 0.7rem;
+  padding: 4px 8px;
+}
+
+.mainTitle {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #0f172a;
+}
+
+.accentText {
+  color: #0b9982;
+}
+
+.searchBox {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.04);
+}
+
+.inputLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.searchInput {
+  border: none;
+  padding-left: 0;
+  font-weight: 500;
+  color: #334155;
+  box-shadow: none !important;
+}
+
+.searchInput::placeholder {
+  color: #cbd5e1;
+}
+
+.searchBtn {
+  background-color: #0b9982;
+  color: #ffffff;
+  border-radius: 12px;
+  border: none;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.searchBtn:hover {
+  background-color: #087d6b;
+  color: #ffffff;
+}
+
+.browseBtn {
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.browseBtn:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
 }
