@@ -6,7 +6,7 @@ import { StatCard } from '../../../components/guest/Dashboard/StatCard/StatCard'
 import { CategorySection } from '../../../components/guest/Dashboard/CategorySection/CategorySection';
 import { StepsSection } from '../../../components/guest/Dashboard/StepsSection/StepsSection';
 import { Footer } from '../../../components/guest/Dashboard/Footer/Footer';
-import { TrustSection } from '../../../components/guest/Dashboard/TrsutSection/TrustSection';
+import { TrustSection } from '../../../components/guest/Dashboard/TrustSection/TrustSection';
 import { Navbar } from '../../../components/guest/shared/Navbar/Navbar';
 
 
