@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styles from './Navbar.module.css';
 
 export const Navbar: React.FC = () => {
@@ -8,43 +9,87 @@ export const Navbar: React.FC = () => {
     setIsOpen(!isOpen);
   };
 
+  const closeMenu = () => {
+    setIsOpen(false);
+  };
+
   return (
     <header className={`border-bottom bg-white sticky-top ${styles.navbarHeader}`}>
       <div className="container">
         <nav className="d-flex align-items-center justify-content-between py-3">
-          
+
           {/* Logo Brand */}
-          <a href="#" className="d-flex align-items-center gap-2 text-decoration-none">
-            <span className={`d-inline-flex align-items-center justify-content-center fw-bold rounded-3 ${styles.logoIcon}`}>
+          <Link
+            to="/"
+            onClick={closeMenu}
+            className="d-flex align-items-center gap-2 text-decoration-none"
+          >
+            <span
+              className={`d-inline-flex align-items-center justify-content-center fw-bold rounded-3 ${styles.logoIcon}`}
+            >
               W
             </span>
-            <span className="fw-extrabold text-dark fs-5">WorkMatch</span>
-          </a>
 
-          {/* Menú Desktop (Se oculta en móvil d-none d-lg-flex) */}
+            <span className="fw-extrabold text-dark fs-5">
+              WorkMatch
+            </span>
+          </Link>
+
+          {/* Menú Desktop */}
           <div className="d-none d-lg-flex align-items-center gap-4">
-            <a href="#find-work" className={styles.navLink}>Find Work</a>
-            <a href="#hire-workers" className={styles.navLink}>Hire Workers</a>
-            <a href="#how-it-works" className={styles.navLink}>How it Works</a>
+            <Link
+              to="/find-work"
+              className={styles.navLink}
+            >
+              Find Work
+            </Link>
+
+            <Link
+              to="/hire-workers"
+              className={styles.navLink}
+            >
+              Hire Workers
+            </Link>
+
+            <Link
+              to="/how-it-works"
+              className={styles.navLink}
+            >
+              How it Works
+            </Link>
           </div>
 
-          {/* CTAs Desktop (Se oculta en móvil d-none d-lg-flex) */}
+          {/* CTAs Desktop */}
           <div className="d-none d-lg-flex align-items-center gap-3">
-            <a href="#login" className={styles.navLink}>Log in</a>
-            <button className={`btn fw-semibold px-4 py-2 ${styles.btnPrimary}`}>
+            <Link
+              to="/login"
+              className={styles.navLink}
+            >
+              Log in
+            </Link>
+
+            <Link
+              to="/register"
+              className={`btn fw-semibold px-4 py-2 ${styles.btnPrimary}`}
+            >
               Sign up free
-            </button>
+            </Link>
           </div>
 
-          {/* Botones Móvil (Se ven solo en pantallas chicas d-flex d-lg-none) */}
+          {/* Botones Móvil */}
           <div className="d-flex d-lg-none align-items-center gap-2">
-            <button className={`btn btn-sm fw-semibold px-3 py-2 ${styles.btnPrimary}`}>
+            <Link
+              to="/register"
+              className={`btn btn-sm fw-semibold px-3 py-2 ${styles.btnPrimary}`}
+            >
               Sign up
-            </button>
-            <button 
-              onClick={toggleMenu} 
+            </Link>
+
+            <button
+              onClick={toggleMenu}
               className={`btn border p-2 d-flex align-items-center justify-content-center ${styles.toggleBtn}`}
               aria-label="Toggle Navigation"
+              aria-expanded={isOpen}
             >
               {isOpen ? '✕' : '☰'}
             </button>
@@ -56,31 +101,58 @@ export const Navbar: React.FC = () => {
         {isOpen && (
           <div className={`d-lg-none py-4 border-top ${styles.mobileMenu}`}>
             <div className="d-flex flex-column gap-3 mb-4 ps-2">
-              <a href="#find-work" className={styles.mobileNavLink} onClick={() => setIsOpen(false)}>
+
+              <Link
+                to="/find-work"
+                className={styles.mobileNavLink}
+                onClick={closeMenu}
+              >
                 Find Work
-              </a>
-              <a href="#hire-workers" className={styles.mobileNavLink} onClick={() => setIsOpen(false)}>
+              </Link>
+
+              <Link
+                to="/hire-workers"
+                className={styles.mobileNavLink}
+                onClick={closeMenu}
+              >
                 Hire Workers
-              </a>
-              <a href="#how-it-works" className={styles.mobileNavLink} onClick={() => setIsOpen(false)}>
+              </Link>
+
+              <Link
+                to="/how-it-works"
+                className={styles.mobileNavLink}
+                onClick={closeMenu}
+              >
                 How it Works
-              </a>
+              </Link>
+
             </div>
 
             <hr className="my-4 text-muted opacity-25" />
 
             {/* CTAs Móvil Abierto */}
             <div className="row g-3">
+
               <div className="col-6">
-                <button className={`btn w-100 py-2 fw-semibold ${styles.btnOutline}`}>
+                <Link
+                  to="/login"
+                  onClick={closeMenu}
+                  className={`btn w-100 py-2 fw-semibold ${styles.btnOutline}`}
+                >
                   Log in
-                </button>
+                </Link>
               </div>
+
               <div className="col-6">
-                <button className={`btn w-100 py-2 fw-semibold ${styles.btnPrimary}`}>
+                <Link
+                  to="/register"
+                  onClick={closeMenu}
+                  className={`btn w-100 py-2 fw-semibold ${styles.btnPrimary}`}
+                >
                   Sign up free
-                </button>
+                </Link>
               </div>
+
             </div>
           </div>
         )}
