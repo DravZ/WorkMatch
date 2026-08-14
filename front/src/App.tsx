@@ -5,6 +5,8 @@ import FindWork from './pages/guest/FindWork/FindWork';
 import HireWorkers from './pages/guest/HireWorkers/HireWorkers';
 import HowItWorks from './pages/guest/HowItWorks/HowItWorks';
 import GuestLayout from './layouts/GuestLayout/GuestLayout';
+import Login from './pages/guest/Login/Login';
+import Register from './pages/guest/Register/Register';
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
           <Route path="/find-work" element={<FindWork />} />
           <Route path="/hire-workers" element={<HireWorkers />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Route>
       </Routes>
     </BrowserRouter>
