@@ -1,0 +1,46 @@
+.stepContainer {
+  position: relative;
+}
+
+.circleIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 2px solid #0b9982;
+  box-shadow: 0 4px 12px rgba(11, 153, 130, 0.1);
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.stepNum {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #0b9982;
+  line-height: 1;
+  margin-top: 1px;
+}
+
+.connectorLine {
+  position: absolute;
+  top: 52px;
+  bottom: -24px; /* Se extiende para conectar con el siguiente circulo */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background-color: #0b9982;
+  z-index: 1;
+}
+
+.stepCard {
+  border-radius: 16px !important;
+  background-color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.144) !important;
+  text-align: left;
+  border: solid 1px #dfd9d9 !important;
+}
