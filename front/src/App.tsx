@@ -24,6 +24,8 @@ import EmployerProfile from './pages/employer/Profile/EmployerProfile';
 import PostJob from './pages/employer/PostJob/PostJob';
 import CompanyProfile from './pages/employer/CompanyProfile/CompanyProfile';
 import EmployerLayout from './layouts/EmployerLayout/EmployerLayout';
+import AdminLayout from './layouts/AdminLayout/AdminLayout';
+import AdminDashboard from './pages/admin/Dashboard/AdminDashboard';
 
 function App() {
   return (
@@ -57,6 +59,10 @@ function App() {
           <Route path="/employer/profile" element={<EmployerProfile />} />
           <Route path="/employer/post-job" element={<PostJob />} />
           <Route path="/employer/company-profile" element={<CompanyProfile />} />
+        </Route>
+
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboard />} />
         </Route>
 
 
