@@ -15,6 +15,13 @@ import WorkerProfile from './pages/worker/Profile/WorkerProfile';
 import Saved from './pages/worker/Saved/Saved';
 import WorkerLayout from './layouts/WorkerLayout/WorkerLayout';
 import WorkerNotifications from './pages/worker/Notifications/WorkerNotifications';
+import EmployerApplications from './pages/employer/Applications/EmployerApplications';
+import FindWorkers_Emp from './pages/employer/FindWorkers/FindWorkers_Emp';
+import EmployerMessages from './pages/employer/Messages/EmployerMessages';
+import EmployerNotifications from './pages/employer/Notifications/EmployerNotifications';
+import EmployerDashboard from './pages/employer/Dashboard/EmployerDashboard';
+import EmployerProfile from './pages/employer/Profile/EmployerProfile';
+import PostJob from './pages/employer/PostJob/PostJob';
 
 function App() {
   return (
@@ -38,6 +45,14 @@ function App() {
           <Route path="/worker/profile" element={<WorkerProfile />} />
           <Route path="/worker/saved" element={<Saved />} />
         </Route>
+
+        <Route path="/employer" element={<EmployerDashboard />} />
+        <Route path="/employer/applications" element={<EmployerApplications />} />
+        <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />
+        <Route path="/employer/messages" element={<EmployerMessages />} />
+        <Route path="/employer/notifications" element={<EmployerNotifications />} />
+        <Route path="/employer/profile" element={<EmployerProfile />} />
+        <Route path="/employer/post-job" element={<PostJob />} />
 
 
       </Routes>
