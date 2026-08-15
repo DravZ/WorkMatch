@@ -11,10 +11,10 @@ import WorkerDashboard from './pages/worker/Dashboard/WorkerDashboard';
 import Applications from './pages/worker/Applications/Applications';
 import FindJobs from './pages/worker/FindJobs/FindJobs';
 import Messages from './pages/worker/Messages/Messages';
-import Notifications from './pages/worker/Notifications/Notifications';
 import WorkerProfile from './pages/worker/Profile/WorkerProfile';
 import Saved from './pages/worker/Saved/Saved';
 import WorkerLayout from './layouts/WorkerLayout/WorkerLayout';
+import WorkerNotifications from './pages/worker/Notifications/WorkerNotifications';
 
 function App() {
   return (
@@ -34,7 +34,7 @@ function App() {
           <Route path="/worker/applications" element={<Applications />} />
           <Route path="/worker/find-jobs" element={<FindJobs />} />
           <Route path="/worker/messages" element={<Messages />} />
-          <Route path="/worker/notifications" element={<Notifications />} />
+          <Route path="/worker/notifications" element={<WorkerNotifications />} />
           <Route path="/worker/profile" element={<WorkerProfile />} />
           <Route path="/worker/saved" element={<Saved />} />
         </Route>
