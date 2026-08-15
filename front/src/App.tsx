@@ -7,6 +7,13 @@ import HowItWorks from './pages/guest/HowItWorks/HowItWorks';
 import GuestLayout from './layouts/GuestLayout/GuestLayout';
 import Login from './pages/guest/Login/Login';
 import Register from './pages/guest/Register/Register';
+import WorkerDashboard from './pages/worker/Dashboard/WorkerDashboard';
+import Applications from './pages/worker/Applications/Applications';
+import FindJobs from './pages/worker/FindJobs/FindJobs';
+import Messages from './pages/worker/Messages/Messages';
+import Notifications from './pages/worker/Notifications/Notifications';
+import WorkerProfile from './pages/worker/Profile/WorkerProfile';
+import Saved from './pages/worker/Saved/Saved';
 
 function App() {
   return (
@@ -20,6 +27,14 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
+
+        <Route path="/worker/" element={<WorkerDashboard />} />
+        <Route path="/worker/applications" element={<Applications />} />
+        <Route path="/worker/find-jobs" element={<FindJobs />} />
+        <Route path="/worker/messages" element={<Messages />} />
+        <Route path="/worker/notifications" element={<Notifications />} />
+        <Route path="/worker/profile" element={<WorkerProfile />} />
+        <Route path="/worker/saved" element={<Saved />} />
       </Routes>
     </BrowserRouter>
   );
