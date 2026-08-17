@@ -1,14 +1,12 @@
-
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EmpresaModule } from './empresa/empresa.module';
 import { VacanteModule } from './vacante/vacante.module';
-import { MensajesModule } from './mensajes/mensajes.module';
-import { UsuarioModule } from './usuario/usuario.module';
 import { PostulacionModule } from './postulacion/postulacion.module';
-
+import { UsuarioModule } from './usuario/usuario.module';
+import { MensajesModule } from './mensajes/mensajes.module';
 
 @Module({
   imports: [
@@ -22,12 +20,12 @@ import { PostulacionModule } from './postulacion/postulacion.module';
       autoLoadEntities: true,
       synchronize: true,
     }),
-    
+
     EmpresaModule,
     VacanteModule,
-    MensajesModule,
-    UsuarioModule,
     PostulacionModule,
+    UsuarioModule,
+    MensajesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
