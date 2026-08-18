@@ -1,0 +1,49 @@
+.verifiedTag {
+  background-color: #e6f7f4;
+  color: #0b9982;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.btnAccept {
+  background-color: #0f172a;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 6px 16px;
+  border-radius: 8px;
+}
+
+.btnAccept:hover {
+  background-color: #1e293b;
+  color: #ffffff;
+}
+
+.btnDecline {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 6px 16px;
+  border-radius: 8px;
+}
+
+.btnDecline:hover {
+  background-color: #f8fafc;
+}
+
+.btnProfile {
+  background-color: transparent;
+  border: none;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+}
+
+.btnProfile:hover {
+  color: #0f172a;
+}

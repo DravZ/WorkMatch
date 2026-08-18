@@ -16,6 +16,8 @@ import { Saved } from './pages/worker/Saved/Saved';
 import { WorkerNotifications } from './pages/worker/Notifications/WorkerNotifications';
 import { WorkerProfile } from './pages/worker/Profile/WorkerProfile';
 import { WorkerJobView } from './pages/worker/WorkerJobView/WorkerJobView';
+import EmployerLayout from './layouts/EmployerLayout/EmployerLayout';
+import { EmployerDashboard } from './pages/employer/Dashboard/EmployerDashboard';
 
 function App() {
   return (
@@ -39,6 +41,11 @@ function App() {
           <Route path="/worker/profile" element={<WorkerProfile />} />
           <Route path="/worker/saved" element={<Saved />} />
           <Route path="/worker/job-view" element={<WorkerJobView />} />
+        </Route>
+
+        <Route element={<EmployerLayout />}>
+          <Route path="/employer/" element={<EmployerDashboard />} />
+          <Route path="/employer/applications" element={<Applications />} />
         </Route>
 
 
