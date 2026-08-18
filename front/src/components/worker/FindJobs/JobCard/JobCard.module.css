@@ -1,0 +1,74 @@
+.card {
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.favBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #f1f5f9 !important;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.categoryLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+.companyLogo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verifiedTag {
+  color: #0b9982;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tagBadge {
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.btnApply {
+  background-color: #0b9982;
+  color: #ffffff;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  transition: background-color 0.2s ease;
+}
+
+.btnApply:hover {
+  background-color: #087d6b;
+  color: #ffffff;
+}
+
+.extraSmall {
+  font-size: 0.7rem;
+}
