@@ -15,6 +15,7 @@ import { Messages } from './pages/worker/Messages/Messages';
 import { Saved } from './pages/worker/Saved/Saved';
 import { WorkerNotifications } from './pages/worker/Notifications/WorkerNotifications';
 import { WorkerProfile } from './pages/worker/Profile/WorkerProfile';
+import { WorkerJobView } from './pages/worker/WorkerJobView/WorkerJobView';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/worker/notifications" element={<WorkerNotifications />} />
           <Route path="/worker/profile" element={<WorkerProfile />} />
           <Route path="/worker/saved" element={<Saved />} />
+          <Route path="/worker/job-view" element={<WorkerJobView />} />
         </Route>
 
 
