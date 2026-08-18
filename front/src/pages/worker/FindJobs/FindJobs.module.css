@@ -1,0 +1,81 @@
+/* Botón Toggle de Filtros */
+.filterToggleBtn {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e293b;
+  padding: 6px 16px;
+  transition: all 0.2s ease;
+}
+
+.filterToggleBtn:hover {
+  background-color: #f8fafc;
+}
+
+/* Barra de Búsqueda */
+.searchBar {
+  background-color: #f8fafc;
+  border-radius: 10px;
+  height: 44px;
+}
+
+/* Dropdown de Ordenamiento */
+.sortSelect {
+  background-color: #f8fafc;
+  border: none;
+  border-radius: 10px;
+  height: 44px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* Panel Desplegable de Filtros */
+.filterPanel {
+  border-radius: 12px;
+  background-color: #f8fafc !important;
+  border: 1px solid #f1f5f9;
+}
+
+.filterLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.clearBtn {
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.clearBtn:hover {
+  color: #0b9982;
+}
+
+/* Chips de Categorías */
+.categoryChip {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 6px 18px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #475569;
+  transition: all 0.2s ease;
+}
+
+.categoryChip:hover {
+  background-color: #f8fafc;
+}
+
+.activeChip {
+  background-color: #0b9982 !important;
+  color: #ffffff !important;
+  border-color: #0b9982 !important;
+}
