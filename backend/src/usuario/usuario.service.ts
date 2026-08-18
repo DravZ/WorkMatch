@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 import { Usuario } from './entities/usuario.entity';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
@@ -14,13 +15,25 @@ export class UsuarioService {
   ) {}
 
   async create(createUsuarioDto: CreateUsuarioDto) {
-    const usuario = this.usuarioRepository.create(createUsuarioDto);
+    const contrasenaHash = await bcrypt.hash(
+      createUsuarioDto.contrasena_hash,
+      10,
+    );
 
-    return await this.usuarioRepository.save(usuario);
+    const usuario = this.usuarioRepository.create({
+      ...createUsuarioDto,
+      contrasena_hash: contrasenaHash,
+    });
+
+    const usuarioGuardado = await this.usuarioRepository.save(usuario);
+
+    return this.usuarioSinContrasena(usuarioGuardado);
   }
 
   async findAll() {
-    return await this.usuarioRepository.find();
+    const usuarios = await this.usuarioRepository.find();
+
+    return usuarios.map((usuario) => this.usuarioSinContrasena(usuario));
   }
 
   async findOne(id: number) {
@@ -32,24 +45,49 @@ export class UsuarioService {
       throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
     }
 
-    return usuario;
+    return this.usuarioSinContrasena(usuario);
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    const usuario = await this.findOne(id);
+    const usuario = await this.usuarioRepository.findOne({
+      where: { id_usuario: id },
+    });
 
-    Object.assign(usuario, updateUsuarioDto);
+    if (!usuario) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    }
 
-    return await this.usuarioRepository.save(usuario);
+    const datosActualizados: any = {
+      ...updateUsuarioDto,
+    };
+
+    if (updateUsuarioDto.contrasena_hash) {
+      datosActualizados.contrasena_hash = await bcrypt.hash(
+        updateUsuarioDto.contrasena_hash,
+        10,
+      );
+    }
+
+    Object.assign(usuario, datosActualizados);
+
+    const usuarioActualizado = await this.usuarioRepository.save(usuario);
+
+    return this.usuarioSinContrasena(usuarioActualizado);
   }
 
   async remove(id: number) {
     const usuario = await this.findOne(id);
 
-    await this.usuarioRepository.remove(usuario);
+    await this.usuarioRepository.delete(id);
 
     return {
       mensaje: `Usuario con ID ${id} eliminado correctamente`,
     };
+  }
+
+  private usuarioSinContrasena(usuario: Usuario) {
+    const { contrasena_hash, ...usuarioSinContrasena } = usuario;
+
+    return usuarioSinContrasena;
   }
 }
