@@ -1,40 +1,73 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { Vacante } from './entities/vacante.entity';
 import { CreateVacanteDto } from './dto/create-vacante.dto';
 import { UpdateVacanteDto } from './dto/update-vacante.dto';
 
 @Injectable()
 export class VacanteService {
+
   constructor(
     @InjectRepository(Vacante)
-    private vacanteRepo: Repository<Vacante>,
+    private vacanteRepository: Repository<Vacante>,
   ) {}
 
-  create(dto: CreateVacanteDto) {
-    const vacante = this.vacanteRepo.create(dto);
-    return this.vacanteRepo.save(vacante);
+  async create(createVacanteDto: CreateVacanteDto) {
+    const vacante = this.vacanteRepository.create(
+      createVacanteDto,
+    );
+    return this.vacanteRepository.save(vacante);
   }
 
-  findAll() {
-    return this.vacanteRepo.find({ relations: { empresa: true } });
+ 
+  async findAll() {
+   const vacantes = await this.vacanteRepository.find({
+      relations: {
+        empresa: true,
+      },
+    });
 
+    return vacantes;
   }
 
-  findOne(id: number) {
-  return this.vacanteRepo.findOne({
-  where: { id_vacante: id },
-  relations: { empresa: true },
-});
 
+  async findOne(id: number) {
+    const vacante = await this.vacanteRepository.findOne({
+      where: {
+        id_vacante: id,
+      },
+      relations: {
+        empresa: true,
+      },
+    });
+    if (!vacante) {
+      throw new NotFoundException(
+        `Vacante not found with Id:${id}`,
+      );
+    }
+    return vacante;
   }
 
-  update(id: number, dto: UpdateVacanteDto) {
-    return this.vacanteRepo.update(id, dto);
+  async update(
+    id: number,
+    updateVacanteDto: UpdateVacanteDto,
+  ) {
+
+    const vacante = await this.findOne(id);
+
+    Object.assign(vacante, updateVacanteDto);
+
+    return this.vacanteRepository.save(vacante);
   }
 
-  remove(id: number) {
-    return this.vacanteRepo.delete(id);
+ 
+  async remove(id: number) {
+    await this.findOne(id);
+    await this.vacanteRepository.delete(id);
+    return {
+      message: `Vacante with Id:${id} has been deleted successfully`,
+    };
   }
 }
