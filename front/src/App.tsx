@@ -9,12 +9,12 @@ import Login from './pages/guest/Login/Login';
 import Register from './pages/guest/Register/Register';
 import WorkerProfile from './pages/worker/Profile/WorkerProfile';
 import WorkerLayout from './layouts/WorkerLayout/WorkerLayout';
-import WorkerNotifications from './pages/worker/Notifications/WorkerNotifications';
 import { WorkerDashboard } from './pages/worker/Dashboard/WorkerDashboard';
 import { FindJobs } from './pages/worker/FindJobs/FindJobs';
 import { Applications } from './pages/worker/Applications/Applications';
 import { Messages } from './pages/worker/Messages/Messages';
 import { Saved } from './pages/worker/Saved/Saved';
+import { WorkerNotifications } from './pages/worker/Notifications/WorkerNotifications';
 
 function App() {
   return (
