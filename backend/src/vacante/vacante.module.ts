@@ -10,3 +10,4 @@ import { Vacante } from './entities/vacante.entity';
   providers: [VacanteService],
 })
 export class VacanteModule {}
+  
