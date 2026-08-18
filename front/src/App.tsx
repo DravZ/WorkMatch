@@ -7,7 +7,6 @@ import HowItWorks from './pages/guest/HowItWorks/HowItWorks';
 import GuestLayout from './layouts/GuestLayout/GuestLayout';
 import Login from './pages/guest/Login/Login';
 import Register from './pages/guest/Register/Register';
-import WorkerDashboard from './pages/worker/Dashboard/WorkerDashboard';
 import Applications from './pages/worker/Applications/Applications';
 import FindJobs from './pages/worker/FindJobs/FindJobs';
 import Messages from './pages/worker/Messages/Messages';
@@ -15,6 +14,7 @@ import WorkerProfile from './pages/worker/Profile/WorkerProfile';
 import Saved from './pages/worker/Saved/Saved';
 import WorkerLayout from './layouts/WorkerLayout/WorkerLayout';
 import WorkerNotifications from './pages/worker/Notifications/WorkerNotifications';
+import { WorkerDashboard } from './pages/worker/Dashboard/WorkerDashboard';
 
 function App() {
   return (
