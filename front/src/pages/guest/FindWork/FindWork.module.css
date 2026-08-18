@@ -132,7 +132,7 @@
   gap: 24px;
 }
 
-/* Clases globales internas para las tarjetas que vienen de temp.tsx */
+
 :global(.job-card) {
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
@@ -174,11 +174,21 @@
   cursor: pointer;
 }
 
+
+:global(.job-header-row) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
 :global(.job-info h3) {
   font-size: 20px;
   font-weight: 800;
   color: #111827;
   margin: 0 0 4px 0;
+  line-height: 1.2;
 }
 
 :global(.job-info p) {
@@ -189,10 +199,41 @@
   margin: 0;
 }
 
-:global(.job-card-bottom) {
+
+:global(.job-meta-row) {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start; /* Alinea perfectamente los elementos arriba con el título */
+  align-items: center;
+  gap: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 12px;
+}
+
+:global(.meta-item) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+:global(.job-tags-row) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+:global(.job-tag) {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 9999px;
+}
+
+:global(.job-card-bottom) {
   padding-top: 16px;
   border-top: 1px solid #f9fafb;
 }
@@ -231,13 +272,14 @@
 
 :global(.pay-rate) {
   text-align: right;
-  margin-top: -2px; /* Alineación exacta de la altura del texto respecto al h3 */
+  flex-shrink: 0;
 }
 
 :global(.pay-rate .amount) {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 900;
   color: #059669;
+  line-height: 1;
 }
 
 :global(.pay-rate .period) {
@@ -245,4 +287,5 @@
   color: #9ca3af;
   display: block;
   font-weight: 600;
+  margin-top: 2px;
 }

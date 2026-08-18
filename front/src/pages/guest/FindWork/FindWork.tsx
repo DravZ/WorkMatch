@@ -5,8 +5,32 @@ import styles from './FindWork.module.css';
 const CATEGORIES = ['All', 'Delivery', 'Events', 'Cleaning', 'Hospitality', 'Moving', 'Security'];
 
 const MOCK_JOBS = [
-  { id: 1, status: 'Open', title: 'Warehouse Picker & Packer', category: 'DELIVERY', companyName: 'Metro Logistics Co.', companyLogoText: 'ML', verifiedText: 'Verified', payRate: 22 },
-  { id: 2, status: 'Open', title: 'House Moving Crew Member', category: 'MOVING', companyName: 'Swift Move NYC', companyLogoText: 'SM', verifiedText: 'Verified', payRate: 28 },
+  { 
+    id: 1, 
+    status: 'Open', 
+    title: 'Warehouse Picker & Packer', 
+    category: 'DELIVERY', 
+    companyName: 'Metro Logistics Co.', 
+    companyLogoText: 'ML', 
+    verifiedText: 'Verified', 
+    payRate: 22,
+    location: 'West Village, NY',
+    schedule: 'Fri–Sat, 4pm–12am',
+    tags: ['Kitchen safety', 'Food prep', 'Speed']
+  },
+  { 
+    id: 2, 
+    status: 'Open', 
+    title: 'House Moving Crew Member', 
+    category: 'MOVING', 
+    companyName: 'Swift Move NYC', 
+    companyLogoText: 'SM', 
+    verifiedText: 'Verified', 
+    payRate: 28,
+    location: 'Brooklyn, NY',
+    schedule: 'Mon–Wed, 8am–4pm',
+    tags: ['Heavy lifting', 'Organization', 'Punctuality']
+  },
 ];
 
 export default function FindWork() {
