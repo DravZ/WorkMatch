@@ -1,15 +1,15 @@
-.tabContainer {
+.tabsNav {
   border-radius: 12px;
-  border: 1px solid #f1f5f9;
+  background-color: #ffffff;
 }
 
 .tabBtn {
   border: none;
-  background-color: transparent;
-  color: #64748b;
+  font-weight: 600;
   font-size: 0.875rem;
-  font-weight: 500;
+  color: #64748b;
   border-radius: 8px;
+  padding: 10px;
   transition: all 0.2s ease;
 }
 
@@ -20,5 +20,4 @@
 .activeTab {
   background-color: #0f172a !important;
   color: #ffffff !important;
-  font-weight: 600;
 }

@@ -1,0 +1,26 @@
+.employerAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background-color: #0b9982;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btnProfile {
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: #ffffff;
+}
+
+.btnProfile:hover {
+  background-color: #f8fafc;
+}
