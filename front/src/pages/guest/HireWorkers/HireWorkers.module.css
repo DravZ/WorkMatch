@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -6,15 +8,22 @@
 
 html, body {
   width: 100%;
-  margin: 0;    /* 👈 esto es lo que probablemente falta */
+  margin: 0;
   padding: 0;
   overflow-x: hidden;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .page {
   width: 100%;
   max-width: 100vw; 
   overflow-x: hidden;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.postJobButton,
+.filtersButton {
+  font-family: inherit;
 }
 
 .headerSection {

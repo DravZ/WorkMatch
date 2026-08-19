@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
 .filters-panel {
   display: flex;
   align-items: center;
@@ -9,9 +11,17 @@
   margin: 16px 0;
 
   background: #f7f8fb;
-  border-radius: 18px;
+  border-radius: 18px;    
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
+.category-button,
+.category-menu li button,
+.rate-input,
+.verified-checkbox,
+.clear-all {
+  font-family: inherit;
+}
 /* =========================
    FILTER GROUPS
    ========================= */

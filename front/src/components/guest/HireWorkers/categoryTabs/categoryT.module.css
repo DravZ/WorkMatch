@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
 .tabs-wrapper {
   display: flex;
   flex-wrap: nowrap;
@@ -7,6 +9,7 @@
   padding-bottom: 12px;
 
   scrollbar-width: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .tabs-wrapper::-webkit-scrollbar {
@@ -14,6 +17,7 @@
 }
 
 .tab {
+  font-family: inherit;
   flex-shrink: 0;
 
   padding: 14px 26px;

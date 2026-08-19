@@ -1,7 +1,4 @@
-.search-wrapper {
-  width: 100%;
-  font-family: Arial, sans-serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 .search-row {
   display: flex;
@@ -9,31 +6,13 @@
   gap: 16px;
   margin-bottom: 20px;
   min-width: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-.post-job-button {
-  padding: 16px 28px;
-  border: none;
-  border-radius: 16px;
-  background: #498f88;
-  color: white;
-  font-size: 17px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 6px 12px rgba(73, 143, 136, 0.25);
-  white-space: nowrap;
-}
-
-.filters-button {
-  padding: 16px 24px;
-  border: 2px solid #e3e7eb;
-  border-radius: 16px;
-  background: white;
-  color: #071c3b;
-  font-size: 17px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
+.search-input,
+.sort-button,
+.sort-menu li button {
+  font-family: inherit;
 }
 
 .search-row {

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
 .cleaner-card-wrapper {
   container-type: inline-size;
   container-name: cleaner-card;
@@ -20,10 +22,14 @@
 
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 
-  font-family: Arial, sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   color: #071c3b;
 
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cleaner-card button {
+  font-family: inherit;
 }
 
 .cleaner-card:hover {
