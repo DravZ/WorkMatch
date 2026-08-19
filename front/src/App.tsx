@@ -18,6 +18,7 @@ import { WorkerProfile } from './pages/worker/Profile/WorkerProfile';
 import { WorkerJobView } from './pages/worker/WorkerJobView/WorkerJobView';
 import EmployerLayout from './layouts/EmployerLayout/EmployerLayout';
 import { EmployerDashboard } from './pages/employer/Dashboard/EmployerDashboard';
+import { PostJob } from './pages/employer/PostJob/PostJob';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
         <Route element={<EmployerLayout />}>
           <Route path="/employer/" element={<EmployerDashboard />} />
           <Route path="/employer/applications" element={<Applications />} />
+          <Route path="/employer/post-job" element={<PostJob />} />
         </Route>
 
 
