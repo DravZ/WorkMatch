@@ -3,6 +3,7 @@ import CardW from '../../../components/guest/HireWorkers/cardWorkers/cardW';
 import SearchBar from '../../../components/guest/HireWorkers/searchBar/searchB';
 import CategoryTabs from '../../../components/guest/HireWorkers/categoryTabs/categoryT';
 import styles from './HireWorkers.module.css';
+import FiltersPanel from '../../../components/guest/HireWorkers/filtersPanel/filtersP';
 
 const WORKERS = [
   {
@@ -55,6 +56,16 @@ const WORKERS = [
 export default function HireWorkers() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [maxRate, setMaxRate] = useState('');
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [filterCategory, setFilterCategory] = useState('All');
+
+  function handleClearAll() {
+    setMaxRate('');
+    setVerifiedOnly(false);
+    setFilterCategory('All');
+  }
 
   const filteredWorkers = useMemo(() => {
     return WORKERS.filter((worker) => {
@@ -84,7 +95,9 @@ export default function HireWorkers() {
               <button className={styles.postJobButton} onClick={() => console.log('post a job')}>
                 + Post a job
               </button>
-              <button className={styles.filtersButton} onClick={() => console.log('open filters')}>
+              <button
+                className={styles.filtersButton}
+                onClick={() => setFiltersOpen((prev) => !prev)}>
                 ⚙ Filters
               </button>
             </div>
@@ -94,6 +107,18 @@ export default function HireWorkers() {
             onSearchChange={setSearch}
             onSortChange={(sort) => console.log('sort:', sort)}
           />
+
+          {filtersOpen && (
+            <FiltersPanel
+              category={filterCategory}
+              onCategoryChange={setFilterCategory}
+              maxRate={maxRate}
+              onMaxRateChange={setMaxRate}
+              verifiedOnly={verifiedOnly}
+              onVerifiedOnlyChange={setVerifiedOnly}
+              onClearAll={handleClearAll}
+            />
+          )}
 
           <CategoryTabs onCategoryChange={setCategory} />
 

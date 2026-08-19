@@ -3,7 +3,6 @@
   container-name: cleaner-card;
   width: 100%;
   max-width: 620px;
-  aspect-ratio: 1 / 1;
 }
 
 .cleaner-card {
