@@ -19,6 +19,9 @@ import { WorkerJobView } from './pages/worker/WorkerJobView/WorkerJobView';
 import EmployerLayout from './layouts/EmployerLayout/EmployerLayout';
 import { EmployerDashboard } from './pages/employer/Dashboard/EmployerDashboard';
 import { PostJob } from './pages/employer/PostJob/PostJob';
+import { EmployerApplications } from './pages/employer/Applications/EmployerApplications';
+import { FindWorkers_Emp } from './pages/employer/FindWorkers/FindWorkers_Emp';
+import { EmployerMessages } from './pages/employer/Messages/EmployerMessages';
 
 function App() {
   return (
@@ -46,8 +49,10 @@ function App() {
 
         <Route element={<EmployerLayout />}>
           <Route path="/employer/" element={<EmployerDashboard />} />
-          <Route path="/employer/applications" element={<Applications />} />
+          <Route path="/employer/applications" element={<EmployerApplications />} />
           <Route path="/employer/post-job" element={<PostJob />} />
+          <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />
+          <Route path="/employer/messages" element={<EmployerMessages />} />
         </Route>
 
 
