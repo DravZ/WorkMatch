@@ -26,7 +26,7 @@ import { CompanyProfile } from './pages/employer/CompanyProfile/CompanyProfile';
 import { EmployerNotifications } from './pages/employer/Notifications/EmployerNotifications';
 import { WorkerProfile_Emp } from './pages/employer/WorkerProfile/WorkerProfile_Emp';
 import AdminLayout from './layouts/AdminLayout/AdminLayout';
-import AdminDashboard from './pages/admin/Dashboard/AdminDashboard';
+import { AdminOperationsDashboard } from './pages/admin/Dashboard/AdminDashboard';
 
 function App() {
   return (
@@ -64,7 +64,7 @@ function App() {
         </Route>
 
         <Route element={<AdminLayout />}>
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin" element={<AdminOperationsDashboard />} />
         </Route>
 
 
