@@ -22,6 +22,7 @@ import { PostJob } from './pages/employer/PostJob/PostJob';
 import { EmployerApplications } from './pages/employer/Applications/EmployerApplications';
 import { FindWorkers_Emp } from './pages/employer/FindWorkers/FindWorkers_Emp';
 import { EmployerMessages } from './pages/employer/Messages/EmployerMessages';
+import { CompanyProfile } from './pages/employer/CompanyProfile/CompanyProfile';
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
           <Route path="/employer/post-job" element={<PostJob />} />
           <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />
           <Route path="/employer/messages" element={<EmployerMessages />} />
+          <Route path="/employer/company-profile" element={<CompanyProfile />} />
         </Route>
 
 
