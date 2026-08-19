@@ -1,56 +1,116 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 import { Postulacion } from './entities/postulacion.entity';
 import { CreatePostulacionDto } from './dto/create-postulacion.dto';
 import { UpdatePostulacionDto } from './dto/update-postulacion.dto';
+
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { Vacante } from '../vacante/entities/vacante.entity';
 
 @Injectable()
 export class PostulacionService {
+
   constructor(
     @InjectRepository(Postulacion)
-    private postulacionRepo: Repository<Postulacion>,
+    private postulacionRepository: Repository<Postulacion>,
+
     @InjectRepository(Usuario)
-    private usuarioRepo: Repository<Usuario>,
+    private usuarioRepository: Repository<Usuario>,
+
     @InjectRepository(Vacante)
-    private vacanteRepo: Repository<Vacante>,
+    private vacanteRepository: Repository<Vacante>,
   ) {}
 
-  async create(dto: CreatePostulacionDto) {
-    const usuario = await this.usuarioRepo.findOneBy({ id_usuario: dto.id_usuario });
-    const vacante = await this.vacanteRepo.findOneBy({ id_vacante: dto.id_vacante });
+ 
+  async create(createPostulacionDto: CreatePostulacionDto) {
 
-    if (!usuario || !vacante) {
-      throw new Error('Usuario o Vacante no encontrados');
+    const usuario = await this.usuarioRepository.findOneBy({
+      id_usuario: createPostulacionDto.id_usuario,
+    });
+
+    if (!usuario) {
+      throw new NotFoundException(
+        `Usuario not found with Id:${createPostulacionDto.id_usuario}`,
+      );
     }
 
-    const postulacion = this.postulacionRepo.create({
-      usuario: usuario,
-      vacante: vacante,
-      estado: dto.estado ?? 'pendiente',
+    const vacante = await this.vacanteRepository.findOneBy({
+      id_vacante: createPostulacionDto.id_vacante,
     });
 
-    return this.postulacionRepo.save(postulacion);
-  }
+    if (!vacante) {
+      throw new NotFoundException(
+        `Vacante not found with Id:${createPostulacionDto.id_vacante}`,
+      );
+    }
 
-  findAll() {
-    return this.postulacionRepo.find({ relations: { usuario: true, vacante: true } });
-  }
-
-  findOne(id: number) {
-    return this.postulacionRepo.findOne({
-      where: { id_postulacion: id },
-      relations: { usuario: true, vacante: true },
+    const postulacion = this.postulacionRepository.create({
+      usuario,
+      vacante,
+      estado: createPostulacionDto.estado ?? 'pendiente',
     });
+
+    return this.postulacionRepository.save(postulacion);
   }
 
-  update(id: number, dto: UpdatePostulacionDto) {
-    return this.postulacionRepo.update(id, dto);
+  
+  async findAll() {
+
+    const postulaciones = await this.postulacionRepository.find({
+      relations: {
+        usuario: true,
+        vacante: true,
+      },
+    });
+
+    return postulaciones;
   }
 
-  remove(id: number) {
-    return this.postulacionRepo.delete(id);
+
+  async findOne(id: number) {
+
+    const postulacion = await this.postulacionRepository.findOne({
+      where: {
+        id_postulacion: id,
+      },
+      relations: {
+        usuario: true,
+        vacante: true,
+      },
+    });
+
+    if (!postulacion) {
+      throw new NotFoundException(
+        `Postulacion not found with Id:${id}`,
+      );
+    }
+
+    return postulacion;
+  }
+
+  async update(
+    id: number,
+    updatePostulacionDto: UpdatePostulacionDto,
+  ) {
+
+    const postulacion = await this.findOne(id);
+
+    Object.assign(postulacion, updatePostulacionDto);
+
+    return this.postulacionRepository.save(postulacion);
+  }
+
+
+  async remove(id: number) {
+
+    await this.findOne(id);
+
+    await this.postulacionRepository.delete(id);
+
+    return {
+      message: `Postulacion with Id:${id} has been deleted successfully`,
+    };
   }
 }

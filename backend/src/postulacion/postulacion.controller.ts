@@ -5,7 +5,10 @@ import { UpdatePostulacionDto } from './dto/update-postulacion.dto';
 
 @Controller('postulacion')
 export class PostulacionController {
-  constructor(private readonly postulacionService: PostulacionService) {}
+
+  constructor(
+    private readonly postulacionService: PostulacionService,
+  ) {}
 
   @Post()
   create(@Body() createPostulacionDto: CreatePostulacionDto) {
@@ -23,8 +26,14 @@ export class PostulacionController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostulacionDto: UpdatePostulacionDto) {
-    return this.postulacionService.update(+id, updatePostulacionDto);
+  update(
+    @Param('id') id: string,
+    @Body() updatePostulacionDto: UpdatePostulacionDto,
+  ) {
+    return this.postulacionService.update(
+      +id,
+      updatePostulacionDto,
+    );
   }
 
   @Delete(':id')
