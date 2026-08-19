@@ -278,7 +278,7 @@
 :global(.pay-rate .amount) {
   font-size: 26px;
   font-weight: 900;
-  color: #059669;
+  color: #115e59;
   line-height: 1;
 }
 
@@ -288,4 +288,124 @@
   display: block;
   font-weight: 600;
   margin-top: 2px;
+}
+
+:global(.job-card-footer) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #f9fafb;
+}
+
+:global(.job-spots-info) {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280; 
+}
+
+:global(.apply-btn) {
+  background-color: #0f766e;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(15, 118, 110, 0.2);
+}
+
+:global(.apply-btn:hover) {
+  background-color: #115e59;
+  box-shadow: 0 4px 6px rgba(15, 118, 110, 0.3);
+}
+
+.advancedFiltersPanel {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.filterGroup label {
+  font-size: 11px;
+  font-weight: 800;
+  color: #9ca3af;
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+
+.selectWrapperSmall {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.selectWrapperSmall select {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #374151;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.minPayInput {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  font-size: 14px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #374151;
+  outline: none;
+}
+
+.minPayInput::placeholder {
+  color: #9ca3af;
+}
+
+.clearAllBtn {
+  background: transparent;
+  border: none;
+  color: #4b5563;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 14px 0;
+  text-align: right;
+  transition: color 0.2s ease;
+}
+
+.clearAllBtn:hover {
+  color: #111827;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
 }

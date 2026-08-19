@@ -11,6 +11,8 @@ interface Job {
   location: string;
   schedule: string;
   tags: string[];
+  spots: number;
+  timeAgo: string;
 }
 
 interface JobCardProps {
@@ -20,26 +22,25 @@ interface JobCardProps {
 export const JobCard: React.FC<JobCardProps> = ({ job }) => {
   return (
     <div className="job-card">
-      <div>
-        <div className="job-card-top">
-          <span className="job-status">{job.status}</span>
-          <button className="favorite-btn">♡</button>
-        </div>
+      
+      <div className="job-card-top">
+        <span className="job-status">{job.status}</span>
+        <button className="favorite-btn">♡</button>
+      </div>
 
-        
-        <div className="job-header-row">
-          <div className="job-info">
-            <h3>{job.title}</h3>
-            <p>{job.category}</p>
-          </div>
-          <div className="pay-rate">
-            <span className="amount">${job.payRate}</span>
-            <span className="period">/ hour</span>
-          </div>
+      
+      <div className="job-header-row">
+        <div className="job-info">
+          <h3>{job.title}</h3>
+          <p>{job.category}</p>
         </div>
-        
-        
+        <div className="pay-rate">
+          <span className="amount">${job.payRate}</span>
+          <span className="period">/ hour</span>
+        </div>
+      </div>
 
+      
       <div className="job-card-bottom">
         <div className="company-info">
           <div className="company-logo">{job.companyLogoText}</div>
@@ -49,25 +50,32 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
           </div>
         </div>
       </div>
-      
-       <div className="job-meta-row">
-          <div className="meta-item">
-            <span>📍</span>
-            <span>{job.location}</span>
-          </div>
-          <div className="meta-item">
-            <span>🕐</span>
-            <span>{job.schedule}</span>
-          </div>
-        </div>
 
-        <div className="job-tags-row">
-          {job.tags.map((tag, index) => (
-            <span key={index} className="job-tag">
-              {tag}
-            </span>
-          ))}
+      
+      <div className="job-meta-row">
+        <div className="meta-item">
+          <span>📍</span>
+          <span>{job.location}</span>
         </div>
+        <div className="meta-item">
+          <span>🕐</span>
+          <span>{job.schedule}</span>
+        </div>
+      </div>
+
+      
+      <div className="job-tags-row">
+        {job.tags.map((tag, index) => (
+          <span key={index} className="job-tag">
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      
+      <div className="job-card-footer">
+        <span className="job-spots-info">{job.spots} spots · {job.timeAgo}</span>
+        <button className="apply-btn">Apply now</button>
       </div>
     </div>
   );
