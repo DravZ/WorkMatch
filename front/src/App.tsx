@@ -23,6 +23,8 @@ import { EmployerApplications } from './pages/employer/Applications/EmployerAppl
 import { FindWorkers_Emp } from './pages/employer/FindWorkers/FindWorkers_Emp';
 import { EmployerMessages } from './pages/employer/Messages/EmployerMessages';
 import { CompanyProfile } from './pages/employer/CompanyProfile/CompanyProfile';
+import { EmployerNotifications } from './pages/employer/Notifications/EmployerNotifications';
+import { WorkerProfile_Emp } from './pages/employer/WorkerProfile/WorkerProfile_Emp';
 
 function App() {
   return (
@@ -55,6 +57,8 @@ function App() {
           <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />
           <Route path="/employer/messages" element={<EmployerMessages />} />
           <Route path="/employer/company-profile" element={<CompanyProfile />} />
+          <Route path="/employer/notifications" element={<EmployerNotifications />} />
+          <Route path="/employer/worker-profile" element={<WorkerProfile_Emp />} />
         </Route>
 
 
