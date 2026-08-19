@@ -30,7 +30,7 @@ export const EmployerNavbar: React.FC<EmployerNavbarProps> = ({
     { label: 'Applications', path: '/employer/applications' },
     { label: 'Find Workers', path: '/employer/find-workers' },
     { label: 'Messages', path: '/employer/messages' },
-    { label: 'Company Profile', path: '/employer/company-profile' },
+    //{ label: 'Company Profile', path: '/employer/company-profile' },
   ];
 
   const mobileNavLinks = [
@@ -38,9 +38,9 @@ export const EmployerNavbar: React.FC<EmployerNavbarProps> = ({
     { label: 'Applications', path: '/employer/applications' },
     { label: 'Find Workers', path: '/employer/find-workers' },
     { label: 'Messages', path: '/employer/messages' },
-    { label: 'Company Profile', path: '/employer/company-profile' },
+    //{ label: 'Company Profile', path: '/employer/company-profile' },
     { label: 'Notifications', path: '/employer/notifications' },
-    { label: 'Profile', path: '/employer/profile' },
+    { label: 'Profile', path: '/employer/company-profile' },
   ];
 
   return (

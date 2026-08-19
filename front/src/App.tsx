@@ -7,23 +7,24 @@ import HowItWorks from './pages/guest/HowItWorks/HowItWorks';
 import GuestLayout from './layouts/GuestLayout/GuestLayout';
 import Login from './pages/guest/Login/Login';
 import Register from './pages/guest/Register/Register';
-import WorkerDashboard from './pages/worker/Dashboard/WorkerDashboard';
-import Applications from './pages/worker/Applications/Applications';
-import FindJobs from './pages/worker/FindJobs/FindJobs';
-import Messages from './pages/worker/Messages/Messages';
-import WorkerProfile from './pages/worker/Profile/WorkerProfile';
-import Saved from './pages/worker/Saved/Saved';
 import WorkerLayout from './layouts/WorkerLayout/WorkerLayout';
-import WorkerNotifications from './pages/worker/Notifications/WorkerNotifications';
-import EmployerApplications from './pages/employer/Applications/EmployerApplications';
-import FindWorkers_Emp from './pages/employer/FindWorkers/FindWorkers_Emp';
-import EmployerMessages from './pages/employer/Messages/EmployerMessages';
-import EmployerNotifications from './pages/employer/Notifications/EmployerNotifications';
-import EmployerDashboard from './pages/employer/Dashboard/EmployerDashboard';
-import EmployerProfile from './pages/employer/Profile/EmployerProfile';
-import PostJob from './pages/employer/PostJob/PostJob';
-import CompanyProfile from './pages/employer/CompanyProfile/CompanyProfile';
+import { WorkerDashboard } from './pages/worker/Dashboard/WorkerDashboard';
+import { FindJobs } from './pages/worker/FindJobs/FindJobs';
+import { Applications } from './pages/worker/Applications/Applications';
+import { Messages } from './pages/worker/Messages/Messages';
+import { Saved } from './pages/worker/Saved/Saved';
+import { WorkerNotifications } from './pages/worker/Notifications/WorkerNotifications';
+import { WorkerProfile } from './pages/worker/Profile/WorkerProfile';
+import { WorkerJobView } from './pages/worker/WorkerJobView/WorkerJobView';
 import EmployerLayout from './layouts/EmployerLayout/EmployerLayout';
+import { EmployerDashboard } from './pages/employer/Dashboard/EmployerDashboard';
+import { PostJob } from './pages/employer/PostJob/PostJob';
+import { EmployerApplications } from './pages/employer/Applications/EmployerApplications';
+import { FindWorkers_Emp } from './pages/employer/FindWorkers/FindWorkers_Emp';
+import { EmployerMessages } from './pages/employer/Messages/EmployerMessages';
+import { CompanyProfile } from './pages/employer/CompanyProfile/CompanyProfile';
+import { EmployerNotifications } from './pages/employer/Notifications/EmployerNotifications';
+import { WorkerProfile_Emp } from './pages/employer/WorkerProfile/WorkerProfile_Emp';
 import AdminLayout from './layouts/AdminLayout/AdminLayout';
 import AdminDashboard from './pages/admin/Dashboard/AdminDashboard';
 
@@ -48,24 +49,23 @@ function App() {
           <Route path="/worker/notifications" element={<WorkerNotifications />} />
           <Route path="/worker/profile" element={<WorkerProfile />} />
           <Route path="/worker/saved" element={<Saved />} />
+          <Route path="/worker/job-view" element={<WorkerJobView />} />
         </Route>
 
         <Route element={<EmployerLayout />}>
-          <Route path="/employer" element={<EmployerDashboard />} />
+          <Route path="/employer/" element={<EmployerDashboard />} />
           <Route path="/employer/applications" element={<EmployerApplications />} />
+          <Route path="/employer/post-job" element={<PostJob />} />
           <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />
           <Route path="/employer/messages" element={<EmployerMessages />} />
-          <Route path="/employer/notifications" element={<EmployerNotifications />} />
-          <Route path="/employer/profile" element={<EmployerProfile />} />
-          <Route path="/employer/post-job" element={<PostJob />} />
           <Route path="/employer/company-profile" element={<CompanyProfile />} />
+          <Route path="/employer/notifications" element={<EmployerNotifications />} />
+          <Route path="/employer/worker-profile" element={<WorkerProfile_Emp />} />
         </Route>
 
         <Route element={<AdminLayout />}>
           <Route path="/admin" element={<AdminDashboard />} />
         </Route>
-
-
 
 
       </Routes>
