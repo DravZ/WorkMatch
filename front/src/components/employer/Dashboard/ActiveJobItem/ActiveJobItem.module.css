@@ -1,0 +1,29 @@
+.jobContainer {
+  background-color: #f8fafc;
+  transition: background-color 0.2s ease;
+}
+
+.jobContainer:hover {
+  background-color: #f1f5f9;
+}
+
+.urgentBadge {
+  color: #0b9982;
+  font-size: 0.725rem;
+  font-weight: 700;
+}
+
+.btnViewApps {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 8px;
+}
+
+.btnViewApps:hover {
+  background-color: #ffffff;
+  border-color: #cbd5e1;
+}
