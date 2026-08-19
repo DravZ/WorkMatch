@@ -25,6 +25,8 @@ import { EmployerMessages } from './pages/employer/Messages/EmployerMessages';
 import { CompanyProfile } from './pages/employer/CompanyProfile/CompanyProfile';
 import { EmployerNotifications } from './pages/employer/Notifications/EmployerNotifications';
 import { WorkerProfile_Emp } from './pages/employer/WorkerProfile/WorkerProfile_Emp';
+import AdminLayout from './layouts/AdminLayout/AdminLayout';
+import AdminDashboard from './pages/admin/Dashboard/AdminDashboard';
 
 function App() {
   return (
@@ -59,6 +61,10 @@ function App() {
           <Route path="/employer/company-profile" element={<CompanyProfile />} />
           <Route path="/employer/notifications" element={<EmployerNotifications />} />
           <Route path="/employer/worker-profile" element={<WorkerProfile_Emp />} />
+        </Route>
+
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboard />} />
         </Route>
 
 
