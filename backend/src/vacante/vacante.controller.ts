@@ -5,7 +5,10 @@ import { UpdateVacanteDto } from './dto/update-vacante.dto';
 
 @Controller('vacante')
 export class VacanteController {
-  constructor(private readonly vacanteService: VacanteService) {}
+
+  constructor(
+    private readonly vacanteService: VacanteService,
+  ) {}
 
   @Post()
   create(@Body() createVacanteDto: CreateVacanteDto) {
@@ -23,8 +26,14 @@ export class VacanteController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVacanteDto: UpdateVacanteDto) {
-    return this.vacanteService.update(+id, updateVacanteDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateVacanteDto: UpdateVacanteDto,
+  ) {
+    return this.vacanteService.update(
+      +id,
+      updateVacanteDto,
+    );
   }
 
   @Delete(':id')
