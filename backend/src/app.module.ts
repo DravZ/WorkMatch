@@ -34,6 +34,7 @@ import { MensajesModule } from './mensajes/mensajes.module';
     PostulacionModule,
     UsuarioModule,
     MensajesModule,
+    
   ],
 
   controllers: [AppController],

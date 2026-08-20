@@ -14,21 +14,19 @@ export class UsuarioService {
     private readonly usuarioRepository: Repository<Usuario>,
   ) {}
 
-  async create(createUsuarioDto: CreateUsuarioDto) {
-    const contrasenaHash = await bcrypt.hash(
-      createUsuarioDto.contrasena_hash,
-      10,
-    );
+ async create(dto: CreateUsuarioDto) {
+  const contrasenaHash = await bcrypt.hash(dto.password, 10);
 
-    const usuario = this.usuarioRepository.create({
-      ...createUsuarioDto,
-      contrasena_hash: contrasenaHash,
-    });
+  const usuario = this.usuarioRepository.create({
+    fullName: dto.fullName,
+    email: dto.email,
+    role: dto.role,
+    contrasena_hash: contrasenaHash,
+  });
 
-    const usuarioGuardado = await this.usuarioRepository.save(usuario);
-
-    return this.usuarioSinContrasena(usuarioGuardado);
-  }
+  const usuarioGuardado = await this.usuarioRepository.save(usuario);
+  return this.usuarioSinContrasena(usuarioGuardado);
+}
 
   async findAll() {
     const usuarios = await this.usuarioRepository.find();
@@ -48,32 +46,20 @@ export class UsuarioService {
     return this.usuarioSinContrasena(usuario);
   }
 
-  async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
-    const usuario = await this.usuarioRepository.findOne({
-      where: { id_usuario: id },
-    });
+    async update(id: number, dto: UpdateUsuarioDto) {
+  const usuario = await this.usuarioRepository.findOne({ where: { id_usuario: id } });
+  if (!usuario) throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
 
-    if (!usuario) {
-      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
-    }
-
-    const datosActualizados: Partial<Usuario> = {
-      ...updateUsuarioDto,
-    };
-
-    if (updateUsuarioDto.contrasena_hash) {
-      datosActualizados.contrasena_hash = await bcrypt.hash(
-        updateUsuarioDto.contrasena_hash,
-        10,
-      );
-    }
-
-    Object.assign(usuario, datosActualizados);
-
-    const usuarioActualizado = await this.usuarioRepository.save(usuario);
-
-    return this.usuarioSinContrasena(usuarioActualizado);
+  if (dto.password) {
+    usuario.contrasena_hash = await bcrypt.hash(dto.password, 10);
   }
+  if (dto.fullName) usuario.fullName = dto.fullName;
+  if (dto.email) usuario.email = dto.email;
+  if (dto.role) usuario.role = dto.role;
+
+  const usuarioActualizado = await this.usuarioRepository.save(usuario);
+  return this.usuarioSinContrasena(usuarioActualizado);
+}
 
   async remove(id: number) {
     const usuario = await this.usuarioRepository.findOne({
