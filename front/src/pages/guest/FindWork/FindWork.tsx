@@ -1,41 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { JobCard } from '../../../components/guest/FindWork/temp';
 import styles from './FindWork.module.css';
 
 const CATEGORIES = ['All', 'Delivery', 'Events', 'Cleaning', 'Hospitality', 'Moving', 'Security'];
-
-const MOCK_JOBS = [
-  { 
-    id: 1, 
-    status: 'Open', 
-    title: 'Warehouse Picker & Packer', 
-    category: 'DELIVERY', 
-    companyName: 'Metro Logistics Co.', 
-    companyLogoText: 'ML', 
-    verifiedText: 'Verified', 
-    payRate: 22,
-    location: 'West Village, NY',
-    schedule: 'Fri–Sat, 4pm–12am',
-    tags: ['Kitchen safety', 'Food prep', 'Speed'],
-    spots: 2,
-    timeAgo: '7d ago'
-  },
-  { 
-    id: 2, 
-    status: 'Open', 
-    title: 'House Moving Crew Member', 
-    category: 'MOVING', 
-    companyName: 'Swift Move NYC', 
-    companyLogoText: 'SM', 
-    verifiedText: 'Verified', 
-    payRate: 28,
-    location: 'Brooklyn, NY',
-    schedule: 'Mon–Wed, 8am–4pm',
-    tags: ['Heavy lifting', 'Organization', 'Punctuality'],
-    spots: 2,
-    timeAgo: '7d ago'
-  },
-];
 
 export default function FindWork() {
   const [activeCategory, setActiveCategory] = useState('All');
@@ -45,7 +12,42 @@ export default function FindWork() {
   const [minPay, setMinPay] = useState('');
 
   
-  const filteredJobs = MOCK_JOBS.filter((job) => {
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  
+  useEffect(() => {
+    fetch('http://localhost:3000/vacante')
+      .then((res) => res.json())
+      .then((data) => {
+       
+        const formattedJobs = data.map((vacante: any) => ({
+          id: vacante.id_vacante,
+          status: vacante.estado || 'Open',
+          title: vacante.titulo,
+          category: vacante.tipo_contrato ? vacante.tipo_contrato.toUpperCase() : 'GENERAL',
+          companyName: vacante.empresa?.nombre || 'Empresa Confidencial',
+          companyLogoText: vacante.empresa?.nombre ? vacante.empresa.nombre.substring(0, 2).toUpperCase() : 'WM',
+          verifiedText: 'Verified',
+          payRate: Number(vacante.salario) || 0,
+          location: vacante.ubicacion,
+          schedule: 'Tiempo completo', 
+          tags: [vacante.tipo_contrato],
+          spots: 1,
+          timeAgo: vacante.fecha_publicacion ? 'Reciente' : 'Hace unos días'
+        }));
+
+        setJobs(formattedJobs);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error al conectar con el backend:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  
+  const filteredJobs = jobs.filter((job) => {
     const matchesCategory = activeCategory === 'All' || job.category.toLowerCase() === activeCategory.toLowerCase();
     
     const matchesSearch = 
@@ -67,6 +69,10 @@ export default function FindWork() {
     setMinPay('');
     setSearchTerm('');
   };
+
+  if (loading) {
+    return <div style={{ padding: '40px', textAlign: 'center' }}>Cargando vacantes...</div>;
+  }
 
   return (
     <div className={styles.jobSearchContainer}>
@@ -104,7 +110,6 @@ export default function FindWork() {
         </div>
       </div>
 
-      
       {showFilters && (
         <div className={styles.advancedFiltersPanel}>
           <div className={styles.filterGroup}>
