@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+.pageWrapper {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #ffffff;
+}
+
+.heroDark {
+  background-color: #111827; /* Fondo azul oscuro */
+  background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
+}
+
+.topBadge {
+  background-color: rgba(11, 153, 130, 0.15);
+  color: #0b9982;
+  border: 1px solid rgba(11, 153, 130, 0.3);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.mainTitle {
+  font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  max-width: 750px;
+}

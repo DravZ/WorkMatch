@@ -1,0 +1,12 @@
+.topBar {
+  width: 24px;
+  height: 2px;
+  background-color: #0b9982;
+  margin-bottom: 1.5rem;
+  border-radius: 2px;
+}
+
+.stepNumber {
+  color: #0b9982;
+  font-size: 0.9rem;
+}

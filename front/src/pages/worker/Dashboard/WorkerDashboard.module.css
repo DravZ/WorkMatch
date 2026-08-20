@@ -1,0 +1,125 @@
+/* Utilidades globales del módulo */
+:global(.text-teal) {
+  color: #0b9982 !important;
+}
+
+:global(.bg-teal) {
+  background-color: #0b9982 !important;
+}
+
+.contentCard {
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.headerAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #0b9982;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.viewAllLink {
+  color: #0b9982;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.viewAllLink:hover {
+  text-decoration: underline;
+}
+
+/* Specific Job Items */
+.jobListCard {
+  background-color: #f8fafc;
+}
+
+.recommendedCard {
+  background-color: #f8fafc;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.recommendedCard:hover {
+  border-color: #cbd5e1;
+}
+
+.categoryLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+/* Profile Section Sidebar */
+.profileAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #0b9982;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.btnSecondary {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.btnSecondary:hover {
+  background-color: #f8fafc;
+}
+
+/* Notifications */
+.notifActive {
+  background-color: #e6f7f4;
+}
+
+.notifInactive {
+  background-color: #f8fafc;
+}
+
+.extraSmall {
+  font-size: 0.75rem;
+}
+
+/* Earnings Widget (Dark Mode Card) */
+.earningsCard {
+  background-color: #111827;
+  color: #ffffff;
+  border-radius: 16px;
+}
+
+.earningsSubtitle {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #6b7280;
+  letter-spacing: 0.8px;
+}
+
+.earningsSummary {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.statLabel {
+  color: #6b7280;
+  font-size: 0.75rem;
+  display: block;
+}

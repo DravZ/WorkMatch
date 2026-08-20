@@ -1,0 +1,26 @@
+.verifiedBadge {
+  background-color: #e6f7f4;
+  color: #0b9982;
+  font-size: 0.725rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.detailsGrid {
+  background-color: #f8fafc;
+}
+
+.detailLabel {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-bottom: 2px;
+}
+
+.detailValue {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+}
