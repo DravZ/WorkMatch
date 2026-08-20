@@ -1,0 +1,65 @@
+.notificationCard {
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.readCard {
+  background-color: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.readCard:hover {
+  background-color: #f8fafc;
+}
+
+/* Estado No Leído: Fondo verde menta suave y borde teal */
+.unreadCard {
+  background-color: #f0fdfa;
+  border: 1px solid #99f6e4 !important;
+  box-shadow: 0 2px 6px rgba(11, 153, 130, 0.05);
+}
+
+.unreadCard:hover {
+  background-color: #ccf0eb;
+}
+
+.iconContainer {
+  font-size: 1.2rem;
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.categoryBadge {
+  background-color: #f1f5f9;
+  color: #64748b;
+  font-size: 0.725rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.unreadTag {
+  color: #0b9982;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #0b9982;
+  display: inline-block;
+}
+
+.extraSmall {
+  font-size: 0.725rem;
+}

@@ -1,0 +1,33 @@
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  text-align: center;
+}
+
+.accepted {
+  background-color: #e6f7f4;
+  color: #0b9982;
+}
+
+.pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.notSelected {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.urgent {
+  background-color: #ffedd5;
+  color: #ea580c;
+}
+
+.default {
+  background-color: #f1f5f9;
+  color: #475569;
+}
