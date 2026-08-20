@@ -57,7 +57,7 @@ export class UsuarioService {
       throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
     }
 
-    const datosActualizados: any = {
+    const datosActualizados: Partial<Usuario> = {
       ...updateUsuarioDto,
     };
 
@@ -76,7 +76,13 @@ export class UsuarioService {
   }
 
   async remove(id: number) {
-    const usuario = await this.findOne(id);
+    const usuario = await this.usuarioRepository.findOne({
+      where: { id_usuario: id },
+    });
+
+    if (!usuario) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    }
 
     await this.usuarioRepository.delete(id);
 
@@ -86,7 +92,9 @@ export class UsuarioService {
   }
 
   private usuarioSinContrasena(usuario: Usuario) {
-    const { contrasena_hash, ...usuarioSinContrasena } = usuario;
+    const usuarioSinContrasena = Object.fromEntries(
+      Object.entries(usuario).filter(([key]) => key !== 'contrasena_hash'),
+    );
 
     return usuarioSinContrasena;
   }
