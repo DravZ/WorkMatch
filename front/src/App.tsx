@@ -29,53 +29,56 @@ import AdminLayout from './layouts/AdminLayout/AdminLayout';
 import { AdminOperationsDashboard } from './pages/admin/Dashboard/AdminDashboard';
 import { NotificationProvider } from './context/NotificationContext/NotificationContext';
 import { NotificationModal } from './components/notification/NotificationModal/NotificationModal';
+import { UserProvider } from './context/UserContext/UserContext';
 
 function App() {
   return (
-    <NotificationProvider>
+    <UserProvider>
+      <NotificationProvider>
 
-      <NotificationModal />
-      <BrowserRouter>
-        <Routes>
-          <Route element={<GuestLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/find-work" element={<FindWork />} />
-            <Route path="/hire-workers" element={<HireWorkers />} />
-            <Route path="/how-it-works" element={<HowItWorks />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Route>
+        <NotificationModal />
+        <BrowserRouter>
+          <Routes>
+            <Route element={<GuestLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/find-work" element={<FindWork />} />
+              <Route path="/hire-workers" element={<HireWorkers />} />
+              <Route path="/how-it-works" element={<HowItWorks />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Route>
 
-          <Route element={<WorkerLayout />}>
-            <Route path="/worker/" element={<WorkerDashboard />} />
-            <Route path="/worker/applications" element={<Applications />} />
-            <Route path="/worker/find-jobs" element={<FindJobs />} />
-            <Route path="/worker/messages" element={<Messages />} />
-            <Route path="/worker/notifications" element={<WorkerNotifications />} />
-            <Route path="/worker/profile" element={<WorkerProfile />} />
-            <Route path="/worker/saved" element={<Saved />} />
-            <Route path="/worker/job-view" element={<WorkerJobView />} />
-          </Route>
+            <Route element={<WorkerLayout />}>
+              <Route path="/worker/" element={<WorkerDashboard />} />
+              <Route path="/worker/applications" element={<Applications />} />
+              <Route path="/worker/find-jobs" element={<FindJobs />} />
+              <Route path="/worker/messages" element={<Messages />} />
+              <Route path="/worker/notifications" element={<WorkerNotifications />} />
+              <Route path="/worker/profile" element={<WorkerProfile />} />
+              <Route path="/worker/saved" element={<Saved />} />
+              <Route path="/worker/job-view" element={<WorkerJobView />} />
+            </Route>
 
-          <Route element={<EmployerLayout />}>
-            <Route path="/employer/" element={<EmployerDashboard />} />
-            <Route path="/employer/applications" element={<EmployerApplications />} />
-            <Route path="/employer/post-job" element={<PostJob />} />
-            <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />
-            <Route path="/employer/messages" element={<EmployerMessages />} />
-            <Route path="/employer/company-profile" element={<CompanyProfile />} />
-            <Route path="/employer/notifications" element={<EmployerNotifications />} />
-            <Route path="/employer/worker-profile" element={<WorkerProfile_Emp />} />
-          </Route>
+            <Route element={<EmployerLayout />}>
+              <Route path="/employer/" element={<EmployerDashboard />} />
+              <Route path="/employer/applications" element={<EmployerApplications />} />
+              <Route path="/employer/post-job" element={<PostJob />} />
+              <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />
+              <Route path="/employer/messages" element={<EmployerMessages />} />
+              <Route path="/employer/company-profile" element={<CompanyProfile />} />
+              <Route path="/employer/notifications" element={<EmployerNotifications />} />
+              <Route path="/employer/worker-profile" element={<WorkerProfile_Emp />} />
+            </Route>
 
-          <Route element={<AdminLayout />}>
-            <Route path="/admin" element={<AdminOperationsDashboard />} />
-          </Route>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin" element={<AdminOperationsDashboard />} />
+            </Route>
 
 
-        </Routes>
-      </BrowserRouter>
-    </NotificationProvider>
+          </Routes>
+        </BrowserRouter>
+      </NotificationProvider>
+    </UserProvider>
 
 
   );

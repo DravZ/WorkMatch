@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styles from './Register.module.css';
-import axios from "axios";
+
+import { useRegisterController } from '../../../controllers/auth.controller';
+import { useNavigate } from 'react-router-dom';
 
 type UserRole = 'work' | 'hire';
 
@@ -15,9 +17,12 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<UserRole>('work');
-  
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { register } = useRegisterController();
+
+  const navigate = useNavigate();
 
   // Lógica de Validación
   const validate = (): boolean => {
@@ -46,30 +51,25 @@ export default function Register() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsSubmitted(true);
+    e.preventDefault();
+    setIsSubmitted(true);
 
-  if (validate()) {
-    try {
-      const response = await axios.post("http://localhost:3000/usuario", {
+    if (validate()) {
+      const success = await register({
         fullName,
         email,
         password,
         role,
       });
-      console.log("✅ Usuario creado en backend:", response.data);
-    } catch (error: any) {
-      if (error.response) {
-        console.error("❌ Error del backend:", error.response.data);
-      } else {
-        console.error("❌ Error de conexión:", error.message);
+
+      if (success) {
+        navigate('/login');
       }
     }
-  }
-};
+  };
   return (
     <div className={`min-vh-100 d-flex flex-column align-items-center justify-content-center py-5 ${styles.pageBg}`}>
-      
+
       {/* Brand Logo Header */}
       <div className="mb-4">
         <a href="/" className="d-flex align-items-center gap-2 text-decoration-none">
@@ -83,7 +83,7 @@ export default function Register() {
       {/* Register Card */}
       <div className={`card border-0 p-4 p-md-5 ${styles.registerCard}`}>
         <div className="card-body p-0">
-          
+
           {/* Header text */}
           <h2 className="fw-extrabold text-dark mb-1 fs-3">Create your account</h2>
           <p className="text-secondary fs-6 mb-4">
@@ -94,7 +94,7 @@ export default function Register() {
           </p>
 
           <form onSubmit={handleSubmit} noValidate>
-            
+
             {/* Full Name Field */}
             <div className="mb-3">
               <label htmlFor="fullName" className="form-label fw-semibold text-dark fs-7 mb-1">
@@ -103,9 +103,8 @@ export default function Register() {
               <input
                 type="text"
                 id="fullName"
-                className={`form-control ${styles.customInput} ${
-                  isSubmitted && errors.fullName ? 'is-invalid' : ''
-                }`}
+                className={`form-control ${styles.customInput} ${isSubmitted && errors.fullName ? 'is-invalid' : ''
+                  }`}
                 placeholder="Marcus Thompson"
                 value={fullName}
                 onChange={(e) => {
@@ -126,9 +125,8 @@ export default function Register() {
               <input
                 type="email"
                 id="email"
-                className={`form-control ${styles.customInput} ${
-                  isSubmitted && errors.email ? 'is-invalid' : ''
-                }`}
+                className={`form-control ${styles.customInput} ${isSubmitted && errors.email ? 'is-invalid' : ''
+                  }`}
                 placeholder="you@example.com"
                 value={email}
                 onChange={(e) => {
@@ -149,9 +147,8 @@ export default function Register() {
               <input
                 type="password"
                 id="password"
-                className={`form-control ${styles.customInput} ${
-                  isSubmitted && errors.password ? 'is-invalid' : ''
-                }`}
+                className={`form-control ${styles.customInput} ${isSubmitted && errors.password ? 'is-invalid' : ''
+                  }`}
                 placeholder="Min. 8 characters"
                 value={password}
                 onChange={(e) => {
@@ -177,9 +174,8 @@ export default function Register() {
               <div className="col-6">
                 <button
                   type="button"
-                  className={`w-100 p-3 text-center border rounded-3 btn ${styles.roleCard} ${
-                    role === 'work' ? styles.roleActive : ''
-                  }`}
+                  className={`w-100 p-3 text-center border rounded-3 btn ${styles.roleCard} ${role === 'work' ? styles.roleActive : ''
+                    }`}
                   onClick={() => setRole('work')}
                 >
                   <div className="fs-3 mb-1">🧑‍🌾</div>
@@ -192,9 +188,8 @@ export default function Register() {
               <div className="col-6">
                 <button
                   type="button"
-                  className={`w-100 p-3 text-center border rounded-3 btn ${styles.roleCard} ${
-                    role === 'hire' ? styles.roleActive : ''
-                  }`}
+                  className={`w-100 p-3 text-center border rounded-3 btn ${styles.roleCard} ${role === 'hire' ? styles.roleActive : ''
+                    }`}
                   onClick={() => setRole('hire')}
                 >
                   <div className="fs-3 mb-1">🏢</div>
