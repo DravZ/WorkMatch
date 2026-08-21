@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Register.module.css';
+import axios from "axios";
 
 type UserRole = 'work' | 'hire';
 
@@ -44,16 +45,28 @@ export default function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitted(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitted(true);
 
-    if (validate()) {
-      console.log('Form submission successful:', { fullName, email, password, role });
-      // Lógica de registro o redirección
+  if (validate()) {
+    try {
+      const response = await axios.post("http://localhost:3000/usuario", {
+        fullName,
+        email,
+        password,
+        role,
+      });
+      console.log("✅ Usuario creado en backend:", response.data);
+    } catch (error: any) {
+      if (error.response) {
+        console.error("❌ Error del backend:", error.response.data);
+      } else {
+        console.error("❌ Error de conexión:", error.message);
+      }
     }
-  };
-
+  }
+};
   return (
     <div className={`min-vh-100 d-flex flex-column align-items-center justify-content-center py-5 ${styles.pageBg}`}>
       
