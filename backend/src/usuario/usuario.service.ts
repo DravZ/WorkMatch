@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -18,19 +19,30 @@ export class UsuarioService {
     private readonly usuarioRepository: Repository<Usuario>,
   ) {}
 
- async create(dto: CreateUsuarioDto) {
-  const contrasenaHash = await bcrypt.hash(dto.password, 10);
+  async create(dto: CreateUsuarioDto) {
+    // Verificar si el correo ya está registrado
+    const usuarioExistente = await this.usuarioRepository.findOne({
+      where: { email: dto.email },
+    });
 
-  const usuario = this.usuarioRepository.create({
-    fullName: dto.fullName,
-    email: dto.email,
-    role: dto.role,
-    contrasena_hash: contrasenaHash,
-  });
+    if (usuarioExistente) {
+      throw new ConflictException('El correo ya está registrado');
+    }
 
-  const usuarioGuardado = await this.usuarioRepository.save(usuario);
-  return this.usuarioSinContrasena(usuarioGuardado);
-}
+    // Encriptar contraseña
+    const contrasenaHash = await bcrypt.hash(dto.password, 10);
+
+    const usuario = this.usuarioRepository.create({
+      fullName: dto.fullName,
+      email: dto.email,
+      role: dto.role,
+      contrasena_hash: contrasenaHash,
+    });
+
+    const usuarioGuardado = await this.usuarioRepository.save(usuario);
+
+    return this.usuarioSinContrasena(usuarioGuardado);
+  }
 
   async findAll() {
     const usuarios = await this.usuarioRepository.find();
@@ -50,20 +62,54 @@ export class UsuarioService {
     return this.usuarioSinContrasena(usuario);
   }
 
-    async update(id: number, dto: UpdateUsuarioDto) {
-  const usuario = await this.usuarioRepository.findOne({ where: { id_usuario: id } });
-  if (!usuario) throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+  async update(id: number, dto: UpdateUsuarioDto) {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { id_usuario: id },
+    });
 
-  if (dto.password) {
-    usuario.contrasena_hash = await bcrypt.hash(dto.password, 10);
+    if (!usuario) {
+      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+    }
+
+    // Verificar si se está cambiando el correo
+    if (dto.email) {
+      const usuarioConCorreo = await this.usuarioRepository.findOne({
+        where: { email: dto.email },
+      });
+
+      // Comprobar que el correo no pertenezca a otro usuario
+      if (
+        usuarioConCorreo &&
+        usuarioConCorreo.id_usuario !== usuario.id_usuario
+      ) {
+        throw new ConflictException(
+          'El correo ya está registrado por otro usuario',
+        );
+      }
+    }
+
+    // Actualizar contraseña si se proporciona una nueva
+    if (dto.password) {
+      usuario.contrasena_hash = await bcrypt.hash(dto.password, 10);
+    }
+
+    // Actualizar los demás campos
+    if (dto.fullName) {
+      usuario.fullName = dto.fullName;
+    }
+
+    if (dto.email) {
+      usuario.email = dto.email;
+    }
+
+    if (dto.role) {
+      usuario.role = dto.role;
+    }
+
+    const usuarioActualizado = await this.usuarioRepository.save(usuario);
+
+    return this.usuarioSinContrasena(usuarioActualizado);
   }
-  if (dto.fullName) usuario.fullName = dto.fullName;
-  if (dto.email) usuario.email = dto.email;
-  if (dto.role) usuario.role = dto.role;
-
-  const usuarioActualizado = await this.usuarioRepository.save(usuario);
-  return this.usuarioSinContrasena(usuarioActualizado);
-}
 
   async login(email: string, contrasena: string) {
     const usuario = await this.usuarioRepository.findOne({
