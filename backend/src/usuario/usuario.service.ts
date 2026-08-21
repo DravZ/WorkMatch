@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -73,6 +77,30 @@ export class UsuarioService {
     const usuarioActualizado = await this.usuarioRepository.save(usuario);
 
     return this.usuarioSinContrasena(usuarioActualizado);
+  }
+
+  async login(email: string, contrasena: string) {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { email },
+    });
+
+    if (!usuario) {
+      throw new UnauthorizedException('Correo o contraseña incorrectos');
+    }
+
+    const contraseñaCorrecta = await bcrypt.compare(
+      contrasena,
+      usuario.contrasena_hash,
+    );
+
+    if (!contraseñaCorrecta) {
+      throw new UnauthorizedException('Correo o contraseña incorrectos');
+    }
+
+    return {
+      mensaje: 'Login exitoso',
+      usuario: this.usuarioSinContrasena(usuario),
+    };
   }
 
   async remove(id: number) {
