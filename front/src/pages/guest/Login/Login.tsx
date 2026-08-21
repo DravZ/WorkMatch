@@ -37,8 +37,7 @@ const handleTest = () => {
 
   await login({
     email,
-    password,
-    role,
+    password
   });
 };
 
@@ -101,16 +100,18 @@ const handleTest = () => {
               />
             </div>
 
-            {/* Forgot Password Link */}
+            {/* Forgot Password Link 
+            
             <div className="text-end mb-4">
               <a href="#forgot-password" className={`text-decoration-none fs-7 ${styles.forgotLink}`}>
                 Forgot password?
               </a>
             </div>
-
-            {/* Role Selection Cards */}
+            
+            /* Role Selection Cards 
+            
             <div className="row g-3 mb-4">
-              {/* Find Work Role */}
+              Find Work Role 
               <div className="col-6">
                 <button
                   type="button"
@@ -125,7 +126,7 @@ const handleTest = () => {
                 </button>
               </div>
 
-              {/* Hire People Role */}
+              Hire People Role 
               <div className="col-6">
                 <button
                   type="button"
@@ -140,6 +141,8 @@ const handleTest = () => {
                 </button>
               </div>
             </div>
+            */}
+            
 
             {/* Submit Button */}
             <button  type="submit" className={`btn w-100 py-3 fw-bold ${styles.btnSubmit}`}>

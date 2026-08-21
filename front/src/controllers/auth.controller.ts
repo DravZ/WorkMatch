@@ -30,13 +30,12 @@ export const useLoginController = () => {
 
             setUser({
                 id: response.usuario.id_usuario,
-                nombre: response.usuario.nombre,
-                apellido: response.usuario.apellido,
+                nombreCompleto: response.usuario.fullName,
                 email: response.usuario.email,
-                role: data.role
+                role: response.usuario.role
             });
 
-            //navigate('/dashboard');
+            navigate('/');
         } catch (error) {
             showNotification({
                 type: 'error',
