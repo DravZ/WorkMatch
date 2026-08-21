@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Login.module.css';
+import { useNotification } from '../../../context/NotificationContext/NotificationContext';
 
 type UserRole = 'work' | 'hire';
 
@@ -8,10 +9,32 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<UserRole>('work');
 
+  const { showNotification } = useNotification();
+
+const handleTest = () => {
+  showNotification({
+    type: 'success',
+    title: 'Operación exitosa',
+    description: 'La acción se realizó correctamente.',
+  });
+  showNotification({
+    type: 'alert',
+    title: 'Operación exitosa',
+    description: 'La acción se realizó correctamente.',
+  });
+  showNotification({
+    type: 'error',
+    title: 'Operación exitosa',
+    description: 'La acción se realizó correctamente.',
+  });
+};
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log({ email, password, role });
     // Lógica de inicio de sesión
+
+    handleTest();
   };
 
   return (
@@ -114,7 +137,7 @@ export default function Login() {
             </div>
 
             {/* Submit Button */}
-            <button type="submit" className={`btn w-100 py-3 fw-bold ${styles.btnSubmit}`}>
+            <button  type="submit" className={`btn w-100 py-3 fw-bold ${styles.btnSubmit}`}>
               Log in
             </button>
           </form>
