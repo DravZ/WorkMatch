@@ -11,7 +11,7 @@ export class CreateVacanteDto {
   ubicacion!: string;
 
   @IsString()
-  tipo_contrato!: string;
+  tipo_pago!: string;   // ✅ coincide con la entity
 
   @IsOptional()
   @IsString()
