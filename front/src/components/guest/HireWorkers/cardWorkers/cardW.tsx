@@ -98,7 +98,7 @@ export default function CardW({
 
         </div>
 
-        {/* Servicios */}
+        {/* Servicios o Habilidades*/}
         <div className={styles['services']}>
 
           {services.slice(0, 3).map((service, index) => (

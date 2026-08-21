@@ -1,59 +1,18 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import CardW from '../../../components/guest/HireWorkers/cardWorkers/cardW';
 import SearchBar from '../../../components/guest/HireWorkers/searchBar/searchB';
 import CategoryTabs from '../../../components/guest/HireWorkers/categoryTabs/categoryT';
-import styles from './HireWorkers.module.css';
 import FiltersPanel from '../../../components/guest/HireWorkers/filtersPanel/filtersP';
-
-const WORKERS = [
-  {
-    id: 1,
-    name: 'Aisha Johnson',
-    initials: 'AJ',
-    profession: 'Professional Cleaner & Organizer',
-    verified: true,
-    price: 24,
-    rating: 5,
-    reviews: 19,
-    jobs: 21,
-    location: 'Harlem, NY',
-    available: true,
-    category: 'Cleaning',
-    services: ['Deep cleaning', 'Airbnb turnover', 'Laundry', 'Windows', 'Organization'],
-  },
-  {
-    id: 2,
-    name: 'Marcus Thompson',
-    initials: 'MT',
-    profession: 'General Laborer & Warehouse',
-    verified: true,
-    price: 22,
-    rating: 4.9,
-    reviews: 47,
-    jobs: 52,
-    location: 'Brooklyn, NY',
-    available: true,
-    category: 'Moving',
-    services: ['Forklift certified', 'Inventory management', 'Heavy lifting', 'Loading', 'Packing'],
-  },
-  {
-    id: 3,
-    name: 'Elena Petrov',
-    initials: 'EP',
-    profession: 'Administrative & Data Entry',
-    verified: false,
-    price: 28,
-    rating: 4.9,
-    reviews: 11,
-    jobs: 12,
-    location: 'Astoria, NY',
-    available: false,
-    category: 'Administrative',
-    services: ['Excel', 'Data entry', 'Scheduling', 'Filing', 'Reports'],
-  },
-];
+import styles from './HireWorkers.module.css';
+import { getUsuarios } from '../../../../services/usuarios';
+import { mapUsuarioToCard } from '../../../../utils/mapUsuarioToCard';
+import type { Usuario } from '../../../../types/usuario';
 
 export default function HireWorkers() {
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -61,30 +20,51 @@ export default function HireWorkers() {
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [filterCategory, setFilterCategory] = useState('All');
 
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    getUsuarios()
+      .then((data) => { if (active) setUsuarios(data); })
+      .catch((err) => { if (active) setError(err.message); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, []);
+
   function handleClearAll() {
     setMaxRate('');
     setVerifiedOnly(false);
     setFilterCategory('All');
   }
 
+  const workers = useMemo(() => usuarios.map(mapUsuarioToCard), [usuarios]);
+
   const filteredWorkers = useMemo(() => {
-    return WORKERS.filter((worker) => {
-      const matchesCategory = category === 'All' || worker.category === category;
+    return workers.filter((worker) => {
+      // Categorías: no existen en el backend (ni etiquetas de habilidades ni
+      // historial laboral en Usuario). CategoryTabs se mantiene visualmente
+      // pero no filtra nada hasta que exista ese campo.
+      const matchesCategory = true;
+
+      // Solo se filtra por lo único real: el nombre.
       const matchesSearch =
-        search.trim() === '' ||
-        worker.name.toLowerCase().includes(search.toLowerCase()) ||
-        worker.profession.toLowerCase().includes(search.toLowerCase()) ||
-        worker.location.toLowerCase().includes(search.toLowerCase());
-      return matchesCategory && matchesSearch;
+        search.trim() === '' || worker.name.toLowerCase().includes(search.toLowerCase());
+
+      // maxRate y verifiedOnly: sin respaldo (no hay tarifa ni verificación
+      // en Usuario). Se mantienen inertes.
+      const matchesRate = true;
+      const matchesVerified = true;
+
+      return matchesCategory && matchesSearch && matchesRate && matchesVerified;
     });
-  }, [search, category]);
+  }, [search, workers]);
+
+  if (loading) return <main className={styles.page}><p>Cargando...</p></main>;
+  if (error) return <main className={styles.page}><p>Error: {error}</p></main>;
 
   return (
     <main className={styles.page}>
-
       <div className={styles.headerSection}>
         <div className={styles.header}>
-
           <div className={styles.titleRow}>
             <div className={styles.titleGroup}>
               <h1>Find workers</h1>
@@ -95,18 +75,14 @@ export default function HireWorkers() {
               <button className={styles.postJobButton} onClick={() => console.log('post a job')}>
                 + Post a job
               </button>
-              <button
-                className={styles.filtersButton}
-                onClick={() => setFiltersOpen((prev) => !prev)}>
+              <button className={styles.filtersButton} onClick={() => setFiltersOpen((prev) => !prev)}>
                 ⚙ Filters
               </button>
             </div>
           </div>
 
-          <SearchBar
-            onSearchChange={setSearch}
-            onSortChange={(sort) => console.log('sort:', sort)}
-          />
+          {/* onSortChange no ordena realmente: no hay rating ni price reales que ordenar */}
+          <SearchBar onSearchChange={setSearch} onSortChange={(sort) => console.log('sort (sin efecto, sin datos de respaldo):', sort)} />
 
           {filtersOpen && (
             <FiltersPanel
@@ -121,7 +97,6 @@ export default function HireWorkers() {
           )}
 
           <CategoryTabs onCategoryChange={setCategory} />
-
         </div>
       </div>
 
@@ -134,7 +109,6 @@ export default function HireWorkers() {
           </div>
         </div>
       </section>
-
     </main>
   );
 }
