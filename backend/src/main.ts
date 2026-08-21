@@ -45,6 +45,7 @@ async function bootstrap() {
   console.log(
     `🚀 API disponible en: http://localhost:${process.env.PORT ?? 3000}`,
   );
+
   console.log(
     `📚 Swagger disponible en: http://localhost:${process.env.PORT ?? 3000}/api`,
   );
