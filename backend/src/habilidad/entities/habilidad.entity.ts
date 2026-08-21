@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
-import { Usuario } from '../../usuario/entities/usuario.entity';
+import { Trabajador } from '../../trabajador/entities/trabajador.entity';
 
 @Entity('habilidades')
 export class Habilidad {
@@ -9,6 +9,6 @@ export class Habilidad {
   @Column()
   nombre!: string;
 
-  @ManyToMany(() => Usuario, usuario => usuario.habilidades)
-  usuarios!: Usuario[];
+  @ManyToMany(() => Trabajador, trabajador => trabajador.habilidades)
+  trabajadores!: Trabajador[];
 }
