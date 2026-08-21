@@ -1,0 +1,25 @@
+.btnApply {
+  background-color: #0b9982;
+  color: #ffffff;
+  border-radius: 10px;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.btnApply:hover {
+  background-color: #09806d;
+  color: #ffffff;
+}
+
+.btnSave {
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background-color: #ffffff;
+}
+
+.btnSave:hover {
+  background-color: #f8fafc;
+}

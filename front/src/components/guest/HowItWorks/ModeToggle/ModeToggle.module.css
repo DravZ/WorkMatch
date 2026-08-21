@@ -1,0 +1,23 @@
+.toggleContainer {
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+}
+
+.toggleBtn {
+  color: #94a3b8;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.toggleBtn:hover {
+  color: #ffffff;
+}
+
+.toggleBtn.active {
+  background-color: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}

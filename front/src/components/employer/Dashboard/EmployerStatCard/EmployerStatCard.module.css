@@ -1,0 +1,18 @@
+.statTitle {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.statSubtitle {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.highlightCard {
+  border: 1px solid #99f6e4 !important;
+  background-color: #f0fdfa;
+}
