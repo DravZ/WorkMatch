@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateVacanteDto {
   @IsString()
@@ -11,7 +11,7 @@ export class CreateVacanteDto {
   ubicacion!: string;
 
   @IsString()
-  tipo_contrato!: string;
+  tipo_pago!: string;   // ✅ coincide con la entity
 
   @IsOptional()
   @IsString()
@@ -19,5 +19,8 @@ export class CreateVacanteDto {
 
   @IsOptional()
   @IsString()
-  estado?: string; 
+  estado?: string;
+
+  @IsNumber()
+  id_empresa!: number;
 }

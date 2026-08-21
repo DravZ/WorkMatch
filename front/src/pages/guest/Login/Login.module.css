@@ -1,0 +1,106 @@
+.pageBg {
+  background-color: #f8fafc;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.logoIcon {
+  width: 36px;
+  height: 36px;
+  background-color: #0b9982;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 440px;
+  border-radius: 20px !important;
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+.signupLink {
+  color: #0b9982;
+  transition: color 0.2s ease;
+}
+
+.signupLink:hover {
+  color: #087d6b;
+}
+
+.customInput {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  padding: 0.75rem 1rem !important;
+  font-size: 0.95rem;
+  color: #0f172a;
+}
+
+.customInput:focus {
+  background-color: #ffffff !important;
+  border-color: #0b9982 !important;
+  box-shadow: 0 0 0 4px rgba(11, 153, 130, 0.1) !important;
+}
+
+.forgotLink {
+  color: #64748b;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.forgotLink:hover {
+  color: #0f172a;
+}
+
+/* Selector de Roles */
+.roleCard {
+  background-color: #ffffff;
+  border-color: #e2e8f0 !important;
+  border-radius: 14px !important;
+  transition: all 0.2s ease;
+}
+
+.roleCard:hover {
+  border-color: #cbd5e1 !important;
+}
+
+.roleTitle {
+  font-size: 0.85rem;
+  color: #1e293b;
+}
+
+.roleSub {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+/* Estado Seleccionado para Role Card */
+.roleActive {
+  background-color: #f0fdfa !important;
+  border: 2px solid #0b9982 !important;
+}
+
+.roleActive .roleTitle {
+  color: #0b9982;
+}
+
+.roleActive .roleSub {
+  color: #0b9982;
+  opacity: 0.8;
+}
+
+/* Botón de Enviar */
+.btnSubmit {
+  background-color: #0f172a;
+  color: #ffffff;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  border: none;
+  transition: background-color 0.2s ease;
+}
+
+.btnSubmit:hover {
+  background-color: #1e293b;
+  color: #ffffff;
+}

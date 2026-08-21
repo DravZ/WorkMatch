@@ -1,0 +1,131 @@
+.navbarHeader {
+  z-index: 1030;
+}
+
+.logoIcon {
+  width: 32px;
+  height: 32px;
+  background-color: #0b9982;
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+/* Enlaces Desktop */
+.navLink {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  background: transparent;
+}
+
+.navLink:hover {
+  color: #0b9982;
+}
+
+.activeNavLink {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+
+/* Botón Notificación Icon */
+.iconBtn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background-color: #ffffff;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.iconBtn:hover {
+  background-color: #f8fafc;
+}
+
+.bellEmoji {
+  font-size: 1rem;
+}
+
+.notifBadge {
+  background-color: #0b9982 !important;
+  color: #ffffff;
+  font-size: 0.65rem;
+  padding: 0.25em 0.45em;
+  border: 2px solid #ffffff;
+}
+
+/* Avatar del Worker */
+.avatarCircle {
+  width: 36px;
+  height: 36px;
+  background-color: #0b9982;
+  color: #ffffff;
+  font-size: 0.85rem;
+  transition: opacity 0.2s ease;
+}
+
+.avatarCircle:hover {
+  opacity: 0.9;
+  color: #ffffff;
+}
+
+/* Botón Hamburguesa */
+.toggleBtn {
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  color: #0f172a;
+  border-color: #e2e8f0 !important;
+  font-size: 1.1rem;
+}
+
+/* Enlaces Móvil */
+.mobileNavLink {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 1.05rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.mobileNavLink:hover {
+  color: #0b9982;
+}
+
+.mobileActiveNavLink {
+  color: #0b9982 !important;
+  font-weight: 700 !important;
+}
+
+.btnLogoutMobile {
+  background-color: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fee2e2;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.btnLogoutMobile:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* Animación del menú desplegable */
+.mobileMenu {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,3 +1,4 @@
+// postulacion.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Usuario } from '../../usuario/entities/usuario.entity';
 import { Vacante } from '../../vacante/entities/vacante.entity';

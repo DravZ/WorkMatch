@@ -19,23 +19,23 @@ export class UsuarioService {
     private readonly usuarioRepository: Repository<Usuario>,
   ) {}
 
-  async create(createUsuarioDto: CreateUsuarioDto) {
+  async create(dto: CreateUsuarioDto) {
     // Verificar si el correo ya está registrado
     const usuarioExistente = await this.usuarioRepository.findOne({
-      where: { email: createUsuarioDto.email },
+      where: { email: dto.email },
     });
 
     if (usuarioExistente) {
       throw new ConflictException('El correo ya está registrado');
     }
 
-    const contrasenaHash = await bcrypt.hash(
-      createUsuarioDto.contrasena_hash,
-      10,
-    );
+    // Encriptar contraseña
+    const contrasenaHash = await bcrypt.hash(dto.password, 10);
 
     const usuario = this.usuarioRepository.create({
-      ...createUsuarioDto,
+      fullName: dto.fullName,
+      email: dto.email,
+      role: dto.role,
       contrasena_hash: contrasenaHash,
     });
 
@@ -62,7 +62,7 @@ export class UsuarioService {
     return this.usuarioSinContrasena(usuario);
   }
 
-  async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
+  async update(id: number, dto: UpdateUsuarioDto) {
     const usuario = await this.usuarioRepository.findOne({
       where: { id_usuario: id },
     });
@@ -72,9 +72,9 @@ export class UsuarioService {
     }
 
     // Verificar si se está cambiando el correo
-    if (updateUsuarioDto.email) {
+    if (dto.email) {
       const usuarioConCorreo = await this.usuarioRepository.findOne({
-        where: { email: updateUsuarioDto.email },
+        where: { email: dto.email },
       });
 
       // Comprobar que el correo no pertenezca a otro usuario
@@ -88,19 +88,23 @@ export class UsuarioService {
       }
     }
 
-    const datosActualizados: Partial<Usuario> = {
-      ...updateUsuarioDto,
-    };
-
-    // Encriptar nueva contraseña si se actualiza
-    if (updateUsuarioDto.contrasena_hash) {
-      datosActualizados.contrasena_hash = await bcrypt.hash(
-        updateUsuarioDto.contrasena_hash,
-        10,
-      );
+    // Actualizar contraseña si se proporciona una nueva
+    if (dto.password) {
+      usuario.contrasena_hash = await bcrypt.hash(dto.password, 10);
     }
 
-    Object.assign(usuario, datosActualizados);
+    // Actualizar los demás campos
+    if (dto.fullName) {
+      usuario.fullName = dto.fullName;
+    }
+
+    if (dto.email) {
+      usuario.email = dto.email;
+    }
+
+    if (dto.role) {
+      usuario.role = dto.role;
+    }
 
     const usuarioActualizado = await this.usuarioRepository.save(usuario);
 

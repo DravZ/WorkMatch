@@ -1,0 +1,191 @@
+.cont {
+  height: calc(100vh - 100px) !important;
+}
+
+/* Layout del Sidebar */
+.sidebar {
+  width: 320px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.conversationList {
+  overflow-y: auto;
+  height: calc(100% - 60px);
+}
+
+.conversationItem {
+  transition: background-color 0.2s ease;
+}
+
+.conversationItem:hover {
+  background-color: #f8fafc;
+}
+
+.activeConversation {
+  background-color: #e6f7f4;
+}
+
+/* Avatares */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.smallAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-bottom: 18px;
+}
+
+.unreadBadge {
+  background-color: #0b9982;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnViewJob {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  white-space: nowrap;
+}
+
+.btnBackMobile {
+  display: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* Banner e Informaciones */
+.infoBanner {
+  background-color: #e6f7f4;
+  border-bottom: 1px solid #ccf0eb;
+}
+
+/* Burbujas del Chat */
+.chatBody {
+  background-color: #f8fafc;
+}
+
+/* Mensajes del Empleador (Enviados -> Derecha, fondo oscuro) */
+.employerBubble {
+  background-color: #0f172a;
+  color: #ffffff;
+  border-radius: 16px 16px 4px 16px;
+}
+
+/* Mensajes del Trabajador (Recibidos -> Izquierda, fondo blanco) */
+.workerBubble {
+  background-color: #ffffff;
+  color: #1e293b;
+  border-radius: 16px 16px 16px 4px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+/* Formulario */
+.messageInput {
+  background-color: #f8fafc;
+  border: 1.5px solid #0b9982;
+  border-radius: 10px;
+  height: 44px;
+  font-size: 0.875rem;
+}
+
+.messageInput:focus {
+  background-color: #ffffff;
+  border-color: #087d6b;
+  box-shadow: none;
+}
+
+.btnSendDisabled {
+  background-color: #94a3b8;
+  color: #ffffff;
+  border-radius: 8px;
+  font-weight: 600;
+  height: 44px;
+  padding: 0 20px;
+}
+
+.btnSendActive {
+  background-color: #0f172a;
+  color: #ffffff;
+  border-radius: 8px;
+  font-weight: 600;
+  height: 44px;
+  padding: 0 20px;
+}
+
+/* Estado Vacío */
+.emptyStateIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #e6f7f4;
+  color: #0b9982;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+/* Responsive (Móviles / Tablets) */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 280px;
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .sidebarHiddenMobile {
+    display: none !important;
+  }
+
+  .chatSection {
+    width: 100%;
+  }
+
+  .chatHiddenMobile {
+    display: none !important;
+  }
+
+  .btnBackMobile {
+    display: inline-block;
+  }
+}

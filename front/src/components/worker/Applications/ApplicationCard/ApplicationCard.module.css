@@ -1,0 +1,38 @@
+.card {
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.noteBox {
+  background-color: #f8fafc;
+  border-radius: 8px;
+}
+
+.btnViewJob {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #1e293b;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 6px 16px;
+}
+
+.btnViewJob:hover {
+  background-color: #f8fafc;
+}
+
+.btnMessage {
+  background-color: #0f172a;
+  color: #ffffff;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 6px 16px;
+}
+
+.btnMessage:hover {
+  background-color: #1e293b;
+  color: #ffffff;
+}

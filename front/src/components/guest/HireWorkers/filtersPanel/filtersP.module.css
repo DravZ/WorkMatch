@@ -1,0 +1,291 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+.filters-panel {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: clamp(20px, 4vw, 48px);
+
+  padding: clamp(16px, 3vw, 24px) clamp(20px, 4vw, 32px);
+  margin: 16px 0;
+
+  background: #f7f8fb;
+  border-radius: 18px;    
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.category-button,
+.category-menu li button,
+.rate-input,
+.verified-checkbox,
+.clear-all {
+  font-family: inherit;
+}
+/* =========================
+   FILTER GROUPS
+   ========================= */
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  /*
+   * Los dos filtros principales
+   * comparten el espacio 50/50.
+   */
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.filter-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #8a9bb5;
+}
+
+/* =========================
+   CATEGORY DROPDOWN
+   ========================= */
+
+.category-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.category-button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding: 18px 22px;
+
+  border: 2px solid #e3e7eb;
+  border-radius: 18px;
+
+  background: white;
+  color: #071c3b;
+
+  font-size: 17px;
+  font-weight: 500;
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  box-sizing: border-box;
+}
+
+.category-chevron {
+  color: #8a9bb5;
+  font-size: 14px;
+
+  flex-shrink: 0;
+}
+
+/* =========================
+   CATEGORY MENU
+   ========================= */
+
+.category-menu {
+  position: absolute;
+
+  top: calc(100% + 8px);
+  left: 0;
+
+  /*
+   * Nunca será más ancho que Category.
+   */
+  width: 100%;
+  max-width: 100%;
+
+  box-sizing: border-box;
+
+  z-index: 10;
+
+  list-style: none;
+
+  margin: 0;
+  padding: 8px;
+
+  background: white;
+
+  border-radius: 14px;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+  overflow: hidden;
+}
+
+.category-menu li {
+  width: 100%;
+}
+
+.category-menu li button {
+  width: 100%;
+
+  display: block;
+
+  text-align: left;
+
+  padding: 12px 14px;
+
+  border: none;
+
+  background: transparent;
+
+  border-radius: 10px;
+
+  font-size: 15px;
+  color: #071c3b;
+
+  cursor: pointer;
+
+  /*
+   * Evita que una opción pueda
+   * hacer crecer horizontalmente
+   * el menú.
+   */
+  white-space: normal;
+  overflow-wrap: break-word;
+
+  box-sizing: border-box;
+}
+
+.category-menu li button:hover {
+  background: #f1f4f8;
+}
+
+/* =========================
+   MAX RATE
+   ========================= */
+
+.rate-input {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 18px 22px;
+
+  border: 2px solid #e3e7eb;
+  border-radius: 18px;
+
+  background: white;
+
+  color: #071c3b;
+
+  font-size: 17px;
+  font-weight: 500;
+
+  outline: none;
+}
+
+.rate-input::placeholder {
+  color: #a3b0c4;
+  font-weight: 400;
+}
+
+.rate-input:focus {
+  border-color: #e3e7eb;
+}
+
+/* =========================
+   ACTIONS
+   ========================= */
+
+.filter-actions {
+  display: flex;
+  align-items: center;
+
+  gap: clamp(16px, 3vw, 32px);
+
+  margin-left: auto;
+
+  flex-shrink: 0;
+}
+
+.verified-checkbox {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  font-size: 16px;
+  color: #071c3b;
+
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.verified-checkbox input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+
+  accent-color: #498f88;
+
+  cursor: pointer;
+}
+
+.clear-all {
+  background: none;
+  border: none;
+  padding: 0;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  color: #647a9a;
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.clear-all:hover {
+  color: #498f88;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 900px) {
+  .filters-panel {
+    align-items: flex-start;
+  }
+
+  .filter-group {
+    flex: 1 1 calc(50% - 24px);
+    min-width: 0;
+  }
+
+  .filter-actions {
+    width: 100%;
+    margin-left: 0;
+
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 640px) {
+  .filters-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group {
+    width: 100%;
+    flex: none;
+  }
+
+  .filter-actions {
+    width: 100%;
+  }
+}
