@@ -1,7 +1,8 @@
 // usuario.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, ManyToMany } from 'typeorm';
 import { Mensaje } from '../../mensajes/entities/mensaje.entity';
 import { Postulacion } from '../../postulacion/entities/postulacion.entity';
+import { Habilidad } from 'src/habilidad/entities/habilidad.entity';
 
 @Entity('usuarios')
 export class Usuario {
@@ -28,4 +29,8 @@ export class Usuario {
 
   @OneToMany(() => Postulacion, postulacion => postulacion.usuario)
   postulaciones!: Postulacion[];
+
+  @ManyToMany(() => Habilidad, habilidad => habilidad.usuarios, { cascade: true })
+  @JoinTable()
+  habilidades!: Habilidad[];
 }

@@ -12,6 +12,7 @@ import { PostulacionModule } from './postulacion/postulacion.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { MensajesModule } from './mensajes/mensajes.module';
 import { CategoriaVacanteModule } from './categoria_vacante/categoria_vacante.module';
+import { HabilidadModule } from './habilidad/habilidad.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { CategoriaVacanteModule } from './categoria_vacante/categoria_vacante.mo
     UsuarioModule,
     MensajesModule,
     CategoriaVacanteModule,
+    HabilidadModule,
     
   ],
 
