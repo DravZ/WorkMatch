@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -19,6 +20,15 @@ export class UsuarioService {
   ) {}
 
   async create(createUsuarioDto: CreateUsuarioDto) {
+    // Verificar si el correo ya está registrado
+    const usuarioExistente = await this.usuarioRepository.findOne({
+      where: { email: createUsuarioDto.email },
+    });
+
+    if (usuarioExistente) {
+      throw new ConflictException('El correo ya está registrado');
+    }
+
     const contrasenaHash = await bcrypt.hash(
       createUsuarioDto.contrasena_hash,
       10,
@@ -61,10 +71,28 @@ export class UsuarioService {
       throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
     }
 
+    // Verificar si se está cambiando el correo
+    if (updateUsuarioDto.email) {
+      const usuarioConCorreo = await this.usuarioRepository.findOne({
+        where: { email: updateUsuarioDto.email },
+      });
+
+      // Comprobar que el correo no pertenezca a otro usuario
+      if (
+        usuarioConCorreo &&
+        usuarioConCorreo.id_usuario !== usuario.id_usuario
+      ) {
+        throw new ConflictException(
+          'El correo ya está registrado por otro usuario',
+        );
+      }
+    }
+
     const datosActualizados: Partial<Usuario> = {
       ...updateUsuarioDto,
     };
 
+    // Encriptar nueva contraseña si se actualiza
     if (updateUsuarioDto.contrasena_hash) {
       datosActualizados.contrasena_hash = await bcrypt.hash(
         updateUsuarioDto.contrasena_hash,
