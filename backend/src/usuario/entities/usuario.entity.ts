@@ -30,5 +30,9 @@ export class Usuario {
   @OneToMany(() => Postulacion, postulacion => postulacion.usuario)
   postulaciones!: Postulacion[];
 
+  @Column({ default: false })
+ is_verified!: boolean; // identidad verificada
+ 
+
 
 }
