@@ -23,9 +23,6 @@ export class Vacante {
   @Column()
   ubicacion!: string;
 
-  @Column()
-  tipo_pago!: string; 
-
   @Column({ nullable: true })
   salario!: string;
 
@@ -55,4 +52,11 @@ export class Vacante {
 
   @OneToMany(() => Postulacion, postulacion => postulacion.vacante)
   postulaciones!: Postulacion[];
+
+  @Column({ default: false })
+ urgente!: boolean; 
+
+@Column({ default: 'hora' })
+ tipo_pago!: 'hora' | 'fijo'; 
+
 }

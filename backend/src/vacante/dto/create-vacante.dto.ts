@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateVacanteDto {
   @IsString()
@@ -10,8 +10,8 @@ export class CreateVacanteDto {
   @IsString()
   ubicacion!: string;
 
-  @IsString()
-  tipo_pago!: string;   // ✅ coincide con la entity
+   @IsEnum(['hora', 'fijo'])
+  tipo_pago!: 'hora' | 'fijo';
 
   @IsOptional()
   @IsString()

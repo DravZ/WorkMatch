@@ -30,7 +30,9 @@ export class Usuario {
   @OneToMany(() => Postulacion, postulacion => postulacion.usuario)
   postulaciones!: Postulacion[];
 
-  @ManyToMany(() => Habilidad, habilidad => habilidad.usuarios, { cascade: true })
-  @JoinTable()
-  habilidades!: Habilidad[];
+  @Column({ default: false })
+ is_verified!: boolean; // identidad verificada
+ 
+
+
 }

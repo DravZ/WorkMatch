@@ -13,6 +13,9 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { MensajesModule } from './mensajes/mensajes.module';
 import { CategoriaVacanteModule } from './categoria_vacante/categoria_vacante.module';
 import { HabilidadModule } from './habilidad/habilidad.module';
+import { TrabajadorModule } from './trabajador/trabajador.module';
+import { ReviewModule } from './review/review.module';
+import { EstadisticasModule } from './estadisticas/estadisticas.module';
 
 @Module({
   imports: [
@@ -38,6 +41,9 @@ import { HabilidadModule } from './habilidad/habilidad.module';
     MensajesModule,
     CategoriaVacanteModule,
     HabilidadModule,
+    TrabajadorModule,
+    ReviewModule,
+    EstadisticasModule,
     
   ],
 

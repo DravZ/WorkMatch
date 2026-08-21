@@ -28,10 +28,17 @@ export class VacanteService {
     );
   }
 
-  const vacante = this.vacanteRepository.create({
-    ...createVacanteDto,
-    empresa,
-  });
+ const vacante = this.vacanteRepository.create({
+  titulo: createVacanteDto.titulo,
+  descripcion: createVacanteDto.descripcion,
+  ubicacion: createVacanteDto.ubicacion,
+  tipo_pago: createVacanteDto.tipo_pago, 
+  salario: createVacanteDto.salario,
+  estado: createVacanteDto.estado ?? 'activa',
+  empresa, 
+});
+
+
 
   return await this.vacanteRepository.save(vacante);
 }

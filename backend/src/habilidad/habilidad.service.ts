@@ -18,13 +18,13 @@ export class HabilidadService {
   }
 
   findAll() {
-    return this.habilidadRepo.find({ relations: { usuarios: true } });
+    return this.habilidadRepo.find({ relations: { trabajadores: true } });
   }
 
   findOne(id: number) {
     return this.habilidadRepo.findOne({
       where: { id_habilidad: id },
-      relations: { usuarios: true },
+      relations: { trabajadores: true },
     });
   }
 
