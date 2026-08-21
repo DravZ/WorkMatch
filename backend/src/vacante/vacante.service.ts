@@ -17,29 +17,27 @@ export class VacanteService {
     private empresaRepository: Repository<Empresa>,
   ) {}
 
-  async create(createVacanteDto: CreateVacanteDto) {
-    const empresa = await this.empresaRepository.findOneBy({
-      id_empresa: createVacanteDto.id_empresa,
-    });
+ async create(createVacanteDto: CreateVacanteDto) {
+  const empresa = await this.empresaRepository.findOneBy({
+    id_empresa: createVacanteDto.id_empresa,
+  });
 
-    if (!empresa) {
-      throw new NotFoundException(
-        `Empresa not found with Id:${createVacanteDto.id_empresa}`,
-      );
-    }
-
-    const vacante = this.vacanteRepository.create({
-      titulo: createVacanteDto.titulo,
-      descripcion: createVacanteDto.descripcion,
-      ubicacion: createVacanteDto.ubicacion,
-      tipo_contrato: createVacanteDto.tipo_contrato,
-      salario: createVacanteDto.salario,
-      estado: createVacanteDto.estado ?? 'activa',
-      empresa,
-    });
-
-    return this.vacanteRepository.save(vacante);
+  if (!empresa) {
+    throw new NotFoundException(
+      `Empresa no encontrada con ID: ${createVacanteDto.id_empresa}`,
+    );
   }
+
+  const vacante = this.vacanteRepository.create({
+    ...createVacanteDto,
+    empresa,
+  });
+
+  return await this.vacanteRepository.save(vacante);
+}
+
+
+
 
   async findAll() {
     return this.vacanteRepository.find({
