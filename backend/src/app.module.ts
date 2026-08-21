@@ -14,6 +14,7 @@ import { MensajesModule } from './mensajes/mensajes.module';
 import { CategoriaVacanteModule } from './categoria_vacante/categoria_vacante.module';
 import { HabilidadModule } from './habilidad/habilidad.module';
 import { TrabajadorModule } from './trabajador/trabajador.module';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { TrabajadorModule } from './trabajador/trabajador.module';
     CategoriaVacanteModule,
     HabilidadModule,
     TrabajadorModule,
+    ReviewModule,
     
   ],
 
