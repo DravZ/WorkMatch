@@ -1,4 +1,10 @@
-import { IsOptional, IsString, IsNumber, IsBoolean } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsNumber,
+  IsBoolean,
+  IsIn,
+} from 'class-validator';
 
 export class CreateTrabajadorDto {
   @IsOptional()
@@ -16,6 +22,27 @@ export class CreateTrabajadorDto {
   @IsOptional()
   @IsNumber()
   calificacion?: number;
+
+  @IsOptional()
+  @IsNumber()
+  total_calificaciones?: number;
+
+  @IsOptional()
+  @IsString()
+  especialidad_carrera?: string;
+
+  @IsOptional()
+  @IsIn([
+    'Delivery',
+    'Moving',
+    'Construction',
+    'Cleaning',
+    'Events',
+    'Hospitality',
+    'Administrative',
+    'Security',
+  ])
+  area_trabajo?: string;
 
   @IsOptional()
   @IsBoolean()
