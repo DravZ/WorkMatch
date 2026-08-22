@@ -1,4 +1,4 @@
-import { IsString, IsOptional } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateVacanteDto {
   @IsString()
@@ -19,5 +19,5 @@ export class CreateVacanteDto {
 
   @IsOptional()
   @IsString()
-  estado?: string; 
+  estado?: string;
 }

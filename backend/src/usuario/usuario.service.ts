@@ -29,13 +29,13 @@ export class UsuarioService {
       throw new ConflictException('El correo ya está registrado');
     }
 
-    const contrasenaHash = await bcrypt.hash(
-      createUsuarioDto.contrasena_hash,
-      10,
-    );
+    // Encriptar contraseña
+    const contrasenaHash = await bcrypt.hash(createUsuarioDto.contrasena, 10);
 
     const usuario = this.usuarioRepository.create({
-      ...createUsuarioDto,
+      nombre: createUsuarioDto.nombre,
+      apellido: createUsuarioDto.apellido,
+      email: createUsuarioDto.email,
       contrasena_hash: contrasenaHash,
     });
 
@@ -71,13 +71,12 @@ export class UsuarioService {
       throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
     }
 
-    // Verificar si se está cambiando el correo
+    // Verificar si el correo ya pertenece a otro usuario
     if (updateUsuarioDto.email) {
       const usuarioConCorreo = await this.usuarioRepository.findOne({
         where: { email: updateUsuarioDto.email },
       });
 
-      // Comprobar que el correo no pertenezca a otro usuario
       if (
         usuarioConCorreo &&
         usuarioConCorreo.id_usuario !== usuario.id_usuario
@@ -88,19 +87,26 @@ export class UsuarioService {
       }
     }
 
-    const datosActualizados: Partial<Usuario> = {
-      ...updateUsuarioDto,
-    };
+    // Actualizar datos normales
+    if (updateUsuarioDto.nombre !== undefined) {
+      usuario.nombre = updateUsuarioDto.nombre;
+    }
+
+    if (updateUsuarioDto.apellido !== undefined) {
+      usuario.apellido = updateUsuarioDto.apellido;
+    }
+
+    if (updateUsuarioDto.email !== undefined) {
+      usuario.email = updateUsuarioDto.email;
+    }
 
     // Encriptar nueva contraseña si se actualiza
-    if (updateUsuarioDto.contrasena_hash) {
-      datosActualizados.contrasena_hash = await bcrypt.hash(
-        updateUsuarioDto.contrasena_hash,
+    if (updateUsuarioDto.contrasena) {
+      usuario.contrasena_hash = await bcrypt.hash(
+        updateUsuarioDto.contrasena,
         10,
       );
     }
-
-    Object.assign(usuario, datosActualizados);
 
     const usuarioActualizado = await this.usuarioRepository.save(usuario);
 
