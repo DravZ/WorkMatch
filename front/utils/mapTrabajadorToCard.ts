@@ -13,9 +13,7 @@ export function mapTrabajadorToCard(t: Trabajador) {
     price: t.tarifa_hora ?? 0,
     rating: t.calificacion ?? 0,
     reviews: t.total_calificaciones ?? 0,
-    // Placeholder: 'experiencia' es texto libre en el backend, no un conteo.
-    // Queda en 0 hasta que exista un campo numérico real para "jobs completados".
-    jobs: 0,//t.trabajos_completados,//
+    jobs: t.trabajos_completados ?? 0,
     location: t.ubicacion ?? 'Ubicación no registrada',
     // disponibilidad ahora es texto libre del backend (ej. "available now", "weekends")
     available: t.disponibilidad ?? '',

@@ -27,8 +27,8 @@ export class Trabajador {
   @Column({ nullable: true })
   tarifa_hora!: number;
 
-  @Column({ nullable: true })
-  experiencia!: string;
+  @Column({ type: 'int', nullable: true })
+  trabajos_completados!: number;
 
   @Column({ type: 'float', default: 0 })
   calificacion!: number;

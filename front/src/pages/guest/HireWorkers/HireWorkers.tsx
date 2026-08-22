@@ -71,9 +71,7 @@ export default function HireWorkers() {
         result.sort((a, b) => b.price - a.price);
         break;
       case 'mas experimentados':
-        // Sin efecto: 'experiencia' es texto libre en el backend, no hay
-        // valor numérico para determinar orden real. Pendiente de campo
-        // numérico en Trabajador (ej. años_experiencia) para activarlo.
+        result.sort((a, b) => b.jobs - a.jobs);
         break;
     }
 

@@ -15,7 +15,7 @@ export type Trabajador = {
   usuario: UsuarioResumen;
   ubicacion?: string;
   tarifa_hora?: number;
-  experiencia?: string;
+  trabajos_completados?: number;
   calificacion: number;
   total_calificaciones: number;
   especialidad_carrera?: string;
