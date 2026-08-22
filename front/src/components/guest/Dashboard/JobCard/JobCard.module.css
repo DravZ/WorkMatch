@@ -1,0 +1,23 @@
+.jobCard {
+  border-radius: 16px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.jobCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+}
+
+.payRate {
+  color: #0b9982;
+  font-size: 1.1rem;
+}
+
+.badgeUrgent {
+  background-color: #fff3eb;
+  color: #f97316;
+  border: 1px solid #ffedd5;
+  font-weight: 500;
+  font-size: 0.75rem;
+}

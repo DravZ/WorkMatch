@@ -9,7 +9,7 @@ export class Mensaje {
   @ManyToOne(() => Usuario, usuario => usuario.mensajes_enviados)
   emisor!: Usuario;
 
-  @ManyToOne(() => Usuario)
+  @ManyToOne(() => Usuario, usuario => usuario.mensajes_recibidos)
   receptor!: Usuario;
 
   @Column('text')

@@ -1,122 +1,98 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import Home from './pages/guest/Dashboard/Dashboard';
+import FindWork from './pages/guest/FindWork/FindWork';
+import HireWorkers from './pages/guest/HireWorkers/HireWorkers';
+import HowItWorks from './pages/guest/HowItWorks/HowItWorks';
+import GuestLayout from './layouts/GuestLayout/GuestLayout';
+import Login from './pages/guest/Login/Login';
+import Register from './pages/guest/Register/Register';
+import WorkerLayout from './layouts/WorkerLayout/WorkerLayout';
+import { WorkerDashboard } from './pages/worker/Dashboard/WorkerDashboard';
+import { FindJobs } from './pages/worker/FindJobs/FindJobs';
+import { Applications } from './pages/worker/Applications/Applications';
+import { Messages } from './pages/worker/Messages/Messages';
+import { Saved } from './pages/worker/Saved/Saved';
+import { WorkerNotifications } from './pages/worker/Notifications/WorkerNotifications';
+import { WorkerProfile } from './pages/worker/Profile/WorkerProfile';
+import { WorkerJobView } from './pages/worker/WorkerJobView/WorkerJobView';
+import EmployerLayout from './layouts/EmployerLayout/EmployerLayout';
+import { EmployerDashboard } from './pages/employer/Dashboard/EmployerDashboard';
+import { PostJob } from './pages/employer/PostJob/PostJob';
+import { EmployerApplications } from './pages/employer/Applications/EmployerApplications';
+import { FindWorkers_Emp } from './pages/employer/FindWorkers/FindWorkers_Emp';
+import { EmployerMessages } from './pages/employer/Messages/EmployerMessages';
+import { CompanyProfile } from './pages/employer/CompanyProfile/CompanyProfile';
+import { EmployerNotifications } from './pages/employer/Notifications/EmployerNotifications';
+import { WorkerProfile_Emp } from './pages/employer/WorkerProfile/WorkerProfile_Emp';
+import AdminLayout from './layouts/AdminLayout/AdminLayout';
+import { AdminOperationsDashboard } from './pages/admin/Dashboard/AdminDashboard';
+import { NotificationProvider } from './context/NotificationContext/NotificationContext';
+import { NotificationModal } from './components/notification/NotificationModal/NotificationModal';
+import { UserProvider } from './context/UserContext/UserContext';
+import { GuestGuard } from './guards/GuestGuard';
+import { RoleGuard } from './guards/RoleGuard';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <UserProvider>
+      <NotificationProvider>
 
-      <div className="ticks"></div>
+        <NotificationModal />
+        <BrowserRouter>
+          <Routes>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+            {/* ==================== GUEST ==================== */}
+            <Route element={<GuestGuard />}>
+              <Route element={<GuestLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/find-work" element={<FindWork />} />
+                <Route path="/hire-workers" element={<HireWorkers />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+              </Route>
+            </Route>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+            {/* ==================== WORKER ==================== */}
+            <Route element={<RoleGuard allowedRoles={['work', 'admin']} />}>
+              <Route element={<WorkerLayout />}>
+                <Route path="/worker/" element={<WorkerDashboard />} />
+                <Route path="/worker/applications" element={<Applications />} />
+                <Route path="/worker/find-jobs" element={<FindJobs />} />
+                <Route path="/worker/messages" element={<Messages />} />
+                <Route path="/worker/notifications" element={<WorkerNotifications />} />
+                <Route path="/worker/profile" element={<WorkerProfile />} />
+                <Route path="/worker/saved" element={<Saved />} />
+                <Route path="/worker/job-view" element={<WorkerJobView />} />
+              </Route>
+            </Route>
+
+            {/* ==================== EMPLOYER ==================== */}
+            <Route element={<RoleGuard allowedRoles={['hire', 'admin']} />}>
+              <Route element={<EmployerLayout />}>
+                <Route path="/employer/" element={<EmployerDashboard />} />
+                <Route path="/employer/applications" element={<EmployerApplications />} />
+                <Route path="/employer/post-job" element={<PostJob />} />
+                <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />
+                <Route path="/employer/messages" element={<EmployerMessages />} />
+                <Route path="/employer/company-profile" element={<CompanyProfile />} />
+                <Route path="/employer/notifications" element={<EmployerNotifications />} />
+                <Route path="/employer/worker-profile" element={<WorkerProfile_Emp />} />
+              </Route>
+            </Route>
+
+            {/* ==================== ADMIN ==================== */}
+            <Route element={<RoleGuard allowedRoles={['admin']} />}>
+              <Route element={<AdminLayout />}>
+                <Route path="/admin" element={<AdminOperationsDashboard />} />
+              </Route>
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </NotificationProvider>
+    </UserProvider>
+  );
 }
 
-export default App
+export default App;

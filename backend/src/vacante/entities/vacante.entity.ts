@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
 import { Empresa } from '../../empresa/entities/empresa.entity';
 import { Postulacion } from '../../postulacion/entities/postulacion.entity';
+import { CategoriaVacante } from '../../categoria_vacante/entities/categoria_vacante.entity';
 
 @Entity('vacantes')
 export class Vacante {
@@ -9,6 +10,9 @@ export class Vacante {
 
   @ManyToOne(() => Empresa, empresa => empresa.vacantes)
   empresa!: Empresa;
+
+  @ManyToOne(() => CategoriaVacante, categoria => categoria.vacantes)
+  categoria!: CategoriaVacante;
 
   @Column()
   titulo!: string;
@@ -19,18 +23,40 @@ export class Vacante {
   @Column()
   ubicacion!: string;
 
-  @Column()
-  tipo_contrato!: string;
-
   @Column({ nullable: true })
   salario!: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   fecha_publicacion!: Date;
 
+  @Column({ type: 'date', nullable: true })
+  fecha_inicio!: Date;
+
+  @Column({ default: 1 })
+  empleados_necesarios!: number;
+
+  @Column({ nullable: true })
+  horario!: string;
+
+  @Column({ nullable: true })
+  duracion_estimada!: string;
+
+  @Column('text', { nullable: true })
+  requerimientos!: string;
+
+  @Column('text', { nullable: true })
+  habilidades_optimas!: string;
+
   @Column({ default: 'activa' })
   estado!: string;
 
   @OneToMany(() => Postulacion, postulacion => postulacion.vacante)
   postulaciones!: Postulacion[];
+
+  @Column({ default: false })
+ urgente!: boolean; 
+
+@Column({ default: 'hora' })
+ tipo_pago!: 'hora' | 'fijo'; 
+
 }

@@ -3,6 +3,7 @@ import { MensajeService } from './mensajes.service';
 import { CreateMensajeDto } from './dto/create-mensaje.dto';
 import { UpdateMensajeDto } from './dto/update-mensaje.dto';
 
+
 @Controller('mensajes')
 export class MensajesController {
   constructor(private readonly mensajesService: MensajeService) {}
@@ -23,7 +24,10 @@ export class MensajesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMensajeDto: UpdateMensajeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateMensajeDto: UpdateMensajeDto,
+  ) {
     return this.mensajesService.update(+id, updateMensajeDto);
   }
 

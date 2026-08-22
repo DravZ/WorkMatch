@@ -10,44 +10,83 @@ import { Usuario } from '../usuario/entities/usuario.entity';
 export class MensajeService {
   constructor(
     @InjectRepository(Mensaje)
-    private mensajeRepo: Repository<Mensaje>,
+    private mensajeRepository: Repository<Mensaje>,
     @InjectRepository(Usuario)
-    private usuarioRepo: Repository<Usuario>,
+    private usuarioRepository: Repository<Usuario>,
   ) {}
 
-  async create(dto: CreateMensajeDto) {
-    const emisor = await this.usuarioRepo.findOneBy({ id_usuario: dto.emisorIdUsuario });
-    const receptor = await this.usuarioRepo.findOneBy({ id_usuario: dto.receptorIdUsuario });
+  async create(createMensajeDto: CreateMensajeDto) {
+    const emisor = await this.usuarioRepository.findOneBy({
+      id_usuario: createMensajeDto.emisorIdUsuario,
+    });
 
-    if (!emisor) throw new NotFoundException(`Usuario emisor con id ${dto.emisorIdUsuario} no encontrado`);
-    if (!receptor) throw new NotFoundException(`Usuario receptor con id ${dto.receptorIdUsuario} no encontrado`);
+    if (!emisor) {
+      throw new NotFoundException(
+        `Usuario emisor not found with Id:${createMensajeDto.emisorIdUsuario}`,
+      );
+    }
 
-    const mensaje = this.mensajeRepo.create({
+    const receptor = await this.usuarioRepository.findOneBy({
+      id_usuario: createMensajeDto.receptorIdUsuario,
+    });
+
+    if (!receptor) {
+      throw new NotFoundException(
+        `Usuario receptor not found with Id:${createMensajeDto.receptorIdUsuario}`,
+      );
+    }
+
+    const mensaje = this.mensajeRepository.create({
       emisor,
       receptor,
-      contenido: dto.contenido,
-      leido: dto.leido ?? false,
+      contenido: createMensajeDto.contenido,
+      leido: createMensajeDto.leido ?? false,
     });
 
-    return this.mensajeRepo.save(mensaje);
+    return this.mensajeRepository.save(mensaje);
   }
 
-  findAll() {
-    return this.mensajeRepo.find({ relations: { emisor: true, receptor: true } });
-  }
-
-  findOne(id: number) {
-    return this.mensajeRepo.findOne({
-      where: { id_mensaje: id },
-      relations: { emisor: true, receptor: true },
+  async findAll() {
+    const mensajes = await this.mensajeRepository.find({
+      relations: {
+        emisor: true,
+        receptor: true,
+      },
     });
+
+    return mensajes;
   }
 
-  update(id: number, dto: UpdateMensajeDto) {
-    return this.mensajeRepo.update(id, dto);
+  async findOne(id: number) {
+    const mensaje = await this.mensajeRepository.findOne({
+      where: {
+        id_mensaje: id,
+      },
+      relations: {
+        emisor: true,
+        receptor: true,
+      },
+    });
+
+    if (!mensaje) {
+      throw new NotFoundException(`Mensaje not found with Id:${id}`);
+    }
+
+    return mensaje;
   }
 
-  remove(id: number) {
-    return this.mensajeRepo.delete(id);
+  async update(id: number, updateMensajeDto: UpdateMensajeDto) {
+    const mensaje = await this.findOne(id);
+    Object.assign(mensaje, updateMensajeDto);
+    return this.mensajeRepository.save(mensaje);
+  }
+
+  async remove(id: number) {
+    await this.findOne(id);
+    await this.mensajeRepository.delete(id);
+
+    return {
+      message: `Mensaje with Id:${id} has been deleted successfully`,
+    };
   }
 }

@@ -1,0 +1,83 @@
+.navbarHeader {
+  z-index: 1030;
+}
+
+.logoIcon {
+  width: 32px;
+  height: 32px;
+  background-color: #0b9982;
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.navLink {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: #0b9982;
+}
+
+.mobileNavLink {
+  color: #1e293b;
+  text-decoration: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.toggleBtn {
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  color: #0f172a;
+  border-color: #e2e8f0 !important;
+  font-size: 1.1rem;
+}
+
+.btnPrimary {
+  background-color: #0b9982;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.btnPrimary:hover {
+  background-color: #087d6b;
+  color: #ffffff;
+}
+
+.btnOutline {
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btnOutline:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.mobileMenu {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

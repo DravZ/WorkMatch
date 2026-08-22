@@ -1,0 +1,16 @@
+.metricCard {
+  border-radius: 18px !important;
+  background-color: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease;
+}
+
+.metricCard:hover {
+  transform: translateY(-2px);
+}
+
+.metricValue {
+  color: #0b9982;
+  font-size: 1.8rem;
+  letter-spacing: -0.02em;
+}

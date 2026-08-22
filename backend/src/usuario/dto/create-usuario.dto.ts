@@ -1,6 +1,15 @@
+import { IsString, IsEmail, MinLength, IsIn } from 'class-validator';
+
 export class CreateUsuarioDto {
-  nombre!: string;
-  apellido!: string;
+  @IsString()
+  fullName!: string;
+
+  @IsEmail()
   email!: string;
-  contrasena_hash!: string;
+
+  @MinLength(8)
+  password!: string;
+
+  @IsIn(['work', 'hire'])
+  role!: 'work' | 'hire';
 }
