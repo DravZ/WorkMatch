@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+
 import { Link } from 'react-router-dom';
+
 import styles from './Navbar.module.css';
 
 export const Navbar: React.FC = () => {
@@ -14,7 +16,9 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className={`border-bottom bg-white sticky-top ${styles.navbarHeader}`}>
+    <header
+      className={`border-bottom bg-white sticky-top ${styles.navbarHeader}`}
+    >
       <div className="container">
         <nav className="d-flex align-items-center justify-content-between py-3">
 
@@ -86,6 +90,7 @@ export const Navbar: React.FC = () => {
             </Link>
 
             <button
+              type="button"
               onClick={toggleMenu}
               className={`btn border p-2 d-flex align-items-center justify-content-center ${styles.toggleBtn}`}
               aria-label="Toggle Navigation"
@@ -94,12 +99,13 @@ export const Navbar: React.FC = () => {
               {isOpen ? '✕' : '☰'}
             </button>
           </div>
-
         </nav>
 
         {/* Menú Desplegable Móvil */}
         {isOpen && (
-          <div className={`d-lg-none py-4 border-top ${styles.mobileMenu}`}>
+          <div
+            className={`d-lg-none py-4 border-top ${styles.mobileMenu}`}
+          >
             <div className="d-flex flex-column gap-3 mb-4 ps-2">
 
               <Link
@@ -125,14 +131,12 @@ export const Navbar: React.FC = () => {
               >
                 How it Works
               </Link>
-
             </div>
 
             <hr className="my-4 text-muted opacity-25" />
 
-            {/* CTAs Móvil Abierto */}
+            {/* CTAs Móvil */}
             <div className="row g-3">
-
               <div className="col-6">
                 <Link
                   to="/login"
@@ -152,11 +156,9 @@ export const Navbar: React.FC = () => {
                   Sign up free
                 </Link>
               </div>
-
             </div>
           </div>
         )}
-
       </div>
     </header>
   );

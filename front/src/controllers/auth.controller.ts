@@ -100,3 +100,25 @@ export const useRegisterController = () => {
     register,
   };
 };
+
+export const useLogoutController = () => {
+  const navigate = useNavigate();
+  const { showNotification } = useNotification();
+  const { clearUser } = useUser();
+
+  const logout = () => {
+    clearUser();
+
+    showNotification({
+      type: 'success',
+      title: 'Sesión cerrada',
+      description: 'Has cerrado sesión correctamente.',
+    });
+
+    navigate('/login');
+  };
+
+  return {
+    logout,
+  };
+};
