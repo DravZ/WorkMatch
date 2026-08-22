@@ -8,10 +8,10 @@ export class Postulacion {
   @PrimaryGeneratedColumn()
   id_postulacion!: number;
 
-  @ManyToOne(() => Usuario, usuario => usuario.postulaciones)
+  @ManyToOne(() => Usuario, (usuario) => usuario.postulaciones)
   usuario!: Usuario;
 
-  @ManyToOne(() => Vacante, vacante => vacante.postulaciones)
+  @ManyToOne(() => Vacante, (vacante) => vacante.postulaciones)
   vacante!: Vacante;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

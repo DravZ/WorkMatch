@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
+
 import { Empresa } from '../../empresa/entities/empresa.entity';
 import { Postulacion } from '../../postulacion/entities/postulacion.entity';
 import { CategoriaVacante } from '../../categoria_vacante/entities/categoria_vacante.entity';
@@ -8,10 +15,10 @@ export class Vacante {
   @PrimaryGeneratedColumn()
   id_vacante!: number;
 
-  @ManyToOne(() => Empresa, empresa => empresa.vacantes)
+  @ManyToOne(() => Empresa, (empresa) => empresa.vacantes)
   empresa!: Empresa;
 
-  @ManyToOne(() => CategoriaVacante, categoria => categoria.vacantes)
+  @ManyToOne(() => CategoriaVacante, (categoria) => categoria.vacantes)
   categoria!: CategoriaVacante;
 
   @Column()
@@ -50,13 +57,12 @@ export class Vacante {
   @Column({ default: 'activa' })
   estado!: string;
 
-  @OneToMany(() => Postulacion, postulacion => postulacion.vacante)
+  @OneToMany(() => Postulacion, (postulacion) => postulacion.vacante)
   postulaciones!: Postulacion[];
 
   @Column({ default: false })
- urgente!: boolean; 
+  urgente!: boolean;
 
-@Column({ default: 'hora' })
- tipo_pago!: 'hora' | 'fijo'; 
-
+  @Column({ default: 'hora' })
+  tipo_pago!: 'hora' | 'fijo';
 }

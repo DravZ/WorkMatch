@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToMany,
+} from 'typeorm';
 import { Vacante } from '../../vacante/entities/vacante.entity';
 import { Trabajador } from '../../trabajador/entities/trabajador.entity';
 
@@ -10,9 +16,9 @@ export class CategoriaVacante {
   @Column()
   nombre!: string;
 
-  @OneToMany(() => Vacante, vacante => vacante.categoria)
+  @OneToMany(() => Vacante, (vacante) => vacante.categoria)
   vacantes!: Vacante[];
 
-  @ManyToMany(() => Trabajador, trabajador => trabajador.categorias)
+  @ManyToMany(() => Trabajador, (trabajador) => trabajador.categorias)
   trabajadores!: Trabajador[];
 }

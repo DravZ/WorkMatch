@@ -6,6 +6,7 @@ import { Vacante } from './entities/vacante.entity';
 import { CreateVacanteDto } from './dto/create-vacante.dto';
 import { UpdateVacanteDto } from './dto/update-vacante.dto';
 import { Empresa } from '../empresa/entities/empresa.entity';
+import { CategoriaVacante } from '../categoria_vacante/entities/categoria_vacante.entity';
 
 @Injectable()
 export class VacanteService {
@@ -15,41 +16,74 @@ export class VacanteService {
 
     @InjectRepository(Empresa)
     private empresaRepository: Repository<Empresa>,
+
+    @InjectRepository(CategoriaVacante)
+    private categoriaRepository: Repository<CategoriaVacante>,
   ) {}
 
- async create(createVacanteDto: CreateVacanteDto) {
-  const empresa = await this.empresaRepository.findOneBy({
-    id_empresa: createVacanteDto.id_empresa,
-  });
+  async create(createVacanteDto: CreateVacanteDto) {
+    const empresa = await this.empresaRepository.findOneBy({
+      id_empresa: createVacanteDto.id_empresa,
+    });
 
-  if (!empresa) {
-    throw new NotFoundException(
-      `Empresa no encontrada con ID: ${createVacanteDto.id_empresa}`,
-    );
+    if (!empresa) {
+      throw new NotFoundException(
+        `Empresa no encontrada con ID: ${createVacanteDto.id_empresa}`,
+      );
+    }
+
+    const categoria = await this.categoriaRepository.findOneBy({
+      id_categoria: createVacanteDto.id_categoria,
+    });
+
+    if (!categoria) {
+      throw new NotFoundException(
+        `Categoría no encontrada con ID: ${createVacanteDto.id_categoria}`,
+      );
+    }
+
+    const { id_empresa, id_categoria, ...vacanteData } = createVacanteDto;
+
+    const vacante = this.vacanteRepository.create({
+      titulo: vacanteData.titulo,
+      descripcion: vacanteData.descripcion,
+      ubicacion: vacanteData.ubicacion,
+
+      salario: vacanteData.salario ?? 'No especificado',
+
+      fecha_inicio: vacanteData.fecha_inicio
+        ? new Date(vacanteData.fecha_inicio)
+        : undefined,
+
+      empleados_necesarios: vacanteData.empleados_necesarios ?? 1,
+
+      horario: vacanteData.horario ?? 'No especificado',
+
+      duracion_estimada: vacanteData.duracion_estimada ?? 'No especificada',
+
+      requerimientos: vacanteData.requerimientos ?? 'No especificados',
+
+      habilidades_optimas:
+        vacanteData.habilidades_optimas ?? 'No especificadas',
+
+      estado: vacanteData.estado ?? 'activa',
+
+      urgente: vacanteData.urgente ?? false,
+
+      tipo_pago: vacanteData.tipo_pago,
+
+      empresa,
+      categoria,
+    });
+
+    return await this.vacanteRepository.save(vacante);
   }
-
- const vacante = this.vacanteRepository.create({
-  titulo: createVacanteDto.titulo,
-  descripcion: createVacanteDto.descripcion,
-  ubicacion: createVacanteDto.ubicacion,
-  tipo_pago: createVacanteDto.tipo_pago, 
-  salario: createVacanteDto.salario,
-  estado: createVacanteDto.estado ?? 'activa',
-  empresa, 
-});
-
-
-
-  return await this.vacanteRepository.save(vacante);
-}
-
-
-
 
   async findAll() {
     return this.vacanteRepository.find({
       relations: {
         empresa: true,
+        categoria: true,
       },
     });
   }
@@ -61,22 +95,18 @@ export class VacanteService {
       },
       relations: {
         empresa: true,
+        categoria: true,
       },
     });
 
     if (!vacante) {
-      throw new NotFoundException(
-        `Vacante not found with Id:${id}`,
-      );
+      throw new NotFoundException(`Vacante not found with Id:${id}`);
     }
 
     return vacante;
   }
 
-  async update(
-    id: number,
-    updateVacanteDto: UpdateVacanteDto,
-  ) {
+  async update(id: number, updateVacanteDto: UpdateVacanteDto) {
     const vacante = await this.findOne(id);
 
     Object.assign(vacante, updateVacanteDto);
