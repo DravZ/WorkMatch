@@ -1,4 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
+
 import { Usuario } from '../../usuario/entities/usuario.entity';
 import { Habilidad } from '../../habilidad/entities/habilidad.entity';
 import { CategoriaVacante } from '../../categoria_vacante/entities/categoria_vacante.entity';
@@ -24,17 +33,30 @@ export class Trabajador {
   @Column({ type: 'float', default: 0 })
   calificacion!: number;
 
+  @Column({ type: 'int', default: 0 })
+  total_calificaciones!: number;
+
+  @Column({ nullable: true })
+  especialidad_carrera!: string;
+
+  @Column({ nullable: true })
+  area_trabajo!: string;
+
   @Column({ default: false })
   is_verified!: boolean;
 
   @Column({ nullable: true })
   disponibilidad!: string; // ej. "available now", "weekends"
 
-  @ManyToMany(() => Habilidad, habilidad => habilidad.trabajadores, { cascade: true })
+  @ManyToMany(() => Habilidad, (habilidad) => habilidad.trabajadores, {
+    cascade: true,
+  })
   @JoinTable()
   habilidades!: Habilidad[];
 
-  @ManyToMany(() => CategoriaVacante, categoria => categoria.trabajadores, { cascade: true })
+  @ManyToMany(() => CategoriaVacante, (categoria) => categoria.trabajadores, {
+    cascade: true,
+  })
   @JoinTable()
   categorias!: CategoriaVacante[];
 }
