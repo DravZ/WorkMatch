@@ -1,12 +1,15 @@
 import type { Usuario } from '../types/usuario';
 
 export function mapUsuarioToCard(u: Usuario) {
-  const fullName = `${u.nombre} ${u.apellido}`.trim();
+  const fullName = `${u.nombre ?? ''} ${u.apellido ?? ''}`.trim();
 
   return {
     id: u.id_usuario,
+
     name: fullName,
-    initials: `${u.nombre[0] ?? ''}${u.apellido[0] ?? ''}`.toUpperCase(),
+
+    initials: `${u.nombre?.[0] ?? ''}${u.apellido?.[0] ?? ''}`.toUpperCase(),
+
     profession: 'Sin especialidad registrada',
     location: 'Ubicación no registrada',
     price: 0,
