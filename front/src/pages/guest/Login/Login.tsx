@@ -1,18 +1,45 @@
 import React, { useState } from 'react';
 import styles from './Login.module.css';
+import { useNotification } from '../../../context/NotificationContext/NotificationContext';
+import { useLoginController } from '../../../controllers/auth.controller';
 
-type UserRole = 'work' | 'hire';
+type UserRole = 'worker' | 'employer';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<UserRole>('work');
+  const [role, setRole] = useState<UserRole>('worker');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log({ email, password, role });
-    // Lógica de inicio de sesión
-  };
+  const { showNotification } = useNotification();
+  const { login } = useLoginController();
+  
+
+const handleTest = () => {
+  showNotification({
+    type: 'success',
+    title: 'Operación exitosa',
+    description: 'La acción se realizó correctamente.',
+  });
+  showNotification({
+    type: 'alert',
+    title: 'Operación exitosa',
+    description: 'La acción se realizó correctamente.',
+  });
+  showNotification({
+    type: 'error',
+    title: 'Operación exitosa',
+    description: 'La acción se realizó correctamente.',
+  });
+};
+
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  await login({
+    email,
+    password
+  });
+};
 
   return (
     <div className={`min-vh-100 d-flex flex-column align-items-center justify-content-center py-5 ${styles.pageBg}`}>
@@ -73,23 +100,25 @@ export default function Login() {
               />
             </div>
 
-            {/* Forgot Password Link */}
+            {/* Forgot Password Link 
+            
             <div className="text-end mb-4">
               <a href="#forgot-password" className={`text-decoration-none fs-7 ${styles.forgotLink}`}>
                 Forgot password?
               </a>
             </div>
-
-            {/* Role Selection Cards */}
+            
+            /* Role Selection Cards 
+            
             <div className="row g-3 mb-4">
-              {/* Find Work Role */}
+              Find Work Role 
               <div className="col-6">
                 <button
                   type="button"
                   className={`w-100 p-3 text-center border rounded-3 btn ${styles.roleCard} ${
-                    role === 'work' ? styles.roleActive : ''
+                    role === 'worker' ? styles.roleActive : ''
                   }`}
-                  onClick={() => setRole('work')}
+                  onClick={() => setRole('worker')}
                 >
                   <div className="fs-3 mb-1">🧑‍🌾</div>
                   <div className={`fw-bold ${styles.roleTitle}`}>Find work</div>
@@ -97,14 +126,14 @@ export default function Login() {
                 </button>
               </div>
 
-              {/* Hire People Role */}
+              Hire People Role 
               <div className="col-6">
                 <button
                   type="button"
                   className={`w-100 p-3 text-center border rounded-3 btn ${styles.roleCard} ${
-                    role === 'hire' ? styles.roleActive : ''
+                    role === 'employer' ? styles.roleActive : ''
                   }`}
-                  onClick={() => setRole('hire')}
+                  onClick={() => setRole('employer')}
                 >
                   <div className="fs-3 mb-1">🏢</div>
                   <div className={`fw-bold ${styles.roleTitle}`}>Hire people</div>
@@ -112,9 +141,11 @@ export default function Login() {
                 </button>
               </div>
             </div>
+            */}
+            
 
             {/* Submit Button */}
-            <button type="submit" className={`btn w-100 py-3 fw-bold ${styles.btnSubmit}`}>
+            <button  type="submit" className={`btn w-100 py-3 fw-bold ${styles.btnSubmit}`}>
               Log in
             </button>
           </form>

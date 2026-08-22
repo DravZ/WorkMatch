@@ -1,0 +1,84 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  padding: 16px;
+}
+
+.modal {
+  width: min(100%, 400px);
+  padding: 32px 28px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+}
+
+.iconWrapper {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* Variaciones de color para iconos */
+.success {
+  background-color: #e6f7f4;
+  color: #00a884;
+}
+
+.error {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+.alert {
+  background-color: #fffbeb;
+  color: #f59e0b;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+.description {
+  margin: 0 0 28px;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.button {
+  width: 100%;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 9999px; /* Botón pill para hacer match con el estilo */
+  background-color: #00a884;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  background-color: #008f70;
+  transform: translateY(-1px);
+}
+
+.button:active {
+  transform: translateY(0);
+}
