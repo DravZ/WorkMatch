@@ -11,29 +11,26 @@ export default function FindWork() {
   const [showFilters, setShowFilters] = useState(false);
   const [minPay, setMinPay] = useState('');
 
-  
   const [jobs, setJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  
   useEffect(() => {
     fetch('http://localhost:3000/vacante')
       .then((res) => res.json())
       .then((data) => {
-       
         const formattedJobs = data.map((vacante: any) => ({
           id: vacante.id_vacante,
           status: vacante.estado || 'Open',
           title: vacante.titulo,
-          category: vacante.tipo_contrato ? vacante.tipo_contrato.toUpperCase() : 'GENERAL',
-          companyName: vacante.empresa?.nombre || 'Empresa Confidencial',
-          companyLogoText: vacante.empresa?.nombre ? vacante.empresa.nombre.substring(0, 2).toUpperCase() : 'WM',
+          category: vacante.categoria?.nombre ? vacante.categoria.nombre.toUpperCase() : 'GENERAL',
+          companyName: vacante.empresa?.nombre_empresa || 'Empresa Confidencial',
+          companyLogoText: vacante.empresa?.nombre_empresa ? vacante.empresa.nombre_empresa.substring(0, 2).toUpperCase() : 'WM',
           verifiedText: 'Verified',
           payRate: Number(vacante.salario) || 0,
           location: vacante.ubicacion,
-          schedule: 'Tiempo completo', 
-          tags: [vacante.tipo_contrato],
-          spots: 1,
+          schedule: vacante.horario || 'Tiempo completo', 
+          tags: [vacante.tipo_pago],
+          spots: vacante.empleados_necesarios || 1,
           timeAgo: vacante.fecha_publicacion ? 'Reciente' : 'Hace unos días'
         }));
 
@@ -46,7 +43,6 @@ export default function FindWork() {
       });
   }, []);
 
-  
   const filteredJobs = jobs.filter((job) => {
     const matchesCategory = activeCategory === 'All' || job.category.toLowerCase() === activeCategory.toLowerCase();
     
@@ -170,3 +166,5 @@ export default function FindWork() {
     </div>
   );
 }
+
+
