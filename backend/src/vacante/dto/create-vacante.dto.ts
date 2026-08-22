@@ -10,7 +10,7 @@ export class CreateVacanteDto {
   @IsString()
   ubicacion!: string;
 
-   @IsEnum(['hora', 'fijo'])
+  @IsEnum(['hora', 'fijo'])
   tipo_pago!: 'hora' | 'fijo';
 
   @IsOptional()

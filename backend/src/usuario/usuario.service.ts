@@ -29,9 +29,10 @@ export class UsuarioService {
       throw new ConflictException('El correo ya está registrado');
     }
 
-    // Encriptar contraseña
+    // Convertir la contraseña a un hash
     const contrasenaHash = await bcrypt.hash(dto.password, 10);
 
+    // Crear el usuario con el hash
     const usuario = this.usuarioRepository.create({
       fullName: dto.fullName,
       email: dto.email,
@@ -39,8 +40,10 @@ export class UsuarioService {
       contrasena_hash: contrasenaHash,
     });
 
+    // Guardar usuario en la base de datos
     const usuarioGuardado = await this.usuarioRepository.save(usuario);
 
+    // No devolver la contraseña
     return this.usuarioSinContrasena(usuarioGuardado);
   }
 
@@ -77,7 +80,6 @@ export class UsuarioService {
         where: { email: dto.email },
       });
 
-      // Comprobar que el correo no pertenezca a otro usuario
       if (
         usuarioConCorreo &&
         usuarioConCorreo.id_usuario !== usuario.id_usuario
@@ -86,22 +88,21 @@ export class UsuarioService {
           'El correo ya está registrado por otro usuario',
         );
       }
+
+      usuario.email = dto.email;
     }
 
-    // Actualizar contraseña si se proporciona una nueva
+    // Actualizar contraseña y volver a generar el hash
     if (dto.password) {
       usuario.contrasena_hash = await bcrypt.hash(dto.password, 10);
     }
 
-    // Actualizar los demás campos
+    // Actualizar nombre
     if (dto.fullName) {
       usuario.fullName = dto.fullName;
     }
 
-    if (dto.email) {
-      usuario.email = dto.email;
-    }
-
+    // Actualizar rol
     if (dto.role) {
       usuario.role = dto.role;
     }
@@ -111,7 +112,7 @@ export class UsuarioService {
     return this.usuarioSinContrasena(usuarioActualizado);
   }
 
-  async login(email: string, contrasena: string) {
+  async login(email: string, password: string) {
     const usuario = await this.usuarioRepository.findOne({
       where: { email },
     });
@@ -120,8 +121,9 @@ export class UsuarioService {
       throw new UnauthorizedException('Correo o contraseña incorrectos');
     }
 
+    // Comparar la contraseña enviada con el hash guardado
     const contraseñaCorrecta = await bcrypt.compare(
-      contrasena,
+      password,
       usuario.contrasena_hash,
     );
 

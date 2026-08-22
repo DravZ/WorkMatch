@@ -2,14 +2,14 @@ import { IsNumber, IsString, IsOptional } from 'class-validator';
 
 export class CreateMensajeDto {
   @IsNumber()
-  emisorIdUsuario!: number;   
+  emisorIdUsuario!: number;
 
   @IsNumber()
-  receptorIdUsuario!: number; 
+  receptorIdUsuario!: number;
 
   @IsString()
   contenido!: string;
 
   @IsOptional()
-  leido?: boolean; 
+  leido?: boolean;
 }
