@@ -16,8 +16,8 @@ export class CreateTrabajadorDto {
   tarifa_hora?: number;
 
   @IsOptional()
-  @IsString()
-  experiencia?: string;
+  @IsNumber()
+  trabajos_completados?: number;
 
   @IsOptional()
   @IsNumber()

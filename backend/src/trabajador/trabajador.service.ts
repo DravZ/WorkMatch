@@ -18,7 +18,13 @@ export class TrabajadorService {
   }
 
   findAll() {
-    return this.trabajadorRepo.find({ relations: { usuario: true, habilidades: true, categorias: true } });
+    return this.trabajadorRepo
+      .createQueryBuilder('trabajador')
+      .leftJoinAndSelect('trabajador.usuario', 'usuario')
+      .leftJoinAndSelect('trabajador.habilidades', 'habilidades')
+      .leftJoinAndSelect('trabajador.categorias', 'categorias')
+      .where('usuario.role = :role', { role: 'work' })
+      .getMany();
   }
 
   findOne(id: number) {
