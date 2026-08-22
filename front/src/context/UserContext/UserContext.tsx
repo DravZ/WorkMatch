@@ -4,17 +4,20 @@ import React, {
   useState,
 } from 'react';
 
+export type UserRole = 'work' | 'hire' | 'admin';
+
 interface User {
   id: number;
-  nombreCompleto: string
+  nombreCompleto: string;
   email: string;
-  role: string;
+  role: UserRole;
 }
 
 interface UserContextType {
   user: User | null;
   setUser: (user: User) => void;
   clearUser: () => void;
+  isAuthenticated: boolean;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -44,6 +47,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
         user,
         setUser,
         clearUser,
+        isAuthenticated: user !== null,
       }}
     >
       {children}

@@ -30,6 +30,8 @@ import { AdminOperationsDashboard } from './pages/admin/Dashboard/AdminDashboard
 import { NotificationProvider } from './context/NotificationContext/NotificationContext';
 import { NotificationModal } from './components/notification/NotificationModal/NotificationModal';
 import { UserProvider } from './context/UserContext/UserContext';
+import { GuestGuard } from './guards/GuestGuard';
+import { RoleGuard } from './guards/RoleGuard';
 
 function App() {
   return (
@@ -39,48 +41,57 @@ function App() {
         <NotificationModal />
         <BrowserRouter>
           <Routes>
-            <Route element={<GuestLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/find-work" element={<FindWork />} />
-              <Route path="/hire-workers" element={<HireWorkers />} />
-              <Route path="/how-it-works" element={<HowItWorks />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+
+            {/* ==================== GUEST ==================== */}
+            <Route element={<GuestGuard />}>
+              <Route element={<GuestLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/find-work" element={<FindWork />} />
+                <Route path="/hire-workers" element={<HireWorkers />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+              </Route>
             </Route>
 
-            <Route element={<WorkerLayout />}>
-              <Route path="/worker/" element={<WorkerDashboard />} />
-              <Route path="/worker/applications" element={<Applications />} />
-              <Route path="/worker/find-jobs" element={<FindJobs />} />
-              <Route path="/worker/messages" element={<Messages />} />
-              <Route path="/worker/notifications" element={<WorkerNotifications />} />
-              <Route path="/worker/profile" element={<WorkerProfile />} />
-              <Route path="/worker/saved" element={<Saved />} />
-              <Route path="/worker/job-view" element={<WorkerJobView />} />
+            {/* ==================== WORKER ==================== */}
+            <Route element={<RoleGuard allowedRoles={['work', 'admin']} />}>
+              <Route element={<WorkerLayout />}>
+                <Route path="/worker/" element={<WorkerDashboard />} />
+                <Route path="/worker/applications" element={<Applications />} />
+                <Route path="/worker/find-jobs" element={<FindJobs />} />
+                <Route path="/worker/messages" element={<Messages />} />
+                <Route path="/worker/notifications" element={<WorkerNotifications />} />
+                <Route path="/worker/profile" element={<WorkerProfile />} />
+                <Route path="/worker/saved" element={<Saved />} />
+                <Route path="/worker/job-view" element={<WorkerJobView />} />
+              </Route>
             </Route>
 
-            <Route element={<EmployerLayout />}>
-              <Route path="/employer/" element={<EmployerDashboard />} />
-              <Route path="/employer/applications" element={<EmployerApplications />} />
-              <Route path="/employer/post-job" element={<PostJob />} />
-              <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />
-              <Route path="/employer/messages" element={<EmployerMessages />} />
-              <Route path="/employer/company-profile" element={<CompanyProfile />} />
-              <Route path="/employer/notifications" element={<EmployerNotifications />} />
-              <Route path="/employer/worker-profile" element={<WorkerProfile_Emp />} />
+            {/* ==================== EMPLOYER ==================== */}
+            <Route element={<RoleGuard allowedRoles={['hire', 'admin']} />}>
+              <Route element={<EmployerLayout />}>
+                <Route path="/employer/" element={<EmployerDashboard />} />
+                <Route path="/employer/applications" element={<EmployerApplications />} />
+                <Route path="/employer/post-job" element={<PostJob />} />
+                <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />
+                <Route path="/employer/messages" element={<EmployerMessages />} />
+                <Route path="/employer/company-profile" element={<CompanyProfile />} />
+                <Route path="/employer/notifications" element={<EmployerNotifications />} />
+                <Route path="/employer/worker-profile" element={<WorkerProfile_Emp />} />
+              </Route>
             </Route>
 
-            <Route element={<AdminLayout />}>
-              <Route path="/admin" element={<AdminOperationsDashboard />} />
+            {/* ==================== ADMIN ==================== */}
+            <Route element={<RoleGuard allowedRoles={['admin']} />}>
+              <Route element={<AdminLayout />}>
+                <Route path="/admin" element={<AdminOperationsDashboard />} />
+              </Route>
             </Route>
-
-
           </Routes>
         </BrowserRouter>
       </NotificationProvider>
     </UserProvider>
-
-
   );
 }
 
