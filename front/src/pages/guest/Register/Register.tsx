@@ -24,7 +24,7 @@ export default function Register() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { register } = useRegisterController();
-  const { create } = useEmpresaController();
+  const empresaController = useEmpresaController();
 
 
 
@@ -75,7 +75,7 @@ export default function Register() {
         }
         if (role == 'hire') {
           console.log("Cree un empleador ")
-          const empSuccess = await create({
+          const empSuccess = await empresaController.create({
             nombre_empresa: `${fullName} Company`,
             sector: "",
             logo_url:
