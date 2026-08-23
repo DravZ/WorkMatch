@@ -4,6 +4,7 @@ import {
   UnauthorizedException,
   ConflictException,
 } from '@nestjs/common';
+
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -17,7 +18,7 @@ export class UsuarioService {
   constructor(
     @InjectRepository(Usuario)
     private readonly usuarioRepository: Repository<Usuario>,
-  ) {}
+  ) { }
 
   async create(dto: CreateUsuarioDto) {
     // Verificar si el correo ya está registrado
@@ -50,16 +51,23 @@ export class UsuarioService {
   async findAll() {
     const usuarios = await this.usuarioRepository.find();
 
-    return usuarios.map((usuario) => this.usuarioSinContrasena(usuario));
+    return usuarios.map((usuario) =>
+      this.usuarioSinContrasena(usuario),
+    );
   }
 
   async findOne(id: number) {
     const usuario = await this.usuarioRepository.findOne({
       where: { id_usuario: id },
+      relations: {
+        empresa: true,
+      },
     });
 
     if (!usuario) {
-      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+      throw new NotFoundException(
+        `Usuario con ID ${id} no encontrado`,
+      );
     }
 
     return this.usuarioSinContrasena(usuario);
@@ -71,7 +79,9 @@ export class UsuarioService {
     });
 
     if (!usuario) {
-      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+      throw new NotFoundException(
+        `Usuario con ID ${id} no encontrado`,
+      );
     }
 
     // Verificar si se está cambiando el correo
@@ -94,7 +104,10 @@ export class UsuarioService {
 
     // Actualizar contraseña y volver a generar el hash
     if (dto.password) {
-      usuario.contrasena_hash = await bcrypt.hash(dto.password, 10);
+      usuario.contrasena_hash = await bcrypt.hash(
+        dto.password,
+        10,
+      );
     }
 
     // Actualizar nombre
@@ -107,7 +120,8 @@ export class UsuarioService {
       usuario.role = dto.role;
     }
 
-    const usuarioActualizado = await this.usuarioRepository.save(usuario);
+    const usuarioActualizado =
+      await this.usuarioRepository.save(usuario);
 
     return this.usuarioSinContrasena(usuarioActualizado);
   }
@@ -118,7 +132,9 @@ export class UsuarioService {
     });
 
     if (!usuario) {
-      throw new UnauthorizedException('Correo o contraseña incorrectos');
+      throw new UnauthorizedException(
+        'Correo o contraseña incorrectos',
+      );
     }
 
     // Comparar la contraseña enviada con el hash guardado
@@ -128,7 +144,9 @@ export class UsuarioService {
     );
 
     if (!contraseñaCorrecta) {
-      throw new UnauthorizedException('Correo o contraseña incorrectos');
+      throw new UnauthorizedException(
+        'Correo o contraseña incorrectos',
+      );
     }
 
     return {
@@ -143,7 +161,9 @@ export class UsuarioService {
     });
 
     if (!usuario) {
-      throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
+      throw new NotFoundException(
+        `Usuario con ID ${id} no encontrado`,
+      );
     }
 
     await this.usuarioRepository.delete(id);
@@ -155,7 +175,9 @@ export class UsuarioService {
 
   private usuarioSinContrasena(usuario: Usuario) {
     const usuarioSinContrasena = Object.fromEntries(
-      Object.entries(usuario).filter(([key]) => key !== 'contrasena_hash'),
+      Object.entries(usuario).filter(
+        ([key]) => key !== 'contrasena_hash',
+      ),
     );
 
     return usuarioSinContrasena;

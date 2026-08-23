@@ -3,6 +3,9 @@ import styles from './Register.module.css';
 
 import { useRegisterController } from '../../../controllers/auth.controller';
 import { useNavigate } from 'react-router-dom';
+import { useEmpresaController } from '../../../controllers/empresas.controller';
+
+
 
 type UserRole = 'work' | 'hire';
 
@@ -21,6 +24,9 @@ export default function Register() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { register } = useRegisterController();
+  const { create } = useEmpresaController();
+
+
 
   const navigate = useNavigate();
 
@@ -55,14 +61,30 @@ export default function Register() {
     setIsSubmitted(true);
 
     if (validate()) {
-      const success = await register({
+      const resp = await register({
         fullName,
         email,
         password,
         role,
       });
 
-      if (success) {
+      if (resp) {
+        console.log(resp.id_usuario)
+        if (role == 'work') {
+          console.log("Cree un trabajador ")
+        }
+        if (role == 'hire') {
+          console.log("Cree un empleador ")
+          const empSuccess = await create({
+            nombre_empresa: `${fullName} Company`,
+            sector: "",
+            logo_url:
+              "https://i.pinimg.com/736x/c3/39/a6/c339a6cfea4ab12c7af03fd2d9df8814.jpg",
+            sitio_web: "",
+            ubicacion: "",
+            id_usuario: resp.id_usuario,
+          });
+        }
         navigate('/login');
       }
     }

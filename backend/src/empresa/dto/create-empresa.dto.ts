@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString } from 'class-validator';
 
 export class CreateEmpresaDto {
   @IsString()
@@ -16,4 +16,7 @@ export class CreateEmpresaDto {
   @IsOptional()
   @IsString()
   logo_url?: string;
+
+  @IsInt()
+  id_usuario!: number;
 }

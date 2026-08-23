@@ -1,5 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+
 import { Vacante } from '../../vacante/entities/vacante.entity';
+import { Usuario } from '../../usuario/entities/usuario.entity';
 
 @Entity('empresas')
 export class Empresa {
@@ -23,4 +32,8 @@ export class Empresa {
 
   @OneToMany(() => Vacante, vacante => vacante.empresa)
   vacantes!: Vacante[];
+
+  @OneToOne(() => Usuario, usuario => usuario.empresa)
+  @JoinColumn({ name: 'id_usuario' })
+  usuario!: Usuario;
 }

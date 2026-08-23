@@ -73,7 +73,7 @@ export const useRegisterController = () => {
         description: 'Tu cuenta se creó correctamente.',
       });
 
-      return true;
+      return response;
     } catch (error: any) {
       if (error.response) {
         showNotification({

@@ -1,8 +1,14 @@
-// usuario.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinTable, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
+
 import { Mensaje } from '../../mensajes/entities/mensaje.entity';
 import { Postulacion } from '../../postulacion/entities/postulacion.entity';
-import { Habilidad } from 'src/habilidad/entities/habilidad.entity';
+import { Empresa } from '../../empresa/entities/empresa.entity';
 
 @Entity('usuarios')
 export class Usuario {
@@ -31,8 +37,8 @@ export class Usuario {
   postulaciones!: Postulacion[];
 
   @Column({ default: false })
- is_verified!: boolean; // identidad verificada
- 
+  is_verified!: boolean;
 
-
+  @OneToOne(() => Empresa, empresa => empresa.usuario)
+  empresa!: Empresa;
 }
