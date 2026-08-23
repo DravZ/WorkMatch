@@ -168,6 +168,17 @@
   border: 1px solid #ccfbf1;
 }
 
+:global(.job-status).status-open {
+  background-color: #e5e7eb !important; 
+  color: #0d9488 !important;
+}
+
+:global(.job-status).status-urgent {
+  background-color: #fee2e2 !important; 
+  color: #e09c60 !important; 
+  font-weight: bold !important;
+}
+
 :global(.favorite-btn) {
   width: 36px;
   height: 36px;

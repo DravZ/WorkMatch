@@ -4,6 +4,28 @@ import styles from './FindWork.module.css';
 
 const CATEGORIES = ['All', 'Delivery', 'Events', 'Cleaning', 'Hospitality', 'Moving', 'Security'];
 
+function getTimeAgo(dateString: string): string {
+  if (!dateString) return 'Reciente';
+  
+  const now = new Date();
+  const pastDate = new Date(dateString);
+  const diffInMs = now.getTime() - pastDate.getTime();
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  
+  if (diffInDays === 0) {
+    return 'today';
+  } else if (diffInDays === 1) {
+    return '1 d ago';
+  } else if (diffInDays < 7) {
+    return ` ${diffInDays} d ago`;
+  } else if (diffInDays < 30) {
+    const weeks = Math.floor(diffInDays / 7);
+    return weeks === 1 ? '1 wk ago' : `${weeks} wk ago`;
+  } else {
+    const months = Math.floor(diffInDays / 30);
+    return months === 1 ? '1 mo ago' : `${months} mo ago`;
+  }
+}
 export default function FindWork() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -20,7 +42,7 @@ export default function FindWork() {
       .then((data) => {
         const formattedJobs = data.map((vacante: any) => ({
           id: vacante.id_vacante,
-          status: vacante.estado || 'Open',
+          status: vacante.urgente ? '⚡Urgent' : 'Open',
           title: vacante.titulo,
           category: vacante.categoria?.nombre ? vacante.categoria.nombre.toUpperCase() : 'GENERAL',
           companyName: vacante.empresa?.nombre_empresa || 'Empresa Confidencial',
@@ -29,9 +51,9 @@ export default function FindWork() {
           payRate: Number(vacante.salario) || 0,
           location: vacante.ubicacion,
           schedule: vacante.horario || 'Tiempo completo', 
-          tags: [vacante.tipo_pago],
+          tags: [vacante.habilidades_optimas],
           spots: vacante.empleados_necesarios || 1,
-          timeAgo: vacante.fecha_publicacion ? 'Reciente' : 'Hace unos días'
+          timeAgo: getTimeAgo(vacante.fecha_publicacion)
         }));
 
         setJobs(formattedJobs);
