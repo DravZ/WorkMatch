@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { useNavigate } from 'react-router-dom';
 interface Job {
   status: string;
   title: string;
@@ -20,12 +20,13 @@ interface JobCardProps {
 }
 
 export const JobCard: React.FC<JobCardProps> = ({ job }) => {
+  const navigate = useNavigate();
   return (
     <div className="job-card">
       
       <div className="job-card-top">
-        <span className="job-status">{job.status}</span>
-        <button className="favorite-btn">♡</button>
+       <span style={{ backgroundColor: job.status === '⚡Urgent' ? '#fee2e2' : '#f0fdf4', color: job.status === '⚡Urgent' ? '#dc2626' : '#0d9488', border: `1px solid ${job.status === '⚡Urgent' ? '#fca5a5' : '#ccfbf1'}`, padding: '4px 12px', fontSize: '12px',fontWeight: '700',borderRadius: '9999px',display: 'inline-block' }}>{job.status}</span>
+        <button className="favorite-btn" onClick={() => navigate('/login')}>♡</button>
       </div>
 
       
@@ -75,7 +76,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
       
       <div className="job-card-footer">
         <span className="job-spots-info">{job.spots} spots · {job.timeAgo}</span>
-        <button className="apply-btn">Apply now</button>
+       <button  className="apply-btn" onClick={() => navigate('/login')}>Apply now</button>
       </div>
     </div>
   );

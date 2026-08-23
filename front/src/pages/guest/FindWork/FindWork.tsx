@@ -1,42 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { JobCard } from '../../../components/guest/FindWork/temp';
 import styles from './FindWork.module.css';
 
 const CATEGORIES = ['All', 'Delivery', 'Events', 'Cleaning', 'Hospitality', 'Moving', 'Security'];
 
-const MOCK_JOBS = [
-  { 
-    id: 1, 
-    status: 'Open', 
-    title: 'Warehouse Picker & Packer', 
-    category: 'DELIVERY', 
-    companyName: 'Metro Logistics Co.', 
-    companyLogoText: 'ML', 
-    verifiedText: 'Verified', 
-    payRate: 22,
-    location: 'West Village, NY',
-    schedule: 'Fri–Sat, 4pm–12am',
-    tags: ['Kitchen safety', 'Food prep', 'Speed'],
-    spots: 2,
-    timeAgo: '7d ago'
-  },
-  { 
-    id: 2, 
-    status: 'Open', 
-    title: 'House Moving Crew Member', 
-    category: 'MOVING', 
-    companyName: 'Swift Move NYC', 
-    companyLogoText: 'SM', 
-    verifiedText: 'Verified', 
-    payRate: 28,
-    location: 'Brooklyn, NY',
-    schedule: 'Mon–Wed, 8am–4pm',
-    tags: ['Heavy lifting', 'Organization', 'Punctuality'],
-    spots: 2,
-    timeAgo: '7d ago'
-  },
-];
-
+function getTimeAgo(dateString: string): string {
+  if (!dateString) return 'Reciente';
+  
+  const now = new Date();
+  const pastDate = new Date(dateString);
+  const diffInMs = now.getTime() - pastDate.getTime();
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  
+  if (diffInDays === 0) {
+    return 'today';
+  } else if (diffInDays === 1) {
+    return '1 d ago';
+  } else if (diffInDays < 7) {
+    return ` ${diffInDays} d ago`;
+  } else if (diffInDays < 30) {
+    const weeks = Math.floor(diffInDays / 7);
+    return weeks === 1 ? '1 wk ago' : `${weeks} wk ago`;
+  } else {
+    const months = Math.floor(diffInDays / 30);
+    return months === 1 ? '1 mo ago' : `${months} mo ago`;
+  }
+}
 export default function FindWork() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -44,8 +33,39 @@ export default function FindWork() {
   const [showFilters, setShowFilters] = useState(false);
   const [minPay, setMinPay] = useState('');
 
-  
-  const filteredJobs = MOCK_JOBS.filter((job) => {
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/vacante')
+      .then((res) => res.json())
+      .then((data) => {
+        const formattedJobs = data.map((vacante: any) => ({
+          id: vacante.id_vacante,
+          status: vacante.urgente ? '⚡Urgent' : 'Open',
+          title: vacante.titulo,
+          category: vacante.categoria?.nombre ? vacante.categoria.nombre.toUpperCase() : 'GENERAL',
+          companyName: vacante.empresa?.nombre_empresa || 'Empresa Confidencial',
+          companyLogoText: vacante.empresa?.nombre_empresa ? vacante.empresa.nombre_empresa.substring(0, 2).toUpperCase() : 'WM',
+          verifiedText: 'Verified',
+          payRate: Number(vacante.salario) || 0,
+          location: vacante.ubicacion,
+          schedule: vacante.horario || 'Tiempo completo', 
+          tags: [vacante.habilidades_optimas],
+          spots: vacante.empleados_necesarios || 1,
+          timeAgo: getTimeAgo(vacante.fecha_publicacion)
+        }));
+
+        setJobs(formattedJobs);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error al conectar con el backend:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  const filteredJobs = jobs.filter((job) => {
     const matchesCategory = activeCategory === 'All' || job.category.toLowerCase() === activeCategory.toLowerCase();
     
     const matchesSearch = 
@@ -67,6 +87,10 @@ export default function FindWork() {
     setMinPay('');
     setSearchTerm('');
   };
+
+  if (loading) {
+    return <div style={{ padding: '40px', textAlign: 'center' }}>Cargando vacantes...</div>;
+  }
 
   return (
     <div className={styles.jobSearchContainer}>
@@ -104,7 +128,6 @@ export default function FindWork() {
         </div>
       </div>
 
-      
       {showFilters && (
         <div className={styles.advancedFiltersPanel}>
           <div className={styles.filterGroup}>
@@ -165,3 +188,5 @@ export default function FindWork() {
     </div>
   );
 }
+
+
