@@ -13,6 +13,9 @@ export class CreateEmpresaDto {
   @IsString()
   sitio_web!: string;
 
+  @IsString()
+  descripcion!: string;
+
   @IsOptional()
   @IsString()
   logo_url?: string;

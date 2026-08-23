@@ -9,6 +9,7 @@ import {
 import { Empresa } from '../../empresa/entities/empresa.entity';
 import { Postulacion } from '../../postulacion/entities/postulacion.entity';
 import { CategoriaVacante } from '../../categoria_vacante/entities/categoria_vacante.entity';
+import { EstadoVacante } from '../enums/estado-vacante.enum';
 
 @Entity('vacantes')
 export class Vacante {
@@ -54,8 +55,12 @@ export class Vacante {
   @Column('text', { nullable: true })
   habilidades_optimas!: string;
 
-  @Column({ default: 'activa' })
-  estado!: string;
+  @Column({
+    type: 'enum',
+    enum: EstadoVacante,
+    default: EstadoVacante.ACTIVA,
+  })
+  estado!: EstadoVacante;
 
   @OneToMany(() => Postulacion, (postulacion) => postulacion.vacante)
   postulaciones!: Postulacion[];

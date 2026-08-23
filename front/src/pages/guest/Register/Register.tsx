@@ -83,6 +83,7 @@ export default function Register() {
             sitio_web: "",
             ubicacion: "",
             id_usuario: resp.id_usuario,
+            descripcion: "Hi, this is my new company profile!"
           });
         }
         navigate('/login');

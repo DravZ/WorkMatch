@@ -3,9 +3,11 @@ import { EmpresaService } from './empresa.service';
 import { CreateEmpresaDto } from './dto/create-empresa.dto';
 import { UpdateEmpresaDto } from './dto/update-empresa.dto';
 
+
+
 @Controller('empresa')
 export class EmpresaController {
-  constructor(private readonly empresaService: EmpresaService) {}
+  constructor(private readonly empresaService: EmpresaService) { }
 
   @Post()
   create(@Body() createEmpresaDto: CreateEmpresaDto) {
@@ -20,6 +22,16 @@ export class EmpresaController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.empresaService.findOne(+id);
+  }
+
+  @Get('usuario/:id_usuario')
+  findByUsuarioId(@Param('id_usuario') id_usuario: string) {
+    return this.empresaService.findByUsuarioId(+id_usuario);
+  }
+
+  @Get(':id_empresa/estadisticas')
+  getEstadisticas(@Param('id_empresa') id_empresa: string) {
+    return this.empresaService.getEstadisticas(+id_empresa);
   }
 
   @Patch(':id')

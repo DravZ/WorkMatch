@@ -7,6 +7,7 @@ import { CreateVacanteDto } from './dto/create-vacante.dto';
 import { UpdateVacanteDto } from './dto/update-vacante.dto';
 import { Empresa } from '../empresa/entities/empresa.entity';
 import { CategoriaVacante } from '../categoria_vacante/entities/categoria_vacante.entity';
+import { EstadoVacante } from './enums/estado-vacante.enum';
 
 @Injectable()
 export class VacanteService {
@@ -66,7 +67,7 @@ export class VacanteService {
       habilidades_optimas:
         vacanteData.habilidades_optimas ?? 'No especificadas',
 
-      estado: vacanteData.estado ?? 'activa',
+      estado: vacanteData.estado ?? EstadoVacante.ACTIVA,
 
       urgente: vacanteData.urgente ?? false,
 

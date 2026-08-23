@@ -4,10 +4,12 @@ import { Step1BasicInfo } from '../../../components/employer/PostJob/Step1BasicI
 import { Step2PayLocation } from '../../../components/employer/PostJob/Step2PayLocation/Step2PayLocation';
 import { Step3ScheduleCapacity } from '../../../components/employer/PostJob/Step3ScheduleCapacity/Step3ScheduleCapacity';
 import { Step4RequirementsSkills } from '../../../components/employer/PostJob/Step4RequirementsSkills/Step4RequirementsSkills';
+import { useNotification } from '../../../context/NotificationContext/NotificationContext';
 
 export const PostJob: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isPosted, setIsPosted] = useState<boolean>(false);
+  const { showNotification } = useNotification();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -53,9 +55,59 @@ export const PostJob: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const fieldNames: Record<string, string> = {
+      title: 'Título',
+      category: 'Categoría',
+      description: 'Descripción',
+      payRate: 'Tarifa de pago',
+      payType: 'Tipo de pago',
+      location: 'Ubicación',
+      startDate: 'Fecha de inicio',
+      workersNeeded: 'Número de trabajadores',
+      schedule: 'Horario',
+      expectedDuration: 'Duración esperada',
+      requirements: 'Requisitos',
+      skills: 'Habilidades',
+    };
+
+    // Validar campos vacíos
+    const emptyField = Object.entries(formData).find(([key, value]) => {
+      if (typeof value === 'string') {
+        return value.trim() === '';
+      }
+
+      return value === null || value === undefined;
+    });
+
+    if (emptyField) {
+      const [field] = emptyField;
+
+      showNotification({
+        type: 'error',
+        title: 'Datos Incompletos',
+        description: `El campo "${fieldNames[field] || field}" es obligatorio.`
+      });
+
+      return;
+    }
+
+    // Validar número de trabajadores
+    if (formData.workersNeeded <= 0) {
+      showNotification({
+        type: 'error',
+        title: 'Datos Incompletos',
+        description: 'El número de trabajadores debe ser mayor que 0.',
+      });
+
+
+      return;
+    }
+
     // Solo permite enviar si estamos en el paso final (Paso 4)
     if (currentStep === 4) {
       setIsPosted(true);
+      console.log(formData);
     }
   };
 

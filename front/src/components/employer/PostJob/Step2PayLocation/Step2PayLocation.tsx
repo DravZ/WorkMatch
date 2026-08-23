@@ -53,7 +53,8 @@ export const Step2PayLocation: React.FC<Step2Props> = ({ formData, onChange }) =
         />
       </div>
 
-      <div className="form-check d-flex align-items-center gap-2">
+      {/**
+       * <div className="form-check d-flex align-items-center gap-2">
         <input
           type="checkbox"
           id="isRemote"
@@ -66,6 +67,7 @@ export const Step2PayLocation: React.FC<Step2Props> = ({ formData, onChange }) =
           This job can be done remotely (hybrid or fully remote)
         </label>
       </div>
+       */}
     </div>
   );
 };

@@ -6,6 +6,7 @@ import {
   IsDateString,
   IsBoolean,
 } from 'class-validator';
+import { EstadoVacante } from '../enums/estado-vacante.enum';
 
 export class CreateVacanteDto {
   @IsNumber()
@@ -52,8 +53,8 @@ export class CreateVacanteDto {
   habilidades_optimas?: string;
 
   @IsOptional()
-  @IsString()
-  estado?: string;
+  @IsEnum(EstadoVacante)
+  estado?: EstadoVacante;
 
   @IsOptional()
   @IsBoolean()

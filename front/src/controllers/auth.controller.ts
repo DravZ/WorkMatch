@@ -2,11 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { authService } from "../services/auth.service";
 import { useNotification } from "../context/NotificationContext/NotificationContext";
 import { useUser } from "../context/UserContext/UserContext";
+import { useEmpresaController } from "./empresas.controller";
 
 export const useLoginController = () => {
     const navigate = useNavigate();
     const { showNotification } = useNotification();
     const { setUser } = useUser();
+    const empresaController = useEmpresaController();
 
     const login = async (data: any) => {
         console.log(data);
@@ -14,13 +16,13 @@ export const useLoginController = () => {
         const body = {
             email: data.email,
             contrasena: data.password
-        }
+        };
+
         try {
             const { data: response } = await authService.login(body);
 
             console.log("RESPONSE: ");
-            console.log(response)
-
+            console.log(response);
 
             showNotification({
                 type: 'success',
@@ -28,14 +30,29 @@ export const useLoginController = () => {
                 description: 'Inicio de sesión exitoso.',
             });
 
+            let id_empresa: number | undefined;
+            let nombreEmpresa: string | undefined;
+
+            if (response.usuario.role === 'hire') {
+                const empresaResponse = await empresaController.getByUsuarioId(
+                    response.usuario.id_usuario
+                );
+
+                id_empresa = empresaResponse?.id_empresa;
+                nombreEmpresa = empresaResponse?.nombre_empresa;
+            }
+
             setUser({
                 id: response.usuario.id_usuario,
                 nombreCompleto: response.usuario.fullName,
                 email: response.usuario.email,
-                role: response.usuario.role
+                role: response.usuario.role,
+                empresaId: id_empresa,
+                nombreEmpresa: nombreEmpresa
             });
 
             navigate('/');
+
         } catch (error) {
             showNotification({
                 type: 'error',

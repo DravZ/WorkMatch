@@ -5,6 +5,7 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 
 import { Vacante } from '../../vacante/entities/vacante.entity';
@@ -29,6 +30,12 @@ export class Empresa {
 
   @Column({ nullable: true })
   logo_url!: string;
+
+  @Column({nullable: true})
+  descripcion!: string;
+
+  @CreateDateColumn()
+  created_at!: Date;
 
   @OneToMany(() => Vacante, vacante => vacante.empresa)
   vacantes!: Vacante[];

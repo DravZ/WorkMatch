@@ -1,0 +1,155 @@
+.containerWrapper {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding: 1.5rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .containerWrapper {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+.contentContainer {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.backButton {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #6c757d;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.backButton:hover {
+  color: #212529;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  color: #6c757d;
+  font-size: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  border: none;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+}
+
+.inputField,
+.selectField,
+.textareaField {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  background-color: #f8fafc;
+  color: #212529;
+  font-size: 0.875rem;
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textareaField {
+  font-size: 0.85rem;
+  resize: vertical;
+}
+
+.inputField:focus,
+.selectField:focus,
+.textareaField:focus {
+  background-color: #ffffff;
+  border-color: #0b9982;
+  box-shadow: 0 0 0 0.2rem rgba(11, 153, 130, 0.15);
+}
+
+.inputError {
+  border-color: #dc3545 !important;
+}
+
+.errorMessage {
+  font-size: 0.725rem;
+  color: #dc3545;
+  margin-top: 0.25rem;
+}
+
+.actionsRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.btnCancel {
+  background-color: #ffffff;
+  color: #212529;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnSubmit {
+  background-color: #0b9982;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.btnSubmit:disabled,
+.btnCancel:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.centerState {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8fafc;
+}

@@ -11,11 +11,14 @@ interface User {
   nombreCompleto: string;
   email: string;
   role: UserRole;
+  empresaId?: number;
+  nombreEmpresa?: string;
 }
 
 interface UserContextType {
   user: User | null;
   setUser: (user: User) => void;
+  patchUser: (data: Partial<User>) => void;
   clearUser: () => void;
   isAuthenticated: boolean;
 }
@@ -36,6 +39,23 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem('userWM', JSON.stringify(user));
   };
 
+  const patchUser = (data: Partial<User>) => {
+    setUserState((currentUser) => {
+      if (!currentUser) {
+        return null;
+      }
+
+      const updatedUser = {
+        ...currentUser,
+        ...data,
+      };
+
+      localStorage.setItem('userWM', JSON.stringify(updatedUser));
+
+      return updatedUser;
+    });
+  };
+
   const clearUser = () => {
     setUserState(null);
     localStorage.removeItem('userWM');
@@ -46,6 +66,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         user,
         setUser,
+        patchUser,
         clearUser,
         isAuthenticated: user !== null,
       }}

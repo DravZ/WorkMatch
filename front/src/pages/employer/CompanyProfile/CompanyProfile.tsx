@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useUser } from '../../../context/UserContext/UserContext';
+import { useEmpresaController } from '../../../controllers/empresas.controller';
 
 interface ActiveJob {
   id: string;
@@ -18,9 +20,42 @@ interface Review {
   date: string;
   comment: string;
 }
+interface Empresa {
+  id_empresa: number;
+  nombre_empresa: string;
+  sector: string;
+  ubicacion: string;
+  sitio_web: string;
+  logo_url: string;
+  descripcion: string;
+  created_at: string;
+}
 
+interface EstadisticasEmpresa {
+  trabajos_creados: number;
+  trabajos_completados: number;
+}
 export const CompanyProfile: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'jobs' | 'reviews'>('jobs');
+
+  const { user } = useUser();
+  const { getById, getEstadisticas } = useEmpresaController();
+
+  const [empresa, setEmpresa] = useState<Empresa | null>(null);
+  const [estadisticas, setEstadisticas] =
+    useState<EstadisticasEmpresa>({
+      trabajos_creados: 0,
+      trabajos_completados: 0,
+    });
+
+  const getInitials = (name?: string): string => {
+    if (!name) return '';
+    const words = name.trim().split(/\s+/);
+    if (words.length === 1) {
+      return words[0].charAt(0).toUpperCase();
+    }
+    return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+  };
 
   // Datos de trabajos activos según el diseño
   const activeJobs: ActiveJob[] = [
@@ -72,14 +107,49 @@ export const CompanyProfile: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    const obtenerDatosEmpresa = async () => {
+      if (!user?.empresaId) {
+        return;
+      }
+
+      try {
+        const [empresaResponse, estadisticasResponse] = await Promise.all([
+          getById(user.empresaId),
+          getEstadisticas(user.empresaId),
+        ]);
+
+        setEmpresa(empresaResponse);
+
+        setEstadisticas(
+          estadisticasResponse ?? {
+            trabajos_creados: 0,
+            trabajos_completados: 0,
+          }
+        );
+
+        console.log("EMPRESA OBTENIDA:");
+        console.log(empresaResponse);
+
+        console.log("ESTADÍSTICAS:");
+        console.log(estadisticasResponse);
+      } catch (error) {
+        console.error("Error obteniendo datos de la empresa:", error);
+      }
+    };
+
+    obtenerDatosEmpresa();
+  }, [user?.empresaId]);
+
+
   return (
     <div className="min-vh-100 bg-light py-5 px-3">
       <div className="container" style={{ maxWidth: '1040px' }}>
         <div className="row g-4">
-          
+
           {/* COLUMNA IZQUIERDA: Perfil & Detalles */}
           <div className="col-12 col-lg-4 d-flex flex-column gap-3">
-            
+
             {/* Card Principal: Logo, Nombre, Métricas */}
             <div className="card border-0 shadow-sm rounded-4 p-4 text-center bg-white">
               {/* Logo de la empresa */}
@@ -87,45 +157,84 @@ export const CompanyProfile: React.FC = () => {
                 className="mx-auto rounded-4 d-flex align-items-center justify-content-center text-white fw-bold mb-3"
                 style={{ width: '80px', height: '80px', backgroundColor: '#0f172a', fontSize: '1.25rem' }}
               >
-                ML
+                {getInitials(empresa?.nombre_empresa)}
               </div>
 
               {/* Nombre y Verificación */}
               <div className="d-flex align-items-center justify-content-center gap-1 mb-1">
-                <h1 className="h5 fw-bold text-dark mb-0">Metro Logistics Co.</h1>
-                <span className="text-teal extra-small fw-bold" title="Verified Business">
-                  ✓
-                </span>
+                <h1 className="h5 fw-bold text-dark mb-0">{empresa?.nombre_empresa}</h1>
+
+                {
+                  empresa?.nombre_empresa != "" &&
+                    empresa?.sector != "" &&
+                    empresa?.ubicacion != "" &&
+                    empresa?.sitio_web != "" &&
+                    empresa?.descripcion != "" ?
+                    <span className="text-teal extra-small fw-bold" title="Verified Business">
+                      ✓
+                    </span>
+                    :
+                    <span className="text-teal extra-small fw-bold" title="Verified Business">
+                      ❌
+                    </span>
+                }
+
+
+
               </div>
 
-              <p className="text-muted extra-small mb-1">Logistics & Warehousing</p>
-              <p className="text-muted extra-small mb-4">📍 Brooklyn, NY</p>
+              <p className="text-muted extra-small mb-1">
+                {empresa?.sector}
+              </p>
+              <p className="text-muted extra-small mb-4">📍 {empresa?.ubicacion}</p>
 
               {/* Estadísticas / Métricas */}
               <div className="row g-0 py-2 border-top border-bottom border-light mb-4">
+
                 <div className="col-4 border-end border-light">
-                  <div className="h4 fw-bold text-teal mb-0">4.7</div>
-                  <span className="text-muted" style={{ fontSize: '0.65rem' }}>
-                    78 reviews
+                  <div className="h4 fw-bold text-teal mb-0">
+                    -.-
+                  </div>
+
+                  <span
+                    className="text-muted"
+                    style={{ fontSize: '0.65rem' }}
+                  >
+                    0 reviews
                   </span>
                 </div>
+
                 <div className="col-4 border-end border-light">
-                  <div className="h4 fw-bold text-dark mb-0">82</div>
-                  <span className="text-muted" style={{ fontSize: '0.65rem' }}>
+                  <div className="h4 fw-bold text-dark mb-0">
+                    {estadisticas.trabajos_completados}
+                  </div>
+
+                  <span
+                    className="text-muted"
+                    style={{ fontSize: '0.65rem' }}
+                  >
                     jobs filled
                   </span>
                 </div>
+
                 <div className="col-4">
-                  <div className="h4 fw-bold text-dark mb-0">89</div>
-                  <span className="text-muted" style={{ fontSize: '0.65rem' }}>
+                  <div className="h4 fw-bold text-dark mb-0">
+                    {estadisticas.trabajos_creados}
+                  </div>
+
+                  <span
+                    className="text-muted"
+                    style={{ fontSize: '0.65rem' }}
+                  >
                     jobs posted
                   </span>
                 </div>
+
               </div>
 
               {/* Botón Editar Perfil */}
               <a
-                href="/employer/settings"
+                href="/employer/company-profile/edit"
                 className="btn btn-outline-secondary w-100 py-2 fw-semibold rounded-3 extra-small bg-white text-dark border-light-subtle text-decoration-none"
               >
                 Edit company profile
@@ -142,19 +251,51 @@ export const CompanyProfile: React.FC = () => {
                     <span className="text-muted fw-bold extra-small text-uppercase d-block mb-0.5">
                       MEMBER SINCE
                     </span>
-                    <span className="fw-semibold text-dark extra-small">2023-03</span>
+                    <span className="fw-semibold text-dark extra-small">
+                      {empresa?.created_at
+                        ? new Date(empresa.created_at).toLocaleDateString("es-MX", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        }).replaceAll("/", "-")
+                        : ""}
+                    </span>
                   </div>
                 </div>
 
                 {/* Verification */}
                 <div className="d-flex align-items-start gap-3">
-                  <span className="fs-6 text-teal">✓</span>
+
+                  {
+                    empresa?.nombre_empresa != "" &&
+                      empresa?.sector != "" &&
+                      empresa?.ubicacion != "" &&
+                      empresa?.sitio_web != "" &&
+                      empresa?.descripcion != "" ?
+                      <span className="fs-6 text-teal">✓</span> :
+                      <span className="fs-6 text-teal">❌</span>
+
+                  }
+
                   <div>
                     <span className="text-muted fw-bold extra-small text-uppercase d-block mb-0.5">
                       VERIFICATION
                     </span>
                     <span className="fw-semibold text-dark extra-small">
                       Identity & business verified
+                    </span>
+                  </div>
+                </div>
+
+                {/* WEB SITE */}
+                <div className="d-flex align-items-start gap-3">
+                  <span className="fs-6">🌐</span>
+                  <div>
+                    <span className="text-muted fw-bold extra-small text-uppercase d-block mb-0.5">
+                      WEB SITE
+                    </span>
+                    <span className="fw-semibold text-dark extra-small">
+                      {empresa?.sitio_web}
                     </span>
                   </div>
                 </div>
@@ -166,7 +307,17 @@ export const CompanyProfile: React.FC = () => {
                     <span className="text-muted fw-bold extra-small text-uppercase d-block mb-0.5">
                       COMPLETION RATE
                     </span>
-                    <span className="fw-semibold text-dark extra-small">92%</span>
+                    <span className="fw-semibold text-dark extra-small">
+                      {Math.round(
+                        [
+                          empresa?.nombre_empresa,
+                          empresa?.sector,
+                          empresa?.ubicacion,
+                          empresa?.sitio_web,
+                          empresa?.descripcion,
+                        ].filter((campo) => campo != null && campo.trim() !== "").length / 5 * 100
+                      )}%
+                    </span>
                   </div>
                 </div>
               </div>
@@ -184,15 +335,12 @@ export const CompanyProfile: React.FC = () => {
 
           {/* COLUMNA DERECHA: About + Tab Panel (Active Jobs / Reviews) */}
           <div className="col-12 col-lg-8 d-flex flex-column gap-4">
-            
+
             {/* Card: About */}
             <div className="card border-0 shadow-sm rounded-4 p-4 bg-white">
               <h2 className="h6 fw-bold text-dark mb-3">About</h2>
               <p className="text-secondary extra-small mb-0 lh-base">
-                Metro Logistics is a regional fulfillment and distribution company serving the
-                greater NYC metro area since 2008. We work with a network of trusted
-                on-demand workers to handle seasonal peaks, special events, and overflow
-                capacity.
+                {empresa?.descripcion}
               </p>
             </div>
 
@@ -200,11 +348,10 @@ export const CompanyProfile: React.FC = () => {
             <div className="bg-white rounded-3 p-1 shadow-sm d-flex">
               <button
                 onClick={() => setActiveTab('jobs')}
-                className={`btn flex-fill py-2 extra-small fw-bold rounded-3 transition-all border-0 ${
-                  activeTab === 'jobs'
-                    ? 'text-white'
-                    : 'text-muted bg-transparent'
-                }`}
+                className={`btn flex-fill py-2 extra-small fw-bold rounded-3 transition-all border-0 ${activeTab === 'jobs'
+                  ? 'text-white'
+                  : 'text-muted bg-transparent'
+                  }`}
                 style={{
                   backgroundColor: activeTab === 'jobs' ? '#0f172a' : 'transparent',
                 }}
@@ -213,11 +360,10 @@ export const CompanyProfile: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab('reviews')}
-                className={`btn flex-fill py-2 extra-small fw-bold rounded-3 transition-all border-0 ${
-                  activeTab === 'reviews'
-                    ? 'text-white'
-                    : 'text-muted bg-transparent'
-                }`}
+                className={`btn flex-fill py-2 extra-small fw-bold rounded-3 transition-all border-0 ${activeTab === 'reviews'
+                  ? 'text-white'
+                  : 'text-muted bg-transparent'
+                  }`}
                 style={{
                   backgroundColor: activeTab === 'reviews' ? '#0f172a' : 'transparent',
                 }}

@@ -32,6 +32,7 @@ import { NotificationModal } from './components/notification/NotificationModal/N
 import { UserProvider } from './context/UserContext/UserContext';
 import { GuestGuard } from './guards/GuestGuard';
 import { RoleGuard } from './guards/RoleGuard';
+import { EditCompanyProfile } from './pages/employer/EditCompanyProfile/EditCompanyProfile';
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
                 <Route path="/employer/company-profile" element={<CompanyProfile />} />
                 <Route path="/employer/notifications" element={<EmployerNotifications />} />
                 <Route path="/employer/worker-profile" element={<WorkerProfile_Emp />} />
+                <Route path="/employer/company-profile/edit" element={<EditCompanyProfile />} />
               </Route>
             </Route>
 
