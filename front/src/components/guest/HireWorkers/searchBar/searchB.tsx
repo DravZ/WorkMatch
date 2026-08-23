@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styles from './searchB.module.css';
-
-type SortOption = 'mas valorados' | 'precio: menor - mayor' | 'price: mayor a menor' | 'mas experimentados';
+export type SortOption = 'mas valorados' | 'precio: menor - mayor' | 'price: mayor a menor' | 'mas experimentados';
 
 type SearchBarProps = {
   onSearchChange: (query: string) => void;
@@ -11,8 +10,8 @@ type SearchBarProps = {
 const SORT_LABELS: Record<SortOption, string> = {
   'mas valorados': 'Más valorados',
   'mas experimentados': 'Más experimentados',
-  'precio: menor - mayor': 'Precio: de Bajo a Alto',
-  'price: mayor a menor': 'Price: High to Low',
+  'precio: menor - mayor': 'Precio: Bajo a Alto',
+  'price: mayor a menor': 'Price: Alto a Bajo',
 };
 
 export default function SearchBar({

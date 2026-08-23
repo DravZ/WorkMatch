@@ -1,30 +1,31 @@
 import { useEffect, useMemo, useState } from 'react';
 import CardW from '../../../components/guest/HireWorkers/cardWorkers/cardW';
 import SearchBar from '../../../components/guest/HireWorkers/searchBar/searchB';
+import type { SortOption } from '../../../components/guest/HireWorkers/searchBar/searchB';
 import CategoryTabs from '../../../components/guest/HireWorkers/categoryTabs/categoryT';
 import FiltersPanel from '../../../components/guest/HireWorkers/filtersPanel/filtersP';
 import styles from './HireWorkers.module.css';
-import { getUsuarios } from '../../../../services/usuarios';
-import { mapUsuarioToCard } from '../../../../utils/mapUsuarioToCard';
-import type { Usuario } from '../../../../types/usuario';
+import { getTrabajadores } from '../../../../services/trabajador';
+import { mapTrabajadorToCard } from '../../../../utils/mapTrabajadorToCard';
+import type { Trabajador } from '../../../../types/trabajador';
 
 export default function HireWorkers() {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [trabajadores, setTrabajadores] = useState<Trabajador[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
+  const [sort, setSort] = useState<SortOption>('mas valorados');
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [maxRate, setMaxRate] = useState('');
   const [verifiedOnly, setVerifiedOnly] = useState(false);
-  const [filterCategory, setFilterCategory] = useState('All');
 
   useEffect(() => {
     let active = true;
     setLoading(true);
-    getUsuarios()
-      .then((data) => { if (active) setUsuarios(data); })
+    getTrabajadores()
+      .then((data) => { if (active) setTrabajadores(data); })
       .catch((err) => { if (active) setError(err.message); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
@@ -33,30 +34,49 @@ export default function HireWorkers() {
   function handleClearAll() {
     setMaxRate('');
     setVerifiedOnly(false);
-    setFilterCategory('All');
+    setCategory('All');
   }
 
-  const workers = useMemo(() => usuarios.map(mapUsuarioToCard), [usuarios]);
+  const workers = useMemo(() => trabajadores.map(mapTrabajadorToCard), [trabajadores]);
 
   const filteredWorkers = useMemo(() => {
     return workers.filter((worker) => {
-      // Categorías: no existen en el backend (ni etiquetas de habilidades ni
-      // historial laboral en Usuario). CategoryTabs se mantiene visualmente
-      // pero no filtra nada hasta que exista ese campo.
-      const matchesCategory = true;
+      const matchesCategory = category === 'All' || worker.areaTrabajo === category;
 
-      // Solo se filtra por lo único real: el nombre.
       const matchesSearch =
-        search.trim() === '' || worker.name.toLowerCase().includes(search.toLowerCase());
+        search.trim() === '' ||
+        worker.name.toLowerCase().includes(search.toLowerCase()) ||
+        worker.profession.toLowerCase().includes(search.toLowerCase()) ||
+        worker.location.toLowerCase().includes(search.toLowerCase()) ||
+        worker.services.some((s) => s.toLowerCase().includes(search.toLowerCase()));
 
-      // maxRate y verifiedOnly: sin respaldo (no hay tarifa ni verificación
-      // en Usuario). Se mantienen inertes.
-      const matchesRate = true;
-      const matchesVerified = true;
+      const matchesRate = maxRate === '' || worker.price <= Number(maxRate);
+      const matchesVerified = !verifiedOnly || worker.verified;
 
       return matchesCategory && matchesSearch && matchesRate && matchesVerified;
     });
-  }, [search, workers]);
+  }, [search, category, workers, maxRate, verifiedOnly]);
+
+  const sortedWorkers = useMemo(() => {
+    const result = [...filteredWorkers];
+
+    switch (sort) {
+      case 'mas valorados':
+        result.sort((a, b) => b.rating - a.rating);
+        break;
+      case 'precio: menor - mayor':
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case 'price: mayor a menor':
+        result.sort((a, b) => b.price - a.price);
+        break;
+      case 'mas experimentados':
+        result.sort((a, b) => b.jobs - a.jobs);
+        break;
+    }
+
+    return result;
+  }, [filteredWorkers, sort]);
 
   if (loading) return <main className={styles.page}><p>Cargando...</p></main>;
   if (error) return <main className={styles.page}><p>Error: {error}</p></main>;
@@ -68,7 +88,7 @@ export default function HireWorkers() {
           <div className={styles.titleRow}>
             <div className={styles.titleGroup}>
               <h1>Find workers</h1>
-              <p>{filteredWorkers.length} workers available to hire</p>
+              <p>{sortedWorkers.length} workers available to hire</p>
             </div>
 
             <div className={styles.headerActions}>
@@ -81,13 +101,12 @@ export default function HireWorkers() {
             </div>
           </div>
 
-          {/* onSortChange no ordena realmente: no hay rating ni price reales que ordenar */}
-          <SearchBar onSearchChange={setSearch} onSortChange={(sort) => console.log('sort (sin efecto, sin datos de respaldo):', sort)} />
+          <SearchBar onSearchChange={setSearch} onSortChange={setSort} />
 
           {filtersOpen && (
             <FiltersPanel
-              category={filterCategory}
-              onCategoryChange={setFilterCategory}
+              category={category}
+              onCategoryChange={setCategory}
               maxRate={maxRate}
               onMaxRateChange={setMaxRate}
               verifiedOnly={verifiedOnly}
@@ -96,14 +115,14 @@ export default function HireWorkers() {
             />
           )}
 
-          <CategoryTabs onCategoryChange={setCategory} />
+          <CategoryTabs active={category} onCategoryChange={setCategory} />
         </div>
       </div>
 
       <section className={styles.resultsSection}>
         <div className={styles.resultsContainer}>
           <div className={styles.grid}>
-            {filteredWorkers.map((worker) => (
+            {sortedWorkers.map((worker) => (
               <CardW key={worker.id} {...worker} />
             ))}
           </div>

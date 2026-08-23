@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import styles from './categoryT.module.css';
 
 const CATEGORIES = [
@@ -14,26 +13,20 @@ const CATEGORIES = [
 ];
 
 type CategoryTabsProps = {
+  active: string;
   onCategoryChange: (category: string) => void;
 };
 
-export default function CategoryTabs({ onCategoryChange }: CategoryTabsProps) {
-  const [active, setActive] = useState('All');
-
-  function handleSelect(category: string) {
-    setActive(category);
-    onCategoryChange(category);
-  }
-
+export default function CategoryTabs({ active, onCategoryChange }: CategoryTabsProps) {
   return (
     <div className={styles['tabs-wrapper']}>
-      {CATEGORIES.map((category) => (
+      {CATEGORIES.map((cat) => (
         <button
-          key={category}
-          className={`${styles['tab']} ${active === category ? styles['active'] : ''}`}
-          onClick={() => handleSelect(category)}
+          key={cat}
+          className={`${styles['tab']} ${active === cat ? styles['active'] : ''}`}
+          onClick={() => onCategoryChange(cat)}
         >
-          {category}
+          {cat}
         </button>
       ))}
     </div>
