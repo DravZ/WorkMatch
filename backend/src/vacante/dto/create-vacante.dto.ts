@@ -33,6 +33,10 @@ export class CreateVacanteDto {
   fecha_inicio?: string;
 
   @IsOptional()
+  @IsDateString()
+  fecha_publicacion?: string;
+
+  @IsOptional()
   @IsNumber()
   empleados_necesarios?: number;
 
