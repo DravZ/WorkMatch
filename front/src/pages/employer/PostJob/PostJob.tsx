@@ -5,11 +5,19 @@ import { Step2PayLocation } from '../../../components/employer/PostJob/Step2PayL
 import { Step3ScheduleCapacity } from '../../../components/employer/PostJob/Step3ScheduleCapacity/Step3ScheduleCapacity';
 import { Step4RequirementsSkills } from '../../../components/employer/PostJob/Step4RequirementsSkills/Step4RequirementsSkills';
 import { useNotification } from '../../../context/NotificationContext/NotificationContext';
+import { useUser } from '../../../context/UserContext/UserContext';
+import { useVacanteController } from '../../../controllers/vacante.controller';
 
 export const PostJob: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [isPosted, setIsPosted] = useState<boolean>(false);
   const { showNotification } = useNotification();
+  const vacanteController = useVacanteController();
+
+  const { user } = useUser();
+
+
+
 
   const [formData, setFormData] = useState({
     title: '',
@@ -53,7 +61,7 @@ export const PostJob: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const fieldNames: Record<string, string> = {
@@ -86,7 +94,7 @@ export const PostJob: React.FC = () => {
       showNotification({
         type: 'error',
         title: 'Datos Incompletos',
-        description: `El campo "${fieldNames[field] || field}" es obligatorio.`
+        description: `El campo "${fieldNames[field] || field}" es obligatorio.`,
       });
 
       return;
@@ -100,13 +108,52 @@ export const PostJob: React.FC = () => {
         description: 'El número de trabajadores debe ser mayor que 0.',
       });
 
+      return;
+    }
+
+    // Validar fecha de inicio
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const startDate = new Date(`${formData.startDate}T00:00:00`);
+
+    if (startDate <= today) {
+      showNotification({
+        type: 'error',
+        title: 'Fecha Inválida',
+        description: 'La fecha de inicio debe ser posterior al día actual.',
+      });
 
       return;
     }
 
     // Solo permite enviar si estamos en el paso final (Paso 4)
     if (currentStep === 4) {
-      setIsPosted(true);
+      const bodyToSend = {
+        id_empresa: Number(user?.empresaId),
+        id_categoria: Number(formData.category),
+        titulo: formData.title,
+        descripcion: formData.description,
+        ubicacion: formData.location,
+        salario: formData.payRate,
+        fecha_inicio: formData.startDate,
+        empleados_necesarios: formData.workersNeeded,
+        horario: formData.schedule,
+        duracion_estimada: formData.expectedDuration,
+        requerimientos: formData.requirements,
+        habilidades_optimas: formData.skills,
+        urgente: false,
+        tipo_pago: (
+          formData.payType === "Hourly" ? "hora" : "fijo"
+        ) as "hora" | "fijo",
+      };
+
+      const response = await vacanteController.create(bodyToSend);
+
+      if (response) {
+        setIsPosted(true);
+      }
+
       console.log(formData);
     }
   };
