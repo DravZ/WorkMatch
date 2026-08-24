@@ -1,4 +1,5 @@
 import React from 'react';
+import { CategoriaVacante } from '../../../../types/categoriaVacante';
 
 interface Step1Props {
   formData: any;
@@ -31,6 +32,7 @@ export const Step1BasicInfo: React.FC<Step1Props> = ({ formData, onChange }) => 
         <label className="form-label fw-semibold text-dark small mb-1">
           Category <span className="text-teal">*</span>
         </label>
+
         <select
           name="category"
           value={formData.category}
@@ -38,10 +40,12 @@ export const Step1BasicInfo: React.FC<Step1Props> = ({ formData, onChange }) => 
           className="form-select bg-light border-0 py-2.5 px-3 rounded-3 text-dark small"
         >
           <option value="">Select a category</option>
-          <option value="warehouse">Warehouse & Logistics</option>
-          <option value="events">Event Support</option>
-          <option value="cleaning">Commercial Cleaning</option>
-          <option value="hospitality">Restaurant & Hospitality</option>
+
+          {Object.values(CategoriaVacante).map((categoria) => (
+            <option key={categoria.value} value={categoria.value}>
+              {categoria.text}
+            </option>
+          ))}
         </select>
       </div>
 

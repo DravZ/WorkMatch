@@ -1,5 +1,6 @@
 import { useNotification } from "../context/NotificationContext/NotificationContext";
 import { vacanteService } from "../services/vacante.service"; 
+import type { EstadoVacante } from "../types/estadoVacante";
 
 interface CrearVacanteData {
   id_empresa: number;
@@ -14,7 +15,7 @@ interface CrearVacanteData {
   duracion_estimada?: string;
   requerimientos?: string;
   habilidades_optimas?: string;
-  estado?: string;
+  estado?: EstadoVacante;
   urgente?: boolean;
   tipo_pago: "hora" | "fijo";
 }
@@ -31,7 +32,7 @@ interface UpdateVacanteData {
   duracion_estimada?: string;
   requerimientos?: string;
   habilidades_optimas?: string;
-  estado?: string;
+  estado?: EstadoVacante;
   urgente?: boolean;
   tipo_pago?: "hora" | "fijo";
 }
