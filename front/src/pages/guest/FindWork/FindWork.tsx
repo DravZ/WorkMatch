@@ -2,7 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { JobCard } from '../../../components/guest/FindWork/temp';
 import styles from './FindWork.module.css';
 
-const CATEGORIES = ['All', 'Delivery', 'Events', 'Cleaning', 'Hospitality', 'Moving', 'Security'];
+
+const CATEGORIES = [
+  'All',
+  'Technology & IT',
+  'Engineering & Technical',
+  'Construction & Skilled Trades',
+  'Healthcare & Wellness',
+  'Education & Training',
+  'Business, Finance & Administration',
+  'Sales & Customer Service',
+  'Marketing, Media & Creative',
+  'Hospitality, Food & Tourism',
+  'Transportation & Logistics',
+  'Retail & Commerce',
+  'Security & Public Safety',
+  'Agriculture & Environmental',
+  'Science & Research',
+  'Legal & Government',
+  'Cleaning & Maintenance',
+  'Personal & Community Services',
+  'Other'
+];
 
 function getTimeAgo(dateString: string): string {
   if (!dateString) return 'Reciente';
@@ -17,7 +38,7 @@ function getTimeAgo(dateString: string): string {
   } else if (diffInDays === 1) {
     return '1 d ago';
   } else if (diffInDays < 7) {
-    return ` ${diffInDays} d ago`;
+    return `${diffInDays} d ago`;
   } else if (diffInDays < 30) {
     const weeks = Math.floor(diffInDays / 7);
     return weeks === 1 ? '1 wk ago' : `${weeks} wk ago`;
@@ -26,6 +47,7 @@ function getTimeAgo(dateString: string): string {
     return months === 1 ? '1 mo ago' : `${months} mo ago`;
   }
 }
+
 export default function FindWork() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -40,21 +62,34 @@ export default function FindWork() {
     fetch('http://localhost:3000/vacante')
       .then((res) => res.json())
       .then((data) => {
-        const formattedJobs = data.map((vacante: any) => ({
-          id: vacante.id_vacante,
-          status: vacante.urgente ? '⚡Urgent' : 'Open',
-          title: vacante.titulo,
-          category: vacante.categoria?.nombre ? vacante.categoria.nombre.toUpperCase() : 'GENERAL',
-          companyName: vacante.empresa?.nombre_empresa || 'Empresa Confidencial',
-          companyLogoText: vacante.empresa?.nombre_empresa ? vacante.empresa.nombre_empresa.substring(0, 2).toUpperCase() : 'WM',
-          verifiedText: 'Verified',
-          payRate: Number(vacante.salario) || 0,
-          location: vacante.ubicacion,
-          schedule: vacante.horario || 'Tiempo completo', 
-          tags: [vacante.habilidades_optimas],
-          spots: vacante.empleados_necesarios || 1,
-          timeAgo: getTimeAgo(vacante.fecha_publicacion)
-        }));
+        const formattedJobs = data.map((vacante: any) => {
+         
+          let categoryText = 'Other';
+          if (typeof vacante.categoria === 'object' && vacante.categoria?.text) {
+            categoryText = vacante.categoria.text;
+          } else if (typeof vacante.categoria === 'string') {
+            categoryText = vacante.categoria;
+          } else if (vacante.categoria?.nombre) {
+            categoryText = vacante.categoria.nombre;
+          }
+
+          return {
+            id: vacante.id_vacante,
+            status: vacante.urgente ? '⚡Urgent' : 'Open',
+            title: vacante.titulo,
+            category: categoryText,
+            companyName: vacante.empresa?.nombre_empresa || 'Empresa Confidencial',
+            companyLogoText: vacante.empresa?.nombre_empresa ? vacante.empresa.nombre_empresa.substring(0, 2).toUpperCase() : 'WM',
+            verifiedText: 'Verified',
+            payRate: Number(vacante.salario) || 0,
+            location: vacante.ubicacion,
+            schedule: vacante.horario || 'Tiempo completo', 
+            tags: [vacante.habilidades_optimas],
+            spots: vacante.empleados_necesarios || 1,
+            timeAgo: getTimeAgo(vacante.fecha_publicacion),
+            rawDate: vacante.fecha_publicacion 
+          };
+        });
 
         setJobs(formattedJobs);
         setLoading(false);
@@ -79,6 +114,9 @@ export default function FindWork() {
   }).sort((a, b) => {
     if (sortBy === 'Highest pay') return b.payRate - a.payRate;
     if (sortBy === 'Lowest pay') return a.payRate - b.payRate;
+    if (sortBy === 'Newest first') {
+      return new Date(b.rawDate).getTime() - new Date(a.rawDate).getTime();
+    }
     return 0; 
   });
 
@@ -188,5 +226,3 @@ export default function FindWork() {
     </div>
   );
 }
-
-
