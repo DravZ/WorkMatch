@@ -40,4 +40,14 @@ export class PostulacionController {
   remove(@Param('id') id: string) {
     return this.postulacionService.remove(+id);
   }
+
+  @Post('aceptar')
+aceptar(@Body() body: { id_vacante: number; id_usuario: number }) {
+  return this.postulacionService.aceptarTrabajador(body.id_vacante, body.id_usuario);
+}
+
+@Post('revocar')
+revocar(@Body() body: { id_vacante: number; id_usuario: number }) {
+  return this.postulacionService.revocarAceptacion(body.id_vacante, body.id_usuario);
+}
 }

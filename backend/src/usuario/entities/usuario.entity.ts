@@ -43,6 +43,9 @@ export class Usuario {
   @OneToOne(() => Empresa, empresa => empresa.usuario)
   empresa!: Empresa;
 
+  @Column({ default: 0 })
+  trabajos_completados!: number;
+
   @OneToOne(() => Trabajador, trabajador => trabajador.usuario)
   trabajador!: Trabajador;
 }

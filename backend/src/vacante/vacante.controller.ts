@@ -47,4 +47,15 @@ export class VacanteController {
   remove(@Param('id') id: string) {
     return this.vacanteService.remove(+id);
   }
+
+  @Patch(':id/finalizar')
+finalizar(@Param('id') id: string) {
+  return this.vacanteService.finalizarVacante(+id);
+}
+
+@Get('empresa/:id/postulaciones')
+postulacionesPorEmpresa(@Param('id') id: string) {
+  return this.vacanteService.postulacionesPorEmpresa(+id);
+}
+
 }
