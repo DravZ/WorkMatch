@@ -26,7 +26,6 @@ export class VacanteService {
     private usuarioRepository: Repository<Usuario>,
 
   ) {}
-  ) { }
 
   async create(createVacanteDto: CreateVacanteDto) {
     const empresa = await this.empresaRepository.findOneBy({
