@@ -74,13 +74,13 @@ export const WorkerCard: React.FC<WorkerCardProps> = ({ worker, onInvite }) => {
             <span className="text-muted ms-1">✓ {worker.jobsCompleted} jobs</span>
           </div>
 
-          <button
+          {/**<button
             onClick={() => setIsFavorite(!isFavorite)}
             className="btn btn-sm border-0 p-0 text-muted rounded-circle d-flex align-items-center justify-content-center"
             style={{ width: '28px', height: '28px', backgroundColor: '#f8fafc' }}
           >
             {isFavorite ? '❤️' : '♡'}
-          </button>
+          </button> */}
         </div>
 
         {/* Ubicación y Disponibilidad */}
