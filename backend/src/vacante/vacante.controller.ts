@@ -8,7 +8,7 @@ export class VacanteController {
 
   constructor(
     private readonly vacanteService: VacanteService,
-  ) {}
+  ) { }
 
   @Post()
   create(@Body() createVacanteDto: CreateVacanteDto) {
@@ -18,6 +18,13 @@ export class VacanteController {
   @Get()
   findAll() {
     return this.vacanteService.findAll();
+  }
+
+  @Get('empresa/:id_empresa')
+  findByEmpresaId(
+    @Param('id_empresa') id_empresa: string,
+  ) {
+    return this.vacanteService.findByEmpresaId(+id_empresa);
   }
 
   @Get(':id')

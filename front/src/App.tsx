@@ -72,7 +72,8 @@ function App() {
             {/* ==================== EMPLOYER ==================== */}
             <Route element={<RoleGuard allowedRoles={['hire', 'admin']} />}>
               <Route element={<EmployerLayout />}>
-                <Route path="/employer/" element={<EmployerDashboard />} />
+                {/*<Route path="/employer/" element={<EmployerDashboard />} />*/}
+                <Route path="/employer/" element={<CompanyProfile />}/>
                 <Route path="/employer/applications" element={<EmployerApplications />} />
                 <Route path="/employer/post-job" element={<PostJob />} />
                 <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />

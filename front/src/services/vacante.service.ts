@@ -10,6 +10,10 @@ export const vacanteService = {
     return api.get<any>('/vacante');
   },
 
+  findByEmpresaId(id_empresa: number) {
+    return api.get<any>(`/vacante/empresa/${id_empresa}`);
+  },
+
   findById(id_vacante: number) {
     return api.get<any>(`/vacante/${id_vacante}`);
   },

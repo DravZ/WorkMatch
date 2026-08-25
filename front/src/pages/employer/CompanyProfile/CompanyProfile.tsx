@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useUser } from '../../../context/UserContext/UserContext';
 import { useEmpresaController } from '../../../controllers/empresas.controller';
+import { useVacanteController } from '../../../controllers/vacante.controller';
+
+// 2. Reemplazar o adaptar la interfaz para que coincida con la Entidad del Backend
+interface VacanteBackend {
+  id_vacante: number;
+  titulo: string;
+  ubicacion: string;
+  horario: string;
+  salario: string;
+  tipo_pago: 'hora' | 'fijo';
+  empleados_necesarios: number;
+  urgente: boolean;
+  estado: string;
+}
 
 interface ActiveJob {
   id: string;
@@ -48,6 +62,9 @@ export const CompanyProfile: React.FC = () => {
       trabajos_completados: 0,
     });
 
+  const { getByEmpresaId } = useVacanteController();
+  const [vacantes, setVacantes] = useState<VacanteBackend[]>([]);
+
   const getInitials = (name?: string): string => {
     if (!name) return '';
     const words = name.trim().split(/\s+/);
@@ -57,42 +74,6 @@ export const CompanyProfile: React.FC = () => {
     return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
   };
 
-  // Datos de trabajos activos según el diseño
-  const activeJobs: ActiveJob[] = [
-    {
-      id: '1',
-      title: 'Warehouse Picker & Packer',
-      location: 'Brooklyn, NY',
-      schedule: 'Mon–Fri, 7am–3pm',
-      rate: '$22/hr',
-      spotsLeft: 2,
-    },
-    {
-      id: '2',
-      title: 'Event Setup Crew',
-      location: 'Manhattan, NY',
-      schedule: 'Sat, 6am–2pm',
-      rate: '$25/hr',
-      spotsLeft: 3,
-      isUrgent: true,
-    },
-    {
-      id: '3',
-      title: 'Office Deep Clean',
-      location: 'Midtown, NY',
-      schedule: 'Sun, 8am–12pm',
-      rate: '$320',
-      spotsLeft: 2,
-    },
-    {
-      id: '4',
-      title: 'Restaurant Kitchen Helper',
-      location: 'West Village, NY',
-      schedule: 'Fri–Sat, 4pm–12am',
-      rate: '$18/hr',
-      spotsLeft: 1,
-    },
-  ];
 
   // Datos de reseñas recibidas
   const reviews: Review[] = [
@@ -114,9 +95,10 @@ export const CompanyProfile: React.FC = () => {
       }
 
       try {
-        const [empresaResponse, estadisticasResponse] = await Promise.all([
+        const [empresaResponse, estadisticasResponse, vacantesResponse] = await Promise.all([
           getById(user.empresaId),
           getEstadisticas(user.empresaId),
+          getByEmpresaId(user.empresaId)
         ]);
 
         setEmpresa(empresaResponse);
@@ -127,6 +109,8 @@ export const CompanyProfile: React.FC = () => {
             trabajos_completados: 0,
           }
         );
+
+        setVacantes(vacantesResponse ?? [])
 
         console.log("EMPRESA OBTENIDA:");
         console.log(empresaResponse);
@@ -371,44 +355,56 @@ export const CompanyProfile: React.FC = () => {
                 Reviews
               </button>
             </div>
-
+            
             {/* CONTENIDO TAB 1: ACTIVE JOBS */}
             {activeTab === 'jobs' && (
               <div className="d-flex flex-column gap-3">
-                {activeJobs.map((job) => (
-                  <div
-                    key={job.id}
-                    className="card border-0 shadow-sm rounded-4 p-4 bg-white d-flex flex-row align-items-center justify-content-between"
-                  >
-                    <div>
-                      <h3 className="h6 fw-bold text-dark mb-1">{job.title}</h3>
-                      <p className="text-muted extra-small mb-0">
-                        📍 {job.location} · 📅 {job.schedule}
-                      </p>
-                    </div>
-
-                    <div className="text-end">
-                      <div className="d-flex align-items-center gap-2 justify-content-end mb-1">
-                        <span className="h6 fw-bold text-dark mb-0">{job.rate}</span>
-                        {job.isUrgent && (
-                          <span
-                            className="badge fw-medium px-2 py-1 rounded-pill extra-small"
-                            style={{
-                              backgroundColor: '#e6f7f4',
-                              color: '#0b9982',
-                              fontSize: '0.65rem',
-                            }}
-                          >
-                            Urgent
-                          </span>
-                        )}
+                {vacantes.length === 0 ? (
+                  <p className="text-muted extra-small text-center py-3 mb-0">
+                    No hay vacantes activas publicadas.
+                  </p>
+                ) : (
+                  vacantes.map((job) => (
+                    <div
+                      key={job.id_vacante}
+                      className="card border-0 shadow-sm rounded-4 p-4 bg-white d-flex flex-row align-items-center justify-content-between"
+                    >
+                      <div>
+                        <h3 className="h6 fw-bold text-dark mb-1">{job.titulo}</h3>
+                        <p className="text-muted extra-small mb-0">
+                          📍 {job.ubicacion}
+                        </p>
+                        <p className="text-muted extra-small mb-0">
+                          📅 {job.horario || 'Horario no especificado'}
+                        </p>
                       </div>
-                      <span className="text-muted extra-small d-block">
-                        {job.spotsLeft} {job.spotsLeft === 1 ? 'spot left' : 'spots left'}
-                      </span>
+
+                      <div className="text-end">
+                        <div className="d-flex align-items-center gap-2 justify-content-end mb-1">
+                          <span className="h6 fw-bold text-dark mb-0">
+                            ${job.salario}{job.tipo_pago === 'hora' ? '/hr' : ''}
+                          </span>
+                          {job.urgente && (
+                            <span
+                              className="badge fw-medium px-2 py-1 rounded-pill extra-small"
+                              style={{
+                                backgroundColor: '#e6f7f4',
+                                color: '#0b9982',
+                                fontSize: '0.65rem',
+                              }}
+                            >
+                              Urgent
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-muted extra-small d-block">
+                          {job.empleados_necesarios}{' '}
+                          {job.empleados_necesarios === 1 ? 'spot left' : 'spots left'}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             )}
 
