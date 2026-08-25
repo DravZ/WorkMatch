@@ -41,14 +41,14 @@ export const JobCard: React.FC<JobCardProps> = ({ job, onApply, onToggleFavorite
         {/* Header de la tarjeta */}
         <div className="d-flex justify-content-between align-items-start mb-2">
           <StatusBadge_W status={job.statusTag} />
-          <button 
+          {/*<button 
             type="button" 
             onClick={handleFavoriteClick}
             className={`btn p-0 border-0 ${styles.favBtn} ${isFav ? styles.favActive : ''}`}
             aria-label="Save Job"
           >
             {isFav ? '❤️' : '🤍'}
-          </button>
+          </button> */}
         </div>
 
         {/* Título y Precio */}

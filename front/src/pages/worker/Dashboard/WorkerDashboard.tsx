@@ -2,8 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './WorkerDashboard.module.css';
 import { StatusBadge_W, type StatusType } from '../../../components/worker/Dashboard/StatusBadge/StatusBadge_W';
+import { useUser } from '../../../context/UserContext/UserContext';
 
 export const WorkerDashboard: React.FC = () => {
+
+  const {user} = useUser();
   const upcomingWork = [
     { id: '1', title: 'Warehouse Picker & Packer', company: 'Metro Logistics Co.', date: '2026-08-15', rate: '$22/hr', status: 'Confirmed' as StatusType },
     { id: '2', title: 'Event Setup Crew', company: 'Prestige Events Group', date: '2026-08-16', rate: '$25/hr', status: 'Confirmed' as StatusType },
@@ -30,22 +33,31 @@ export const WorkerDashboard: React.FC = () => {
     { id: '4', icon: '📋', title: 'New job matching your skills', time: 'Yesterday', active: false },
   ];
 
+   const getInitials = (name: string) => {
+    return name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map(word => word[0].toUpperCase())
+      .join("");
+  };
+
   return (
     <div className="min-vh-100 bg-light">
 
       <main className="container py-4">
         {/* Header Greeting */}
         <div className="d-flex align-items-center gap-3 mb-4">
-          <div className={styles.headerAvatar}>MT</div>
+          <div className={styles.headerAvatar}>{getInitials(user?.nombreCompleto ?? '')}</div>
           <div>
-            <h1 className="h3 fw-bold text-dark mb-0">Good morning, Marcus.</h1>
-            <p className="text-muted small mb-0">1 pending application · 2 upcoming jobs</p>
+            <h1 className="h3 fw-bold text-dark mb-0">Good morning, {user?.nombreCompleto}.</h1>
+            {/*<p className="text-muted small mb-0">1 pending application · 2 upcoming jobs</p> */}
           </div>
         </div>
 
         <div className="row g-4">
           {/* Columna Izquierda Principal */}
-          <div className="col-12 col-lg-8">
+          <div className="col-12 col-lg-12">
             
             {/* Sección: Upcoming Work */}
             <div className={`p-4 bg-white mb-4 ${styles.contentCard}`}>
@@ -95,7 +107,7 @@ export const WorkerDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Sección: Recommended for you */}
+            {/* Sección: Recommended for you 
             <div className={`p-4 bg-white ${styles.contentCard}`}>
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <h2 className="h6 fw-bold text-dark mb-0">Recommended for you</h2>
@@ -124,80 +136,7 @@ export const WorkerDashboard: React.FC = () => {
                 ))}
               </div>
             </div>
-
-          </div>
-
-          {/* Columna Derecha Lateral */}
-          <div className="col-12 col-lg-4">
-            
-            {/* Card: User Profile */}
-            <div className={`p-4 bg-white mb-4 ${styles.contentCard}`}>
-              <div className="d-flex align-items-center gap-3 mb-3">
-                <div className={styles.profileAvatar}>MT</div>
-                <div>
-                  <h3 className="fw-bold text-dark fs-6 mb-0">Marcus Thompson</h3>
-                  <p className="text-muted small mb-0">⭐ 4.9 · 52 jobs done</p>
-                </div>
-              </div>
-
-              <div className="mb-3">
-                <div className="d-flex justify-content-between align-items-center mb-1">
-                  <span className="text-muted small fw-medium">Profile strength</span>
-                  <span className="fw-bold text-teal small">83%</span>
-                </div>
-                <div className="progress" style={{ height: '6px' }}>
-                  <div className="progress-bar bg-teal" role="progressbar" style={{ width: '83%' }}></div>
-                </div>
-              </div>
-
-              <Link to="/profile" className={`btn w-100 py-2 ${styles.btnSecondary}`}>
-                View my profile
-              </Link>
-            </div>
-
-            {/* Card: Notifications */}
-            <div className={`p-4 bg-white mb-4 ${styles.contentCard}`}>
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h2 className="h6 fw-bold text-dark mb-0">Notifications</h2>
-                <Link to="/notifications" className={styles.viewAllLink}>View all</Link>
-              </div>
-
-              <div className="d-flex flex-column gap-2">
-                {notifications.map((notif) => (
-                  <div 
-                    key={notif.id} 
-                    className={`p-3 rounded-3 d-flex align-items-start gap-2 ${
-                      notif.active ? styles.notifActive : styles.notifInactive
-                    }`}
-                  >
-                    <span className="fs-6 me-1">{notif.icon}</span>
-                    <div>
-                      <h4 className="fw-bold text-dark small mb-0">{notif.title}</h4>
-                      <span className="text-muted extra-small">{notif.time}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Card: Earnings (This Month) */}
-            <div className={`p-4 ${styles.earningsCard}`}>
-              <span className={styles.earningsSubtitle}>THIS MONTH</span>
-              <h2 className="display-6 fw-bold my-1">$1,284</h2>
-              <p className={styles.earningsSummary}>Across 6 completed jobs</p>
-
-              <div className="d-flex align-items-center gap-4 mt-4 pt-2 border-top border-secondary border-opacity-25">
-                <div>
-                  <span className={styles.statLabel}>Avg. rate</span>
-                  <p className="fw-bold fs-6 mb-0">$24/hr</p>
-                </div>
-                <div>
-                  <span className={styles.statLabel}>Hours worked</span>
-                  <p className="fw-bold fs-6 mb-0">52h</p>
-                </div>
-              </div>
-            </div>
-
+            */}
           </div>
         </div>
       </main>

@@ -137,7 +137,7 @@ export const PostJob: React.FC = () => {
         ubicacion: formData.location,
         salario: formData.payRate,
         fecha_inicio: formData.startDate,
-        empleados_necesarios: formData.workersNeeded,
+        empleados_necesarios: Number(formData.workersNeeded),
         horario: formData.schedule,
         duracion_estimada: formData.expectedDuration,
         requerimientos: formData.requirements,
