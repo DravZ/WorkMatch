@@ -80,6 +80,21 @@ export const useVacanteController = () => {
     }
   };
 
+  const getByEmpresaId = async (id_empresa: number) => {
+    try {
+      const { data: response } =
+        await vacanteService.findByEmpresaId(id_empresa);
+
+      return response;
+    } catch (error) {
+      showNotification({
+        type: "error",
+        title: "Error",
+        description: "No se pudieron obtener las vacantes de la empresa.",
+      });
+    }
+  };
+
   const getById = async (id_vacante: number) => {
     try {
       const { data: response } = await vacanteService.findById(id_vacante);
@@ -152,6 +167,7 @@ export const useVacanteController = () => {
   return {
     create,
     getAll,
+    getByEmpresaId,
     getById,
     update,
     remove,

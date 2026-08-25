@@ -26,6 +26,7 @@ export class VacanteService {
     private usuarioRepository: Repository<Usuario>,
 
   ) {}
+  ) { }
 
   async create(createVacanteDto: CreateVacanteDto) {
     const empresa = await this.empresaRepository.findOneBy({
@@ -72,6 +73,18 @@ export class VacanteService {
         categoria: true,
       },
     });
+  }
+
+  async findByEmpresaId(id_empresa: number) {
+    return this.vacanteRepository
+      .createQueryBuilder('vacante')
+      .leftJoinAndSelect('vacante.empresa', 'empresa')
+      .leftJoinAndSelect('vacante.categoria', 'categoria')
+      .where('empresa.id_empresa = :id_empresa', { id_empresa })
+      .andWhere('vacante.estado != :estado', {
+        estado: EstadoVacante.CANCELADA,
+      })
+      .getMany();
   }
 
   async findOne(id: number) {

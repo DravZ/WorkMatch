@@ -9,6 +9,7 @@ import {
 import { Mensaje } from '../../mensajes/entities/mensaje.entity';
 import { Postulacion } from '../../postulacion/entities/postulacion.entity';
 import { Empresa } from '../../empresa/entities/empresa.entity';
+import { Trabajador } from 'src/trabajador/entities/trabajador.entity';
 
 @Entity('usuarios')
 export class Usuario {
@@ -45,4 +46,6 @@ export class Usuario {
   @Column({ default: 0 })
   trabajos_completados!: number;
 
+  @OneToOne(() => Trabajador, trabajador => trabajador.usuario)
+  trabajador!: Trabajador;
 }

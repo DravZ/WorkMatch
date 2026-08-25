@@ -33,6 +33,7 @@ import { UserProvider } from './context/UserContext/UserContext';
 import { GuestGuard } from './guards/GuestGuard';
 import { RoleGuard } from './guards/RoleGuard';
 import { EditCompanyProfile } from './pages/employer/EditCompanyProfile/EditCompanyProfile';
+import { EditWorkerProfile } from './pages/worker/EditWorkerProfile/EditWorkerProfile';
 
 function App() {
   return (
@@ -58,12 +59,14 @@ function App() {
             {/* ==================== WORKER ==================== */}
             <Route element={<RoleGuard allowedRoles={['work', 'admin']} />}>
               <Route element={<WorkerLayout />}>
+                {/*<Route path="/worker/" element={<WorkerDashboard />} /> */}
                 <Route path="/worker/" element={<WorkerDashboard />} />
                 <Route path="/worker/applications" element={<Applications />} />
                 <Route path="/worker/find-jobs" element={<FindJobs />} />
                 <Route path="/worker/messages" element={<Messages />} />
                 <Route path="/worker/notifications" element={<WorkerNotifications />} />
                 <Route path="/worker/profile" element={<WorkerProfile />} />
+                <Route path="/worker/profile/edit" element={<EditWorkerProfile />} />
                 <Route path="/worker/saved" element={<Saved />} />
                 <Route path="/worker/job-view" element={<WorkerJobView />} />
               </Route>
@@ -72,7 +75,8 @@ function App() {
             {/* ==================== EMPLOYER ==================== */}
             <Route element={<RoleGuard allowedRoles={['hire', 'admin']} />}>
               <Route element={<EmployerLayout />}>
-                <Route path="/employer/" element={<EmployerDashboard />} />
+                {/*<Route path="/employer/" element={<EmployerDashboard />} />*/}
+                <Route path="/employer/" element={<CompanyProfile />}/>
                 <Route path="/employer/applications" element={<EmployerApplications />} />
                 <Route path="/employer/post-job" element={<PostJob />} />
                 <Route path="/employer/find-workers" element={<FindWorkers_Emp />} />

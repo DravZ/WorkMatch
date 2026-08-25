@@ -41,7 +41,7 @@ export default function HireWorkers() {
 
   const filteredWorkers = useMemo(() => {
     return workers.filter((worker) => {
-      const matchesCategory = category === 'All' || worker.areaTrabajo === category;
+      const matchesCategory = category === 'All' || worker.profession === category;
 
       const matchesSearch =
         search.trim() === '' ||

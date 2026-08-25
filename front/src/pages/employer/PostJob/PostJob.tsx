@@ -142,7 +142,7 @@ export const PostJob: React.FC = () => {
         duracion_estimada: formData.expectedDuration,
         requerimientos: formData.requirements,
         habilidades_optimas: formData.skills,
-        urgente: false,
+        urgente: formData.isRemote,
         tipo_pago: (
           formData.payType === "Hourly" ? "hora" : "fijo"
         ) as "hora" | "fijo",

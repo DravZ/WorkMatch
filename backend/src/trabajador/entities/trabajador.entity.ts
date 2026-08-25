@@ -17,7 +17,7 @@ export class Trabajador {
   @PrimaryGeneratedColumn()
   id_trabajador!: number;
 
-  @OneToOne(() => Usuario)
+  @OneToOne(() => Usuario, (usuario) => usuario.trabajador)
   @JoinColumn()
   usuario!: Usuario;
 
@@ -42,21 +42,26 @@ export class Trabajador {
   @Column({ nullable: true })
   area_trabajo!: string;
 
+  @Column({ nullable: true })
+  acercaDe!: string;
+
+  @Column({ nullable: true })
+  experienciaLaboral!: string;
+
   @Column({ default: false })
   is_verified!: boolean;
 
   @Column({ nullable: true })
-  disponibilidad!: string; // ej. "available now", "weekends"
+  disponibilidad!: string;
 
-  @ManyToMany(() => Habilidad, (habilidad) => habilidad.trabajadores, {
-    cascade: true,
-  })
+  @ManyToMany(() => Habilidad, (habilidad) => habilidad.trabajadores)
   @JoinTable()
   habilidades!: Habilidad[];
 
-  @ManyToMany(() => CategoriaVacante, (categoria) => categoria.trabajadores, {
-    cascade: true,
-  })
+  @ManyToMany(
+    () => CategoriaVacante,
+    (categoria) => categoria.trabajadores,
+  )
   @JoinTable()
   categorias!: CategoriaVacante[];
 }

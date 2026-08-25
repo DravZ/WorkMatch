@@ -37,17 +37,9 @@ export const ProfileOverview: React.FC<ProfileOverviewProps> = ({
       {/* Seccion Work Experience */}
       <div className="card border-0 shadow-sm p-4 rounded-4">
         <h2 className="h6 fw-bold text-dark mb-3">Work experience</h2>
-        <ul className="list-unstyled mb-0 d-flex flex-column gap-3">
-          {experiences.map((exp, idx) => (
-            <li key={idx} className="d-flex align-items-start gap-2 small text-muted">
-              <span className="text-teal fw-bold">•</span>
-              <div>
-                <strong className="text-dark fw-semibold">{exp.title}</strong> — {exp.company} (
-                {exp.period})
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div  className="list-unstyled mb-0 d-flex flex-column gap-3">
+          {`${experiences}`}
+        </div>
       </div>
     </div>
   );
