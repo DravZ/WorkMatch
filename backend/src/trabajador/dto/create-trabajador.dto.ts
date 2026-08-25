@@ -4,9 +4,16 @@ import {
   IsNumber,
   IsBoolean,
   IsIn,
+  IsArray,
+  IsInt,
 } from 'class-validator';
 
 export class CreateTrabajadorDto {
+  // Relación con Usuario
+  @IsNumber()
+  idUsuario!: number;
+
+  // Datos del trabajador
   @IsOptional()
   @IsString()
   ubicacion?: string;
@@ -51,4 +58,16 @@ export class CreateTrabajadorDto {
   @IsOptional()
   @IsString()
   disponibilidad?: string;
+
+  // Relación ManyToMany con Habilidad
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  habilidades?: number[];
+
+  // Relación ManyToMany con CategoriaVacante
+  @IsOptional()
+  @IsArray()
+  @IsInt({ each: true })
+  categorias?: number[];
 }
