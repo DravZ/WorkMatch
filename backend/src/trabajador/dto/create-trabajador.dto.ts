@@ -31,6 +31,10 @@ export class CreateTrabajadorDto {
   acercaDe?: string;
 
   @IsOptional()
+  @IsString()
+  experienciaLaboral?: string;
+
+  @IsOptional()
   @IsNumber()
   calificacion?: number;
 

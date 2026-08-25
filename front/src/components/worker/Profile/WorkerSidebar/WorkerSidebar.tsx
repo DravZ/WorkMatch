@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './WorkerSidebar.module.css';
+import { useNavigate } from 'react-router-dom';
 
 interface WorkerSidebarProps {
   name: string;
@@ -32,12 +33,27 @@ export const WorkerSidebar: React.FC<WorkerSidebarProps> = ({
   categories,
   profileStrength,
 }) => {
+
+  const navigate = useNavigate();
+
+
+  const getInitials = (name: string) => {
+    return name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map(word => word[0].toUpperCase())
+      .join("");
+  };
+
   return (
     <div className="d-flex flex-column gap-3">
       {/* Targeta Principal de Usuario */}
       <div className="card border-0 shadow-sm p-4 text-center rounded-4">
         <div className="position-relative mx-auto mb-3" style={{ width: '80px', height: '80px' }}>
-          <div className={styles.avatar}>MT</div>
+          <div className={styles.avatar}>
+            {getInitials(name)}
+          </div>
         </div>
 
         <h2 className="h5 fw-bold text-dark mb-1 d-flex align-items-center justify-content-center gap-1">
@@ -70,7 +86,11 @@ export const WorkerSidebar: React.FC<WorkerSidebarProps> = ({
         </div>
         */}
 
-        <button type="button" className={`btn w-100 ${styles.btnEdit}`}>
+        <button
+          type="button"
+          className={`btn w-100 ${styles.btnEdit}`}
+          onClick={() => navigate("/worker/profile/edit")}
+        >
           Edit profile
         </button>
       </div>
@@ -125,6 +145,7 @@ export const WorkerSidebar: React.FC<WorkerSidebarProps> = ({
           ></div>
         </div>
 
+        {/*
         <ul className="list-unstyled extra-small mb-0 d-flex flex-column gap-2 text-muted">
           <li className="d-flex justify-content-between align-items-center">
             <span>⚪ Profile photo</span>
@@ -138,6 +159,7 @@ export const WorkerSidebar: React.FC<WorkerSidebarProps> = ({
           <li className="text-teal fw-medium">✓ Identity verified</li>
           <li className="text-teal fw-medium">✓ Availability set</li>
         </ul>
+        */}
       </div>
     </div>
   );

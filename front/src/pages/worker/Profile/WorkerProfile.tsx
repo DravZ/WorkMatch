@@ -41,9 +41,8 @@ export const WorkerProfile: React.FC = () => {
     location: trabajador?.ubicacion ?? 'Not specified',
     availability:
       trabajador?.disponibilidad ?? 'Not specified',
-    roleTitle: 'General Laborer & Warehouse Specialist',
+    roleTitle: trabajador?.especialidad_carrera ?? '',
     completionRate: '98%',
-
     responseTime: 'Usually within 1 hour',
     categories:
       trabajador?.categorias?.map(
@@ -81,11 +80,7 @@ export const WorkerProfile: React.FC = () => {
       trabajador?.habilidades?.map(
         (habilidad: { nombre: string }) => habilidad.nombre
       ) ?? [],
-    experiences: [
-      { title: 'Warehouse Associate', company: 'Amazon Fulfillment Center', period: '2022–2024' },
-      { title: 'Delivery Driver', company: 'FedEx Ground', period: '2020–2022' },
-      { title: 'Moving Crew Lead', company: 'Two Men and a Truck', period: '2018–2020' },
-    ],
+    experiences: trabajador?.experienciaLaboral ?? 'Nothing to show here.',
     reviews: [
       {
         id: '1',

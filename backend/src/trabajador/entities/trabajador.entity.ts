@@ -45,6 +45,9 @@ export class Trabajador {
   @Column({ nullable: true })
   acercaDe!: string;
 
+  @Column({ nullable: true })
+  experienciaLaboral!: string;
+
   @Column({ default: false })
   is_verified!: boolean;
 

@@ -10,6 +10,7 @@ interface CrearTrabajadorData {
   calificacion?: number;
   total_calificaciones?: number;
   acercaDe?: string;
+  experienciaLaboral?: string;
   especialidad_carrera?: string;
   area_trabajo?:
     | "Delivery"
@@ -33,6 +34,7 @@ interface UpdateTrabajadorData {
   calificacion?: number;
   total_calificaciones?: number;
   acercaDe?: string;
+  experienciaLaboral?: string;
   especialidad_carrera?: string;
   area_trabajo?:
     | "Delivery"
