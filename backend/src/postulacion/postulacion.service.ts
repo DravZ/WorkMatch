@@ -113,4 +113,48 @@ export class PostulacionService {
       message: `Postulacion with Id:${id} has been deleted successfully`,
     };
   }
+
+
+      async aceptarTrabajador(id_vacante: number, id_usuario: number) {
+      const vacante = await this.vacanteRepository.findOne({
+        where: { id_vacante },
+        relations: { postulaciones: true },
+      });
+
+      if (!vacante) throw new NotFoundException('Vacante no encontrada');
+      if (vacante.fecha_inicio && new Date() >= vacante.fecha_inicio) {
+        throw new Error('Ya no se puede aceptar trabajadores después de la fecha de inicio');
+      }
+      const aceptados = vacante.postulaciones.filter(p => p.estado === 'aceptado').length;
+      if (aceptados >= vacante.empleados_necesarios) {
+        throw new Error('Ya se alcanzó el límite de trabajadores aceptados');
+      }
+      const postulacion = await this.postulacionRepository.findOne({
+        where: { usuario: { id_usuario }, vacante: { id_vacante } },
+        relations: { usuario: true, vacante: true },
+      });
+      if (!postulacion) throw new NotFoundException('Postulación no encontrada');
+      postulacion.estado = 'aceptado';
+      return this.postulacionRepository.save(postulacion);
+    }
+
+    async revocarAceptacion(id_vacante: number, id_usuario: number) {
+      const vacante = await this.vacanteRepository.findOne({ where: { id_vacante } });
+      if (!vacante) throw new NotFoundException('Vacante no encontrada');
+
+      if (vacante.fecha_inicio && new Date() >= vacante.fecha_inicio) {
+        throw new Error('Ya no se puede revocar después de la fecha de inicio');
+      }
+
+      const postulacion = await this.postulacionRepository.findOne({
+        where: { usuario: { id_usuario }, vacante: { id_vacante } },
+      });
+
+      if (!postulacion) throw new NotFoundException('Postulación no encontrada');
+
+      postulacion.estado = 'revocado';
+      return this.postulacionRepository.save(postulacion);
+    }
+
+
 }

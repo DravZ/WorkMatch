@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Vacante } from './entities/vacante.entity';
 import { Empresa } from 'src/empresa/entities/empresa.entity';
 import { CategoriaVacante } from 'src/categoria_vacante/entities/categoria_vacante.entity';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Vacante, Empresa, CategoriaVacante])],
+  imports: [TypeOrmModule.forFeature([Vacante, Empresa, CategoriaVacante, Usuario])],
   controllers: [VacanteController],
   providers: [VacanteService],
 })

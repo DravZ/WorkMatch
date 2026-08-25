@@ -3,6 +3,7 @@ export const EstadoVacante = {
   COMPLETADA: "completada",
   CERRADA: "cerrada",
   CANCELADA: "cancelada",
+  INACTIVA: 'inactiva',   
 } as const;
 
 export type EstadoVacante =
