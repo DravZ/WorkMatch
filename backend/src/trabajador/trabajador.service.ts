@@ -80,6 +80,7 @@ export class TrabajadorService {
       tarifa_hora: dto.tarifa_hora,
       trabajos_completados: dto.trabajos_completados,
       calificacion: dto.calificacion,
+      acercaDe: dto.acercaDe,
       total_calificaciones: dto.total_calificaciones,
       especialidad_carrera: dto.especialidad_carrera,
       area_trabajo: dto.area_trabajo,

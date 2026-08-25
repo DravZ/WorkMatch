@@ -38,9 +38,6 @@ export const WorkerSidebar: React.FC<WorkerSidebarProps> = ({
       <div className="card border-0 shadow-sm p-4 text-center rounded-4">
         <div className="position-relative mx-auto mb-3" style={{ width: '80px', height: '80px' }}>
           <div className={styles.avatar}>MT</div>
-          <button type="button" className={styles.avatarAddBtn} title="Upload photo">
-            +
-          </button>
         </div>
 
         <h2 className="h5 fw-bold text-dark mb-1 d-flex align-items-center justify-content-center gap-1">
@@ -48,11 +45,13 @@ export const WorkerSidebar: React.FC<WorkerSidebarProps> = ({
         </h2>
         <p className="text-muted extra-small mb-2">{roleTitle}</p>
 
+        {/*
+        
         <div className="d-flex align-items-center justify-content-center gap-1 text-warning extra-small fw-semibold mb-3">
           ★ {rating} <span className="text-muted fw-normal">({reviewsCount} reviews)</span>
         </div>
 
-        {/* Métricas destacadas */}
+        {/* Métricas destacadas 
         <div className="d-flex justify-content-around bg-light p-3 rounded-3 mb-3">
           <div>
             <div className="h5 fw-bold text-teal mb-0">{jobsDone}</div>
@@ -69,6 +68,7 @@ export const WorkerSidebar: React.FC<WorkerSidebarProps> = ({
             <span className="text-muted extra-small">Completion</span>
           </div>
         </div>
+        */}
 
         <button type="button" className={`btn w-100 ${styles.btnEdit}`}>
           Edit profile

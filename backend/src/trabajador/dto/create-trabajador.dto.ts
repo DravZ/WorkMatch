@@ -27,6 +27,10 @@ export class CreateTrabajadorDto {
   trabajos_completados?: number;
 
   @IsOptional()
+  @IsString()
+  acercaDe?: string;
+
+  @IsOptional()
   @IsNumber()
   calificacion?: number;
 

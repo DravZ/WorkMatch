@@ -42,6 +42,9 @@ export class Trabajador {
   @Column({ nullable: true })
   area_trabajo!: string;
 
+  @Column({ nullable: true })
+  acercaDe!: string;
+
   @Column({ default: false })
   is_verified!: boolean;
 

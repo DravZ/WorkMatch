@@ -1,35 +1,86 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProfileTabsNav, type TabType } from '../../../components/worker/Profile/ProfileTabsNav/ProfileTabsNav';
 import { WorkerSidebar } from '../../../components/worker/Profile/WorkerSidebar/WorkerSidebar';
 import { ProfileOverview } from '../../../components/worker/Profile/tabs/ProfileOverview/ProfileOverview';
 import { ProfileReviews } from '../../../components/worker/Profile/tabs/ProfileReviews/ProfileReviews';
 import { ProfileHistory } from '../../../components/worker/Profile/tabs/ProfileHistory/ProfileHistory';
+import { useUser } from '../../../context/UserContext/UserContext';
+import { useTrabajadorController } from '../../../controllers/trabajador.controller';
 
 export const WorkerProfile: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
 
+  const { user } = useUser();
+  const { getByIdUsuario } = useTrabajadorController();
+  const [trabajador, setTrabajador] = useState<any>(null);
+
+  useEffect(() => {
+    const loadTrabajador = async () => {
+      if (!user?.id) return;
+
+      const response = await getByIdUsuario(user.id);
+
+      if (response) {
+        setTrabajador(response);
+        console.log(response);
+      }
+    };
+
+    loadTrabajador();
+  }, [user?.id]);
+
   const profileData = {
-    name: 'Marcus Thompson',
+    name: trabajador?.usuario?.fullName ?? '-------',
+    rating: trabajador?.calificacion ?? 0,
+    reviewsCount: trabajador?.total_calificaciones ?? 0,
+    jobsDone: trabajador?.trabajos_completados ?? 0,
+    hourlyRate:
+      trabajador?.tarifa_hora != null
+        ? `$${trabajador.tarifa_hora}`
+        : '$0',
+    location: trabajador?.ubicacion ?? 'Not specified',
+    availability:
+      trabajador?.disponibilidad ?? 'Not specified',
     roleTitle: 'General Laborer & Warehouse Specialist',
-    rating: 4.9,
-    reviewsCount: 47,
-    jobsDone: 52,
-    hourlyRate: '$22',
     completionRate: '98%',
-    location: 'Brooklyn, NY',
-    availability: 'Available now',
+
     responseTime: 'Usually within 1 hour',
-    categories: ['Delivery', 'Moving', 'Construction'],
-    profileStrength: 83,
+    categories:
+      trabajador?.categorias?.map(
+        (categoria: { nombre: string }) => categoria.nombre
+      ) ?? [],
+    profileStrength: (() => {
+      if (!trabajador) return 0;
+
+      const fields = [
+        trabajador.usuario?.fullName,
+        trabajador.ubicacion,
+        trabajador.tarifa_hora,
+        trabajador.especialidad_carrera,
+        trabajador.area_trabajo,
+        trabajador.acercaDe,
+        trabajador.disponibilidad,
+        trabajador.habilidades?.length > 0,
+        trabajador.categorias?.length > 0,
+      ];
+
+      const completedFields = fields.filter(
+        (field) =>
+          field !== undefined &&
+          field !== null &&
+          field !== '' &&
+          field !== false
+      ).length;
+
+      return Math.round((completedFields / fields.length) * 100);
+    })(),
     aboutText:
-      'Reliable and hardworking with 6 years of warehouse, logistics, and general labor experience. I show up on time, follow instructions, and take pride in every job I complete. Available 7 days a week.',
-    skills: [
-      'Forklift certified',
-      'Inventory management',
-      'Heavy lifting',
-      'Pallet jack',
-      'OSHA trained',
-    ],
+      trabajador?.acercaDe ??
+      'No information available about this worker.',
+    skills:
+      trabajador?.habilidades?.map(
+        (habilidad: { nombre: string }) => habilidad.nombre
+      ) ?? [],
     experiences: [
       { title: 'Warehouse Associate', company: 'Amazon Fulfillment Center', period: '2022–2024' },
       { title: 'Delivery Driver', company: 'FedEx Ground', period: '2020–2022' },

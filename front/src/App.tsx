@@ -58,7 +58,8 @@ function App() {
             {/* ==================== WORKER ==================== */}
             <Route element={<RoleGuard allowedRoles={['work', 'admin']} />}>
               <Route element={<WorkerLayout />}>
-                <Route path="/worker/" element={<WorkerDashboard />} />
+                {/*<Route path="/worker/" element={<WorkerDashboard />} /> */}
+                <Route path="/worker/" element={<WorkerProfile />} />
                 <Route path="/worker/applications" element={<Applications />} />
                 <Route path="/worker/find-jobs" element={<FindJobs />} />
                 <Route path="/worker/messages" element={<Messages />} />

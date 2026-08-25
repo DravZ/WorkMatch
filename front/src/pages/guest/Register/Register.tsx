@@ -4,6 +4,7 @@ import styles from './Register.module.css';
 import { useRegisterController } from '../../../controllers/auth.controller';
 import { useNavigate } from 'react-router-dom';
 import { useEmpresaController } from '../../../controllers/empresas.controller';
+import { useTrabajadorController } from '../../../controllers/trabajador.controller';
 
 
 
@@ -25,8 +26,7 @@ export default function Register() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { register } = useRegisterController();
   const empresaController = useEmpresaController();
-
-
+  const trabajadorController = useTrabajadorController();
 
   const navigate = useNavigate();
 
@@ -72,6 +72,11 @@ export default function Register() {
         console.log(resp.id_usuario)
         if (role == 'work') {
           console.log("Cree un trabajador ")
+          const workSucess = await trabajadorController.create({
+            idUsuario: resp.id_usuario,
+            acercaDe: "Hi, this is my new worker profile!",
+            disponibilidad: "Available"
+          })
         }
         if (role == 'hire') {
           console.log("Cree un empleador ")
