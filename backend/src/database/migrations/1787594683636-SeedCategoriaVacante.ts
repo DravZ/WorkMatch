@@ -1,9 +1,8 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class SeedCategoriaVacante1787594683636 implements MigrationInterface {
-
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             INSERT INTO categoria_vacante (id_categoria, nombre)
             VALUES
                 (1, 'Technology & IT'),
@@ -25,10 +24,10 @@ export class SeedCategoriaVacante1787594683636 implements MigrationInterface {
                 (17 ,'Personal & Community Services'),
                 (18 ,'Other');
         `);
-    }
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
             DELETE FROM categoria_vacante
             WHERE nombre IN (
                 'Technology & IT',
@@ -51,6 +50,5 @@ export class SeedCategoriaVacante1787594683636 implements MigrationInterface {
                 'Other'
             );
         `);
-    }
-
+  }
 }
