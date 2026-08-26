@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './WorkerDashboard.module.css';
 import { StatusBadge_W, type StatusType } from '../../../components/worker/Dashboard/StatusBadge/StatusBadge_W';
 import { useUser } from '../../../context/UserContext/UserContext';
+import { usePostulacionController } from '../../../controllers/postulacion.controller';
+import { EstadoPostulacion } from '../../../types/estadoPostulacion';
 
 export const WorkerDashboard: React.FC = () => {
 
-  const {user} = useUser();
+  const { user } = useUser();
+  const postulacionController = usePostulacionController();
+
+  const [postulacionesEnProceso, setPostulacionesEnProceso] =
+    useState([]);
+
+  const [otrasPostulaciones, setOtrasPostulaciones] =
+    useState([]);
   const upcomingWork = [
     { id: '1', title: 'Warehouse Picker & Packer', company: 'Metro Logistics Co.', date: '2026-08-15', rate: '$22/hr', status: 'Confirmed' as StatusType },
     { id: '2', title: 'Event Setup Crew', company: 'Prestige Events Group', date: '2026-08-16', rate: '$25/hr', status: 'Confirmed' as StatusType },
@@ -19,21 +28,7 @@ export const WorkerDashboard: React.FC = () => {
     { id: '4', title: 'Office Cleaning — Midtown', company: 'CleanSpace Partners', date: '2026-08-05', status: 'Not selected' as StatusType },
   ];
 
-  const recommendedJobs = [
-    { id: '1', category: 'DELIVERY', title: 'Warehouse Picker & Packer', company: 'Metro Logistics Co.', location: 'Brooklyn, NY', pay: '$22/hr' },
-    { id: '2', category: 'EVENTS', title: 'Event Setup Crew', company: 'Prestige Events Group', location: 'Manhattan, NY', pay: '$25/hr', isUrgent: true },
-    { id: '3', category: 'CLEANING', title: 'Office Deep Clean', company: 'Stark Financial Group', location: 'Midtown, NY', pay: '$320' },
-    { id: '4', category: 'HOSPITALITY', title: 'Restaurant Kitchen Helper', company: 'Osteria Morandi', location: 'West Village, NY', pay: '$18/hr' },
-  ];
-
-  const notifications = [
-    { id: '1', icon: '✓', title: 'Application accepted', time: '2 hours ago', active: true },
-    { id: '2', icon: '💬', title: 'New message from Metro Logistics', time: '4 hours ago', active: true },
-    { id: '3', icon: '⭐', title: 'New review received', time: 'Yesterday', active: false },
-    { id: '4', icon: '📋', title: 'New job matching your skills', time: 'Yesterday', active: false },
-  ];
-
-   const getInitials = (name: string) => {
+  const getInitials = (name: string) => {
     return name
       .trim()
       .split(/\s+/)
@@ -41,6 +36,37 @@ export const WorkerDashboard: React.FC = () => {
       .map(word => word[0].toUpperCase())
       .join("");
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!user) return;
+
+        const respPostulaciones =
+          await postulacionController.getByUsuario(user.id);
+
+        const enProceso = respPostulaciones.filter(
+          (postulacion: any) =>
+            postulacion.estado === EstadoPostulacion.EN_PROCESO
+        );
+
+        const otras = respPostulaciones.filter(
+          (postulacion: any) =>
+            postulacion.estado !== EstadoPostulacion.EN_PROCESO
+        );
+
+        console.log(enProceso);
+        console.log(otras);
+
+        setPostulacionesEnProceso(enProceso);
+        setOtrasPostulaciones(otras);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [user]);
 
   return (
     <div className="min-vh-100 bg-light">
@@ -58,7 +84,7 @@ export const WorkerDashboard: React.FC = () => {
         <div className="row g-4">
           {/* Columna Izquierda Principal */}
           <div className="col-12 col-lg-12">
-            
+
             {/* Sección: Upcoming Work */}
             <div className={`p-4 bg-white mb-4 ${styles.contentCard}`}>
               <div className="d-flex justify-content-between align-items-center mb-3">
@@ -67,15 +93,31 @@ export const WorkerDashboard: React.FC = () => {
               </div>
 
               <div className="d-flex flex-column gap-3">
-                {upcomingWork.map((job) => (
-                  <div key={job.id} className={`p-3 rounded-3 d-flex align-items-center justify-content-between ${styles.jobListCard}`}>
+                {postulacionesEnProceso.map((job: any) => (
+                  <div key={job.id_postulacion} className={`p-3 rounded-3 d-flex align-items-center justify-content-between ${styles.jobListCard}`}>
                     <div>
-                      <h3 className="fw-bold text-dark fs-6 mb-1">{job.title}</h3>
-                      <p className="text-muted small mb-0">{job.company} · {job.date}</p>
+                      <h3 className="fw-bold text-dark fs-6 mb-1">{job.vacante.titulo}</h3>
+                      <p className="text-muted small mb-0">{job.vacante.empresa.nombre_empresa} ·
+                        {new Date(job.fecha_postulacion).toLocaleString('es-MX', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
                     </div>
                     <div className="d-flex align-items-center gap-3">
-                      <span className="fw-bold text-teal">{job.rate}</span>
-                      <StatusBadge_W status={job.status} />
+                      <span className="fw-bold text-teal">${job.vacante.salario}
+                        {job.vacante.tipo_pago == "hora" ? "/hr" : ""}</span>
+                      <StatusBadge_W status={job.estado == "pendiente" ? "Pending" :
+                        job.estado == "aceptada" ? "Accepted" :
+                          job.estado == "rechazada" ? "Not selected" :
+                            job.estado == "revocada" ? "Revoked" :
+                              job.estado == "en_proceso" ? "In Progress" :
+                                job.estado == "finalizada" ? "Finalized" :
+                                  "Not selected"
+                      } />
                     </div>
                   </div>
                 ))}
@@ -90,18 +132,31 @@ export const WorkerDashboard: React.FC = () => {
               </div>
 
               <div className="d-flex flex-column">
-                {recentApplications.map((app, idx) => (
-                  <div 
-                    key={app.id} 
-                    className={`py-3 d-flex align-items-center justify-content-between ${
-                      idx !== recentApplications.length - 1 ? 'border-bottom' : ''
-                    }`}
+                {otrasPostulaciones.map((app: any, idx) => (
+                  <div
+                    key={app.id_postulacion}
+                    className={`py-3 d-flex align-items-center justify-content-between ${idx !== recentApplications.length - 1 ? 'border-bottom' : ''
+                      }`}
                   >
                     <div>
-                      <h3 className="fw-bold text-dark fs-6 mb-1">{app.title}</h3>
-                      <p className="text-muted small mb-0">{app.company} · {app.date}</p>
+                      <h3 className="fw-bold text-dark fs-6 mb-1">{app.vacante.titulo}</h3>
+                      <p className="text-muted small mb-0">{app.vacante.empresa.nombre_empresa} ·
+                        {new Date(app.fecha_postulacion).toLocaleString('es-MX', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}</p>
                     </div>
-                    <StatusBadge_W status={app.status} />
+                    <StatusBadge_W status={app.estado == "pendiente" ? "Pending" :
+                      app.estado == "aceptada" ? "Accepted" :
+                        app.estado == "rechazada" ? "Not selected" :
+                          app.estado == "revocada" ? "Revoked" :
+                            app.estado == "en_proceso" ? "In Progress" :
+                              app.estado == "finalizada" ? "Finalized" :
+                                "Not selected"
+                    } />
                   </div>
                 ))}
               </div>

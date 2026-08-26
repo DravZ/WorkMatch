@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Applications.module.css';
 import { ApplicationCard, type ApplicationData } from '../../../components/worker/Applications/ApplicationCard/ApplicationCard';
 import type { StatusType } from '../../../components/worker/Dashboard/StatusBadge/StatusBadge_W';
+import { useUser } from '../../../context/UserContext/UserContext';
+import { usePostulacionController } from '../../../controllers/postulacion.controller';
 
 type TabType = 'All' | 'Pending' | 'Accepted' | 'Rejected';
 
 export const Applications: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('All');
+  const { user } = useUser();
+  const postulacionController = usePostulacionController();
+
+  const [postulaciones, setPostulaciones] = useState([])
 
   const applicationsData: ApplicationData[] = [
     {
@@ -55,23 +61,42 @@ export const Applications: React.FC = () => {
       appliedDate: '2026-08-05',
       note: 'Experienced cleaner with commercial references.',
       status: 'Not selected' as StatusType,
-      filterGroup: 'Rejected',
+      filterGroup: 'Not selected',
     },
   ];
 
   // Cálculo de conteos dinámicos
   const counts = {
-    All: applicationsData.length,
-    Pending: applicationsData.filter((a) => a.filterGroup === 'Pending').length,
-    Accepted: applicationsData.filter((a) => a.filterGroup === 'Accepted').length,
-    Rejected: applicationsData.filter((a) => a.filterGroup === 'Rejected').length,
+    All: postulaciones.length,
+    Pending: postulaciones.filter((a: any) => a.estado === 'pendiente').length,
+    Accepted: postulaciones.filter((a: any) => a.estado === 'aceptada' || a.estado === 'en_proceso').length,
+    Rejected: postulaciones.filter((a: any) => a.estado === 'rechazada' || a.estado === 'revocada').length,
   };
 
   // Filtrado de la lista según la pestaña activa
-  const filteredApplications = applicationsData.filter((app) => {
+  const filteredApplications = postulaciones.filter((app:any) => {
     if (activeTab === 'All') return true;
-    return app.filterGroup === activeTab;
+    else if (activeTab == 'Pending' && (app.estado === "pendiente")) return true;
+    else if (activeTab == 'Accepted' && (app.estado === "aceptada" || app.estado === "en_proceso")) return true;
+    else if (activeTab == 'Rejected' && (app.estado === "revocada" || app.estado === "rechazada")) return true;
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!user) return;
+
+        const respPostulaciones =
+          await postulacionController.getByUsuario(user.id);
+
+        setPostulaciones(respPostulaciones)
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, [user]);
 
   return (
     <div className="min-vh-100 bg-light">
@@ -90,9 +115,8 @@ export const Applications: React.FC = () => {
               key={tab}
               type="button"
               onClick={() => setActiveTab(tab)}
-              className={`btn flex-fill py-2 ${styles.tabBtn} ${
-                activeTab === tab ? styles.activeTab : ''
-              }`}
+              className={`btn flex-fill py-2 ${styles.tabBtn} ${activeTab === tab ? styles.activeTab : ''
+                }`}
             >
               {tab}
               {tab !== 'All' && <span className="ms-1 opacity-75">{counts[tab]}</span>}
@@ -103,10 +127,33 @@ export const Applications: React.FC = () => {
         {/* Lista de Aplicaciones */}
         <div>
           {filteredApplications.length > 0 ? (
-            filteredApplications.map((app) => (
+            filteredApplications.map((app: any) => (
               <ApplicationCard
-                key={app.id}
-                application={app}
+                key={app.id_postulacion}
+                application={{
+                  id: app?.id_postulacion,
+                  title: app?.vacante?.titulo,
+                  company: app?.vacante?.empresa?.nombre_empresa,
+                  location: app?.vacante?.ubicacion,
+                  rate: app?.vacante?.salario,
+                  jobDate: app?.vacante?.fecha_inicio,
+                  appliedDate: app?.fecha_postulacion,
+                  note: '',
+                  status: app?.estado == "pendiente" ? "Pending" :
+                        app?.estado == "aceptada" ? "Accepted" :
+                          app?.estado == "rechazada" ? "Not selected" :
+                            app?.estado == "revocada" ? "Revoked" :
+                              app?.estado == "en_proceso" ? "In Progress" :
+                                app?.estado == "finalizada" ? "Finalized" :
+                                  "Not selected",
+                  filterGroup:app?.estado == "pendiente" ? "Pending" :
+                        app?.estado == "aceptada" ? "Accepted" :
+                          app?.estado == "rechazada" ? "Not selected" :
+                            app?.estado == "revocada" ? "Revoked" :
+                              app?.estado == "en_proceso" ? "In Progress" :
+                                app?.estado == "finalizada" ? "Finalized" :
+                                  "Not selected"
+                }}
                 onViewJob={(id) => console.log('View job:', id)}
                 onMessageEmployer={(id) => console.log('Message employer:', id)}
               />

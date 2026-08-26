@@ -12,7 +12,8 @@ export interface ApplicationData {
   appliedDate: string;
   note: string;
   status: StatusType;
-  filterGroup: 'Pending' | 'Accepted' | 'Rejected';
+  filterGroup: 'Confirmed' | 'Accepted' | 'Pending' |
+  'In Progress' | 'Revoked' | 'Not selected' | 'Urgent' | 'Finalized';
 }
 
 interface ApplicationCardProps {
@@ -40,17 +41,25 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = ({
       {/* Metadatos (Ubicación, Pago, Fechas) */}
       <div className="d-flex flex-wrap gap-3 text-muted small mb-3">
         <span className="d-flex align-items-center gap-1">📍 {application.location}</span>
-        <span className="d-flex align-items-center gap-1">💵 {application.rate}</span>
-        <span className="d-flex align-items-center gap-1">📅 Job date: {application.jobDate}</span>
-        <span className="text-secondary">Applied: {application.appliedDate}</span>
+        <span className="d-flex align-items-center gap-1">💵 ${application.rate}</span>
+        <span className="d-flex align-items-center gap-1">📅 Job date:
+          {application.jobDate}</span>
+        <span className="text-secondary">Applied:
+          {new Date(application.appliedDate).toLocaleString('es-MX', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}</span>
       </div>
 
-      {/* Nota / Mensaje adjunto */}
+      {/* Nota / Mensaje adjunto 
       {application.note && (
         <div className={`p-3 mb-3 ${styles.noteBox}`}>
           <p className="fst-italic text-secondary small mb-0">"{application.note}"</p>
         </div>
-      )}
+      )}*/}
 
       {/* Botones de Acción */}
       <div className="d-flex align-items-center gap-2">

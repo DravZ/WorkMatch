@@ -74,6 +74,7 @@ interface VacanteApi {
   habilidades_optimas?: string | string[] | null;
   empleados_necesarios?: number | null;
   fecha_publicacion?: string | null;
+  fecha_inicio?: string | null;
 }
 
 export const FindJobs: React.FC = () => {
@@ -102,90 +103,92 @@ export const FindJobs: React.FC = () => {
       .join("");
   };
 
-useEffect(() => {
-  fetch('http://localhost:3000/vacante')
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(`Error HTTP: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then((data: VacanteApi[]) => {
-      // Fecha actual en formato YYYY-MM-DD
-      const today = new Date().toISOString().split('T')[0];
-
-      // Solo vacantes cuya fecha de inicio sea posterior a hoy
-      const filteredData = data.filter(
-        (vacante) => vacante.fecha_inicio > today
-      );
-
-      const formattedJobs: JobData[] = filteredData.map((vacante) => {
-        let categoryText = 'Other';
-
-        if (
-          typeof vacante.categoria === 'object' &&
-          vacante.categoria?.text
-        ) {
-          categoryText = vacante.categoria.text;
-        } else if (typeof vacante.categoria === 'string') {
-          categoryText = vacante.categoria;
-        } else if (
-          typeof vacante.categoria === 'object' &&
-          vacante.categoria?.nombre
-        ) {
-          categoryText = vacante.categoria.nombre;
+  useEffect(() => {
+    fetch('http://localhost:3000/vacante')
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Error HTTP: ${res.status}`);
         }
+        return res.json();
+      })
+      .then((data: VacanteApi[]) => {
+        // Fecha actual en formato YYYY-MM-DD
+        const today = new Date().toISOString().split('T')[0];
 
-        const companyName =
-          vacante.empresa?.nombre_empresa || 'Empresa Confidencial';
-
-        const companyInitials = getInitials(
-          vacante.empresa?.nombre_empresa || 'N A'
+        // Solo vacantes cuya fecha de inicio sea posterior a hoy
+        const filteredData = data.filter(
+          (vacante) =>
+            vacante.fecha_inicio != null &&
+            new Date(vacante.fecha_inicio).toISOString().split('T')[0] > today
         );
 
-        const statusTag: StatusType = vacante.urgente
-          ? ('Urgent' as StatusType)
-          : ('Open' as StatusType);
+        const formattedJobs: JobData[] = filteredData.map((vacante) => {
+          let categoryText = 'Other';
 
-        let tags: string[] = [];
+          if (
+            typeof vacante.categoria === 'object' &&
+            vacante.categoria?.text
+          ) {
+            categoryText = vacante.categoria.text;
+          } else if (typeof vacante.categoria === 'string') {
+            categoryText = vacante.categoria;
+          } else if (
+            typeof vacante.categoria === 'object' &&
+            vacante.categoria?.nombre
+          ) {
+            categoryText = vacante.categoria.nombre;
+          }
 
-        if (Array.isArray(vacante.habilidades_optimas)) {
-          tags = vacante.habilidades_optimas;
-        } else if (typeof vacante.habilidades_optimas === 'string') {
-          tags = vacante.habilidades_optimas
-            .split(',')
-            .map((tag) => tag.trim())
-            .filter((tag) => tag.length > 0);
-        }
+          const companyName =
+            vacante.empresa?.nombre_empresa || 'Empresa Confidencial';
 
-        return {
-          id: String(vacante.id_vacante),
-          title: vacante.titulo,
-          category: categoryText,
-          company: companyName,
-          isVerified: true,
-          companyInitials,
-          rate: Number(vacante.salario) || 0,
-          location: vacante.ubicacion || '',
-          schedule: vacante.horario || 'Tiempo completo',
-          tags,
-          spots: vacante.empleados_necesarios || 1,
-          postedAgo: getTimeAgo(vacante.fecha_publicacion || ''),
-          statusTag,
-          rawDate: vacante.fecha_publicacion || '',
-        } as JobData & {
-          rawDate: string;
-        };
+          const companyInitials = getInitials(
+            vacante.empresa?.nombre_empresa || 'N A'
+          );
+
+          const statusTag: StatusType = vacante.urgente
+            ? ('Urgent' as StatusType)
+            : ('Open' as StatusType);
+
+          let tags: string[] = [];
+
+          if (Array.isArray(vacante.habilidades_optimas)) {
+            tags = vacante.habilidades_optimas;
+          } else if (typeof vacante.habilidades_optimas === 'string') {
+            tags = vacante.habilidades_optimas
+              .split(',')
+              .map((tag) => tag.trim())
+              .filter((tag) => tag.length > 0);
+          }
+
+          return {
+            id: String(vacante.id_vacante),
+            title: vacante.titulo,
+            category: categoryText,
+            company: companyName,
+            isVerified: true,
+            companyInitials,
+            rate: Number(vacante.salario) || 0,
+            location: vacante.ubicacion || '',
+            schedule: vacante.horario || 'Tiempo completo',
+            tags,
+            spots: vacante.empleados_necesarios || 1,
+            postedAgo: getTimeAgo(vacante.fecha_publicacion || ''),
+            statusTag,
+            rawDate: vacante.fecha_publicacion || '',
+          } as JobData & {
+            rawDate: string;
+          };
+        });
+
+        setJobs(formattedJobs);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error al conectar con el backend:', err);
+        setLoading(false);
       });
-
-      setJobs(formattedJobs);
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error('Error al conectar con el backend:', err);
-      setLoading(false);
-    });
-}, []);
+  }, []);
 
   const fetchData = async () => {
     try {

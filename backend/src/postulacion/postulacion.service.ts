@@ -8,13 +8,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Postulacion } from './entities/postulacion.entity';
-import { CreatePostulacionDto } from './dto/create-postulacion.dto'; 
+import { CreatePostulacionDto } from './dto/create-postulacion.dto';
 import { UpdatePostulacionDto } from './dto/update-postulacion.dto';
 
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { Vacante } from '../vacante/entities/vacante.entity';
 
-import { EstadoPostulacion } from './entities/postulacion.entity'; 
+import { EstadoPostulacion } from './entities/postulacion.entity';
 
 @Injectable()
 export class PostulacionService {
@@ -27,7 +27,7 @@ export class PostulacionService {
 
     @InjectRepository(Vacante)
     private readonly vacanteRepository: Repository<Vacante>,
-  ) {}
+  ) { }
 
   // =========================================================
   // CREATE
@@ -77,7 +77,7 @@ export class PostulacionService {
     if (
       vacante.fecha_inicio &&
       this.obtenerInicioDelDia(vacante.fecha_inicio) <=
-        this.obtenerInicioDelDia(new Date())
+      this.obtenerInicioDelDia(new Date())
     ) {
       throw new BadRequestException(
         'Ya no es posible postularse porque la vacante ya inició',
@@ -101,7 +101,9 @@ export class PostulacionService {
     const postulaciones = await this.postulacionRepository.find({
       relations: {
         usuario: true,
-        vacante: true,
+        vacante: {
+          empresa: true,
+        },
       },
     });
 
@@ -119,7 +121,9 @@ export class PostulacionService {
       },
       relations: {
         usuario: true,
-        vacante: true,
+        vacante: {
+          empresa: true,
+        },
       },
     });
 
@@ -148,7 +152,9 @@ export class PostulacionService {
       },
       relations: {
         usuario: true,
-        vacante: true,
+        vacante: {
+          empresa: true,
+        },
       },
     });
 
@@ -168,7 +174,9 @@ export class PostulacionService {
       },
       relations: {
         usuario: true,
-        vacante: true,
+        vacante: {
+          empresa: true,
+        },
       },
     });
 
@@ -190,7 +198,7 @@ export class PostulacionService {
         postulacion.estado === EstadoPostulacion.ACEPTADA &&
         postulacion.vacante.fecha_inicio &&
         this.obtenerInicioDelDia(postulacion.vacante.fecha_inicio) <=
-          this.obtenerInicioDelDia(ahora)
+        this.obtenerInicioDelDia(ahora)
       ) {
         postulacion.estado = EstadoPostulacion.EN_PROCESO;
         modificadas.push(postulacion);
@@ -234,7 +242,7 @@ export class PostulacionService {
     if (
       postulacion.vacante.fecha_inicio &&
       this.obtenerInicioDelDia(postulacion.vacante.fecha_inicio) <=
-        this.obtenerInicioDelDia(new Date())
+      this.obtenerInicioDelDia(new Date())
     ) {
       throw new BadRequestException(
         'Ya no se pueden aceptar trabajadores después de la fecha de inicio',
@@ -329,7 +337,7 @@ export class PostulacionService {
     if (
       postulacion.vacante.fecha_inicio &&
       this.obtenerInicioDelDia(postulacion.vacante.fecha_inicio) <=
-        this.obtenerInicioDelDia(new Date())
+      this.obtenerInicioDelDia(new Date())
     ) {
       throw new BadRequestException(
         'No se puede revocar la aceptación después de la fecha de inicio',

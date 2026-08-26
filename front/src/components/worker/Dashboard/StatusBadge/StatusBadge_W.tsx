@@ -1,13 +1,15 @@
 import React from 'react';
 import styles from './StatusBadge_W.module.css';
 
-export type StatusType = 'Confirmed' | 'Accepted' | 'Pending' | 'Not selected' | 'Urgent';
+export type StatusType = 'Confirmed' | 'Accepted' | 'Pending' |
+  'In Progress' | 'Revoked' | 'Not selected' | 'Urgent' | 'Finalized';
 
 interface StatusBadgeProps {
   status: StatusType;
 }
 
 export const StatusBadge_W: React.FC<StatusBadgeProps> = ({ status }) => {
+
   const getStatusClass = () => {
     switch (status) {
       case 'Confirmed':
