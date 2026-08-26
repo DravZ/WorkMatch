@@ -1,38 +1,46 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Postulacion } from './entities/postulacion.entity';
-import { CreatePostulacionDto } from './dto/create-postulacion.dto';
+import { CreatePostulacionDto } from './dto/create-postulacion.dto'; 
 import { UpdatePostulacionDto } from './dto/update-postulacion.dto';
 
 import { Usuario } from '../usuario/entities/usuario.entity';
 import { Vacante } from '../vacante/entities/vacante.entity';
 
+import { EstadoPostulacion } from './entities/postulacion.entity'; 
+
 @Injectable()
 export class PostulacionService {
-
   constructor(
     @InjectRepository(Postulacion)
-    private postulacionRepository: Repository<Postulacion>,
+    private readonly postulacionRepository: Repository<Postulacion>,
 
     @InjectRepository(Usuario)
-    private usuarioRepository: Repository<Usuario>,
+    private readonly usuarioRepository: Repository<Usuario>,
 
     @InjectRepository(Vacante)
-    private vacanteRepository: Repository<Vacante>,
+    private readonly vacanteRepository: Repository<Vacante>,
   ) {}
 
- 
-  async create(createPostulacionDto: CreatePostulacionDto) {
+  // =========================================================
+  // CREATE
+  // =========================================================
 
+  async create(createPostulacionDto: CreatePostulacionDto) {
     const usuario = await this.usuarioRepository.findOneBy({
       id_usuario: createPostulacionDto.id_usuario,
     });
 
     if (!usuario) {
       throw new NotFoundException(
-        `Usuario not found with Id:${createPostulacionDto.id_usuario}`,
+        `Usuario no encontrado con Id: ${createPostulacionDto.id_usuario}`,
       );
     }
 
@@ -42,22 +50,54 @@ export class PostulacionService {
 
     if (!vacante) {
       throw new NotFoundException(
-        `Vacante not found with Id:${createPostulacionDto.id_vacante}`,
+        `Vacante no encontrada con Id: ${createPostulacionDto.id_vacante}`,
+      );
+    }
+
+    // Evitar postulaciones duplicadas
+    const postulacionExistente =
+      await this.postulacionRepository.findOne({
+        where: {
+          usuario: {
+            id_usuario: createPostulacionDto.id_usuario,
+          },
+          vacante: {
+            id_vacante: createPostulacionDto.id_vacante,
+          },
+        },
+      });
+
+    if (postulacionExistente) {
+      throw new ConflictException(
+        'El usuario ya tiene una postulación para esta vacante',
+      );
+    }
+
+    // No permitir postularse después de la fecha de inicio
+    if (
+      vacante.fecha_inicio &&
+      this.obtenerInicioDelDia(vacante.fecha_inicio) <=
+        this.obtenerInicioDelDia(new Date())
+    ) {
+      throw new BadRequestException(
+        'Ya no es posible postularse porque la vacante ya inició',
       );
     }
 
     const postulacion = this.postulacionRepository.create({
       usuario,
       vacante,
-      estado: createPostulacionDto.estado ?? 'pendiente',
+      estado: EstadoPostulacion.PENDIENTE,
     });
 
     return this.postulacionRepository.save(postulacion);
   }
 
-  
-  async findAll() {
+  // =========================================================
+  // FIND ALL
+  // =========================================================
 
+  async findAll() {
     const postulaciones = await this.postulacionRepository.find({
       relations: {
         usuario: true,
@@ -65,12 +105,14 @@ export class PostulacionService {
       },
     });
 
-    return postulaciones;
+    return this.sincronizarEstadosPorFecha(postulaciones);
   }
 
+  // =========================================================
+  // FIND ONE
+  // =========================================================
 
   async findOne(id: number) {
-
     const postulacion = await this.postulacionRepository.findOne({
       where: {
         id_postulacion: id,
@@ -83,18 +125,262 @@ export class PostulacionService {
 
     if (!postulacion) {
       throw new NotFoundException(
-        `Postulacion not found with Id:${id}`,
+        `Postulación no encontrada con Id: ${id}`,
       );
     }
 
-    return postulacion;
+    const [postulacionActualizada] =
+      await this.sincronizarEstadosPorFecha([postulacion]);
+
+    return postulacionActualizada;
   }
+
+  // =========================================================
+  // FIND BY USUARIO
+  // =========================================================
+
+  async findByUsuario(id_usuario: number) {
+    const postulaciones = await this.postulacionRepository.find({
+      where: {
+        usuario: {
+          id_usuario,
+        },
+      },
+      relations: {
+        usuario: true,
+        vacante: true,
+      },
+    });
+
+    return this.sincronizarEstadosPorFecha(postulaciones);
+  }
+
+  // =========================================================
+  // FIND BY VACANTE
+  // =========================================================
+
+  async findByVacante(id_vacante: number) {
+    const postulaciones = await this.postulacionRepository.find({
+      where: {
+        vacante: {
+          id_vacante,
+        },
+      },
+      relations: {
+        usuario: true,
+        vacante: true,
+      },
+    });
+
+    return this.sincronizarEstadosPorFecha(postulaciones);
+  }
+
+  // =========================================================
+  // SINCRONIZAR ESTADOS POR FECHA
+  // =========================================================
+
+  private async sincronizarEstadosPorFecha(
+    postulaciones: Postulacion[],
+  ): Promise<Postulacion[]> {
+    const ahora = new Date();
+    const modificadas: Postulacion[] = [];
+
+    for (const postulacion of postulaciones) {
+      if (
+        postulacion.estado === EstadoPostulacion.ACEPTADA &&
+        postulacion.vacante.fecha_inicio &&
+        this.obtenerInicioDelDia(postulacion.vacante.fecha_inicio) <=
+          this.obtenerInicioDelDia(ahora)
+      ) {
+        postulacion.estado = EstadoPostulacion.EN_PROCESO;
+        modificadas.push(postulacion);
+      }
+    }
+
+    if (modificadas.length > 0) {
+      await this.postulacionRepository.save(modificadas);
+    }
+
+    return postulaciones;
+  }
+
+  // =========================================================
+  // ACEPTAR
+  // =========================================================
+
+  async aceptarTrabajador(id_postulacion: number) {
+    const postulacion = await this.postulacionRepository.findOne({
+      where: {
+        id_postulacion,
+      },
+      relations: {
+        usuario: true,
+        vacante: true,
+      },
+    });
+
+    if (!postulacion) {
+      throw new NotFoundException(
+        'Postulación no encontrada',
+      );
+    }
+
+    if (postulacion.estado !== EstadoPostulacion.PENDIENTE) {
+      throw new BadRequestException(
+        `No se puede aceptar una postulación con estado ${postulacion.estado}`,
+      );
+    }
+
+    if (
+      postulacion.vacante.fecha_inicio &&
+      this.obtenerInicioDelDia(postulacion.vacante.fecha_inicio) <=
+        this.obtenerInicioDelDia(new Date())
+    ) {
+      throw new BadRequestException(
+        'Ya no se pueden aceptar trabajadores después de la fecha de inicio',
+      );
+    }
+
+    const postulacionesVacante =
+      await this.postulacionRepository.find({
+        where: {
+          vacante: {
+            id_vacante: postulacion.vacante.id_vacante,
+          },
+        },
+      });
+
+    const aceptados = postulacionesVacante.filter(
+      (p) => p.estado === EstadoPostulacion.ACEPTADA,
+    ).length;
+
+    if (
+      aceptados >= postulacion.vacante.empleados_necesarios
+    ) {
+      throw new BadRequestException(
+        'Ya se alcanzó el límite de trabajadores aceptados para esta vacante',
+      );
+    }
+
+    postulacion.estado = EstadoPostulacion.ACEPTADA;
+
+    return this.postulacionRepository.save(postulacion);
+  }
+
+  // =========================================================
+  // RECHAZAR
+  // =========================================================
+
+  async rechazarPostulacion(id_postulacion: number) {
+    const postulacion = await this.postulacionRepository.findOne({
+      where: {
+        id_postulacion,
+      },
+      relations: {
+        usuario: true,
+        vacante: true,
+      },
+    });
+
+    if (!postulacion) {
+      throw new NotFoundException(
+        'Postulación no encontrada',
+      );
+    }
+
+    if (postulacion.estado !== EstadoPostulacion.PENDIENTE) {
+      throw new BadRequestException(
+        `No se puede rechazar una postulación con estado ${postulacion.estado}`,
+      );
+    }
+
+    postulacion.estado = EstadoPostulacion.RECHAZADA;
+
+    return this.postulacionRepository.save(postulacion);
+  }
+
+  // =========================================================
+  // REVOCAR
+  // =========================================================
+
+  async revocarAceptacion(id_postulacion: number) {
+    const postulacion = await this.postulacionRepository.findOne({
+      where: {
+        id_postulacion,
+      },
+      relations: {
+        usuario: true,
+        vacante: true,
+      },
+    });
+
+    if (!postulacion) {
+      throw new NotFoundException(
+        'Postulación no encontrada',
+      );
+    }
+
+    if (postulacion.estado !== EstadoPostulacion.ACEPTADA) {
+      throw new BadRequestException(
+        'Solo se puede revocar una postulación aceptada',
+      );
+    }
+
+    if (
+      postulacion.vacante.fecha_inicio &&
+      this.obtenerInicioDelDia(postulacion.vacante.fecha_inicio) <=
+        this.obtenerInicioDelDia(new Date())
+    ) {
+      throw new BadRequestException(
+        'No se puede revocar la aceptación después de la fecha de inicio',
+      );
+    }
+
+    postulacion.estado = EstadoPostulacion.REVOCADA;
+
+    return this.postulacionRepository.save(postulacion);
+  }
+
+  // =========================================================
+  // FINALIZAR
+  // =========================================================
+
+  async finalizarTrabajo(id_postulacion: number) {
+    const postulacion = await this.postulacionRepository.findOne({
+      where: {
+        id_postulacion,
+      },
+      relations: {
+        usuario: true,
+        vacante: true,
+      },
+    });
+
+    if (!postulacion) {
+      throw new NotFoundException(
+        'Postulación no encontrada',
+      );
+    }
+
+    if (postulacion.estado !== EstadoPostulacion.EN_PROCESO) {
+      throw new BadRequestException(
+        'Solo se puede finalizar un trabajo que está en proceso',
+      );
+    }
+
+    postulacion.estado = EstadoPostulacion.FINALIZADA;
+
+    return this.postulacionRepository.save(postulacion);
+  }
+
+  // =========================================================
+  // UPDATE
+  // =========================================================
 
   async update(
     id: number,
     updatePostulacionDto: UpdatePostulacionDto,
   ) {
-
     const postulacion = await this.findOne(id);
 
     Object.assign(postulacion, updatePostulacionDto);
@@ -102,59 +388,29 @@ export class PostulacionService {
     return this.postulacionRepository.save(postulacion);
   }
 
+  // =========================================================
+  // REMOVE
+  // =========================================================
 
   async remove(id: number) {
-
     await this.findOne(id);
 
     await this.postulacionRepository.delete(id);
 
     return {
-      message: `Postulacion with Id:${id} has been deleted successfully`,
+      message: `Postulación con Id: ${id} eliminada correctamente`,
     };
   }
 
+  // =========================================================
+  // UTILIDAD PARA COMPARAR SOLO LA FECHA
+  // =========================================================
 
-      async aceptarTrabajador(id_vacante: number, id_usuario: number) {
-      const vacante = await this.vacanteRepository.findOne({
-        where: { id_vacante },
-        relations: { postulaciones: true },
-      });
+  private obtenerInicioDelDia(fecha: Date): Date {
+    const resultado = new Date(fecha);
 
-      if (!vacante) throw new NotFoundException('Vacante no encontrada');
-      if (vacante.fecha_inicio && new Date() >= vacante.fecha_inicio) {
-        throw new Error('Ya no se puede aceptar trabajadores después de la fecha de inicio');
-      }
-      const aceptados = vacante.postulaciones.filter(p => p.estado === 'aceptado').length;
-      if (aceptados >= vacante.empleados_necesarios) {
-        throw new Error('Ya se alcanzó el límite de trabajadores aceptados');
-      }
-      const postulacion = await this.postulacionRepository.findOne({
-        where: { usuario: { id_usuario }, vacante: { id_vacante } },
-        relations: { usuario: true, vacante: true },
-      });
-      if (!postulacion) throw new NotFoundException('Postulación no encontrada');
-      postulacion.estado = 'aceptado';
-      return this.postulacionRepository.save(postulacion);
-    }
+    resultado.setHours(0, 0, 0, 0);
 
-    async revocarAceptacion(id_vacante: number, id_usuario: number) {
-      const vacante = await this.vacanteRepository.findOne({ where: { id_vacante } });
-      if (!vacante) throw new NotFoundException('Vacante no encontrada');
-
-      if (vacante.fecha_inicio && new Date() >= vacante.fecha_inicio) {
-        throw new Error('Ya no se puede revocar después de la fecha de inicio');
-      }
-
-      const postulacion = await this.postulacionRepository.findOne({
-        where: { usuario: { id_usuario }, vacante: { id_vacante } },
-      });
-
-      if (!postulacion) throw new NotFoundException('Postulación no encontrada');
-
-      postulacion.estado = 'revocado';
-      return this.postulacionRepository.save(postulacion);
-    }
-
-
+    return resultado;
+  }
 }

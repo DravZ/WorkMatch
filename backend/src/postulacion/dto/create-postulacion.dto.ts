@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class CreatePostulacionDto {
   @IsNumber()
@@ -6,8 +6,4 @@ export class CreatePostulacionDto {
 
   @IsNumber()
   id_vacante!: number;
-
-  @IsOptional()
-  @IsString()
-  estado?: string;
 }

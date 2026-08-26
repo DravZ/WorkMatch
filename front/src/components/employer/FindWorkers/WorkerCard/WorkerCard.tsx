@@ -84,15 +84,15 @@ export const WorkerCard: React.FC<WorkerCardProps> = ({ worker, onInvite }) => {
         </div>
 
         {/* Ubicación y Disponibilidad */}
-        <div className="d-flex align-items-center gap-3 extra-small text-muted mb-3">
-          <div className="d-flex align-items-center gap-1">
+        <div className="d-block align-items-center gap-3 extra-small text-muted mb-3">
+          <p className="row mb-0 d-block align-items-center">
             <span style={{ color: '#e11d48' }}>📍</span>
-            <span>{worker.location}</span>
-          </div>
-          <div className="d-flex align-items-center gap-1">
-            <span style={{ color: '#d97706' }}>⚡</span>
-            <span>{worker.availability}</span>
-          </div>
+            <span className='mx-0 px-0'>{worker.location}</span>
+          </p>
+          <p className="row mt-1 d-block align-items-center">
+            <span  style={{ color: '#d97706' }}>⚡</span>
+            <span className='mx-0 px-0'>{worker.availability}</span>
+          </p>
         </div>
 
         {/* Badges de Skills */}

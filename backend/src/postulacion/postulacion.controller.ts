@@ -1,53 +1,130 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  ParseIntPipe,
+} from '@nestjs/common';
+
 import { PostulacionService } from './postulacion.service';
 import { CreatePostulacionDto } from './dto/create-postulacion.dto';
-import { UpdatePostulacionDto } from './dto/update-postulacion.dto';
 
 @Controller('postulacion')
 export class PostulacionController {
-
   constructor(
     private readonly postulacionService: PostulacionService,
   ) {}
 
+  // =========================================================
+  // CREAR POSTULACIÓN
+  // =========================================================
+
   @Post()
-  create(@Body() createPostulacionDto: CreatePostulacionDto) {
-    return this.postulacionService.create(createPostulacionDto);
+  create(
+    @Body() createPostulacionDto: CreatePostulacionDto,
+  ) {
+    return this.postulacionService.create(
+      createPostulacionDto,
+    );
   }
+
+  // =========================================================
+  // OBTENER TODAS
+  // =========================================================
 
   @Get()
   findAll() {
     return this.postulacionService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postulacionService.findOne(+id);
+  // =========================================================
+  // OBTENER POR USUARIO
+  // =========================================================
+
+  @Get('usuario/:id_usuario')
+  findByUsuario(
+    @Param('id_usuario', ParseIntPipe) id_usuario: number,
+  ) {
+    return this.postulacionService.findByUsuario(id_usuario);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updatePostulacionDto: UpdatePostulacionDto,
+  // =========================================================
+  // OBTENER POR VACANTE
+  // =========================================================
+
+  @Get('vacante/:id_vacante')
+  findByVacante(
+    @Param('id_vacante', ParseIntPipe) id_vacante: number,
   ) {
-    return this.postulacionService.update(
-      +id,
-      updatePostulacionDto,
-    );
+    return this.postulacionService.findByVacante(id_vacante);
   }
+
+  // =========================================================
+  // OBTENER UNA POSTULACIÓN
+  // =========================================================
+
+  @Get(':id')
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.postulacionService.findOne(id);
+  }
+
+  // =========================================================
+  // ACEPTAR
+  // =========================================================
+
+  @Patch(':id/aceptar')
+  aceptar(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.postulacionService.aceptarTrabajador(id);
+  }
+
+  // =========================================================
+  // RECHAZAR
+  // =========================================================
+
+  @Patch(':id/rechazar')
+  rechazar(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.postulacionService.rechazarPostulacion(id);
+  }
+
+  // =========================================================
+  // REVOCAR
+  // =========================================================
+
+  @Patch(':id/revocar')
+  revocar(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.postulacionService.revocarAceptacion(id);
+  }
+
+  // =========================================================
+  // FINALIZAR TRABAJO
+  // =========================================================
+
+  @Patch(':id/finalizar')
+  finalizar(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.postulacionService.finalizarTrabajo(id);
+  }
+
+  // =========================================================
+  // ELIMINAR
+  // =========================================================
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postulacionService.remove(+id);
+  remove(
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.postulacionService.remove(id);
   }
-
-  @Post('aceptar')
-aceptar(@Body() body: { id_vacante: number; id_usuario: number }) {
-  return this.postulacionService.aceptarTrabajador(body.id_vacante, body.id_usuario);
-}
-
-@Post('revocar')
-revocar(@Body() body: { id_vacante: number; id_usuario: number }) {
-  return this.postulacionService.revocarAceptacion(body.id_vacante, body.id_usuario);
-}
 }
