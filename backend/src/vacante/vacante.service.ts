@@ -9,6 +9,7 @@ import { Empresa } from '../empresa/entities/empresa.entity';
 import { CategoriaVacante } from '../categoria_vacante/entities/categoria_vacante.entity';
 import { EstadoVacante } from './enums/estado-vacante.enum';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { EstadoPostulacion } from 'src/postulacion/entities/postulacion.entity';
 
 @Injectable()
 export class VacanteService {
@@ -122,7 +123,7 @@ export class VacanteService {
   vacante.estado = EstadoVacante.COMPLETADA;
   await this.vacanteRepository.save(vacante);
   for (const postulacion of vacante.postulaciones) {
-    if (postulacion.estado === 'aceptado') {
+    if (postulacion.estado === EstadoPostulacion.ACEPTADA) {
       postulacion.usuario.trabajos_completados += 1;
       await this.usuarioRepository.save(postulacion.usuario);
     }

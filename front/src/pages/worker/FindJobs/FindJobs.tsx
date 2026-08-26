@@ -8,6 +8,8 @@ import {
 } from '../../../components/worker/FindJobs/JobCard/JobCard';
 
 import type { StatusType } from '../../../components/worker/Dashboard/StatusBadge/StatusBadge_W';
+import { usePostulacionController } from '../../../controllers/postulacion.controller';
+import { useUser } from '../../../context/UserContext/UserContext';
 
 const CATEGORIES = [
   'All',
@@ -75,6 +77,10 @@ interface VacanteApi {
 }
 
 export const FindJobs: React.FC = () => {
+
+  const postulacionController = usePostulacionController();
+  const { user } = useUser();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showFilters, setShowFilters] = useState(false);
@@ -83,6 +89,9 @@ export const FindJobs: React.FC = () => {
 
   const [jobs, setJobs] = useState<JobData[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [postulaciones, setPostulaciones] = useState([]);
+  const [vacantesPostuladas, setVacantesPostuladas] = useState<number[]>([]);
 
   const getInitials = (name: string) => {
     return name
@@ -93,94 +102,113 @@ export const FindJobs: React.FC = () => {
       .join("");
   };
 
-  useEffect(() => {
-    fetch('http://localhost:3000/vacante')
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Error HTTP: ${res.status}`);
+useEffect(() => {
+  fetch('http://localhost:3000/vacante')
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Error HTTP: ${res.status}`);
+      }
+      return res.json();
+    })
+    .then((data: VacanteApi[]) => {
+      // Fecha actual en formato YYYY-MM-DD
+      const today = new Date().toISOString().split('T')[0];
+
+      // Solo vacantes cuya fecha de inicio sea posterior a hoy
+      const filteredData = data.filter(
+        (vacante) => vacante.fecha_inicio > today
+      );
+
+      const formattedJobs: JobData[] = filteredData.map((vacante) => {
+        let categoryText = 'Other';
+
+        if (
+          typeof vacante.categoria === 'object' &&
+          vacante.categoria?.text
+        ) {
+          categoryText = vacante.categoria.text;
+        } else if (typeof vacante.categoria === 'string') {
+          categoryText = vacante.categoria;
+        } else if (
+          typeof vacante.categoria === 'object' &&
+          vacante.categoria?.nombre
+        ) {
+          categoryText = vacante.categoria.nombre;
         }
 
-        return res.json();
-      })
-      .then((data: VacanteApi[]) => {
-        const formattedJobs: JobData[] = data.map((vacante) => {
-          let categoryText = 'Other';
+        const companyName =
+          vacante.empresa?.nombre_empresa || 'Empresa Confidencial';
 
-          if (
-            typeof vacante.categoria === 'object' &&
-            vacante.categoria?.text
-          ) {
-            categoryText = vacante.categoria.text;
-          } else if (typeof vacante.categoria === 'string') {
-            categoryText = vacante.categoria;
-          } else if (
-            typeof vacante.categoria === 'object' &&
-            vacante.categoria?.nombre
-          ) {
-            categoryText = vacante.categoria.nombre;
-          }
+        const companyInitials = getInitials(
+          vacante.empresa?.nombre_empresa || 'N A'
+        );
 
-          const companyName =
-            vacante.empresa?.nombre_empresa || 'Empresa Confidencial';
+        const statusTag: StatusType = vacante.urgente
+          ? ('Urgent' as StatusType)
+          : ('Open' as StatusType);
 
-          const companyInitials = getInitials(vacante.empresa?.nombre_empresa || 'N A')
+        let tags: string[] = [];
 
-          const statusTag: StatusType = vacante.urgente
-            ? ('Urgent' as StatusType)
-            : ('Open' as StatusType);
-          let tags: string[] = [];
+        if (Array.isArray(vacante.habilidades_optimas)) {
+          tags = vacante.habilidades_optimas;
+        } else if (typeof vacante.habilidades_optimas === 'string') {
+          tags = vacante.habilidades_optimas
+            .split(',')
+            .map((tag) => tag.trim())
+            .filter((tag) => tag.length > 0);
+        }
 
-          if (Array.isArray(vacante.habilidades_optimas)) {
-            tags = vacante.habilidades_optimas;
-          } else if (typeof vacante.habilidades_optimas === 'string') {
-            tags = vacante.habilidades_optimas
-              .split(',')
-              .map((tag) => tag.trim())
-              .filter((tag) => tag.length > 0);
-          }
-
-
-          return {
-            id: String(vacante.id_vacante),
-            title: vacante.titulo,
-            category: categoryText,
-            company: companyName,
-
-            /*
-             * Estos valores no existen en los datos utilizados
-             * por la página guía. Se mantienen aquí únicamente
-             * si JobData los requiere.
-             */
-            isVerified: true,
-            companyInitials,
-
-            rate: Number(vacante.salario) || 0,
-            location: vacante.ubicacion || '',
-            schedule: vacante.horario || 'Tiempo completo',
-            tags,
-            spots: vacante.empleados_necesarios || 1,
-
-            postedAgo: getTimeAgo(vacante.fecha_publicacion || ''),
-            statusTag,
-
-            /*
-             * Se utiliza únicamente para ordenar por fecha.
-             * No afecta al JobCard.
-             */
-            rawDate: vacante.fecha_publicacion || '',
-          } as JobData & {
-            rawDate: string;
-          };
-        });
-
-        setJobs(formattedJobs);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error al conectar con el backend:', err);
-        setLoading(false);
+        return {
+          id: String(vacante.id_vacante),
+          title: vacante.titulo,
+          category: categoryText,
+          company: companyName,
+          isVerified: true,
+          companyInitials,
+          rate: Number(vacante.salario) || 0,
+          location: vacante.ubicacion || '',
+          schedule: vacante.horario || 'Tiempo completo',
+          tags,
+          spots: vacante.empleados_necesarios || 1,
+          postedAgo: getTimeAgo(vacante.fecha_publicacion || ''),
+          statusTag,
+          rawDate: vacante.fecha_publicacion || '',
+        } as JobData & {
+          rawDate: string;
+        };
       });
-  }, []);
+
+      setJobs(formattedJobs);
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error('Error al conectar con el backend:', err);
+      setLoading(false);
+    });
+}, []);
+
+  const fetchData = async () => {
+    try {
+      if (!user) return;
+
+      const respPostulaciones =
+        await postulacionController.getByUsuario(user.id);
+
+      const idsVacantes = respPostulaciones.map(
+        (postulacion: any) => postulacion.vacante.id_vacante
+      );
+
+      setVacantesPostuladas(idsVacantes);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+
+
+    fetchData();
+  }, [user]);
 
   const filteredJobs = jobs
     .filter((job) => {
@@ -228,8 +256,25 @@ export const FindJobs: React.FC = () => {
     setSearchTerm('');
   };
 
-  const handleApply = (id: string) => {
+  const handleApply = async (id: string) => {
     console.log('Applied to job:', id);
+
+    try {
+
+      if (user) {
+        const resp = await postulacionController.create(
+          {
+            id_usuario: user?.id,
+            id_vacante: Number(id)
+          }
+        )
+      }
+
+    } catch (error) {
+      console.log("ERROR: " + error)
+    } finally {
+      fetchData();
+    }
   };
 
   if (loading) {
@@ -380,17 +425,24 @@ export const FindJobs: React.FC = () => {
         {/* Grid de Empleos */}
         <div className="row g-4">
           {filteredJobs.length > 0 ? (
-            filteredJobs.map((job) => (
-              <div
-                key={job.id}
-                className="col-12 col-md-6 col-lg-4"
-              >
-                <JobCard
-                  job={job}
-                  onApply={handleApply}
-                />
-              </div>
-            ))
+            filteredJobs.map((job) => {
+              const yaPostulado = vacantesPostuladas.includes(
+                Number(job.id)
+              );
+
+              return (
+                <div
+                  key={job.id}
+                  className="col-12 col-md-6 col-lg-4"
+                >
+                  <JobCard
+                    job={job}
+                    hasApplied={yaPostulado}
+                    onApply={handleApply}
+                  />
+                </div>
+              )
+            })
           ) : (
             <div className="col-12">
               <p

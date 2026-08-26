@@ -23,11 +23,12 @@ export interface JobData {
 
 interface JobCardProps {
   job: JobData;
+  hasApplied: boolean;
   onApply?: (id: string) => void;
   onToggleFavorite?: (id: string) => void;
 }
 
-export const JobCard: React.FC<JobCardProps> = ({ job, onApply, onToggleFavorite }) => {
+export const JobCard: React.FC<JobCardProps> = ({ job, hasApplied, onApply, onToggleFavorite }) => {
   const [isFav, setIsFav] = useState(job.isFavorite || false);
 
   const handleFavoriteClick = () => {
@@ -98,10 +99,11 @@ export const JobCard: React.FC<JobCardProps> = ({ job, onApply, onToggleFavorite
         </span>
         <button
           type="button"
+          disabled={hasApplied}
           onClick={() => onApply && onApply(job.id)}
           className={`btn px-3 py-2 fw-semibold ${styles.btnApply}`}
         >
-          Apply now
+          {hasApplied ? 'You have already applied.' : 'Apply now'}
         </button>
       </div>
     </div>
