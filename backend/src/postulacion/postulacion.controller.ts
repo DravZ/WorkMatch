@@ -16,7 +16,7 @@ import { CreatePostulacionDto } from './dto/create-postulacion.dto';
 export class PostulacionController {
   constructor(
     private readonly postulacionService: PostulacionService,
-  ) {}
+  ) { }
 
   // =========================================================
   // CREAR POSTULACIÓN
@@ -63,6 +63,17 @@ export class PostulacionController {
   }
 
   // =========================================================
+  // OBTENER POR EMPRESA
+  // =========================================================
+
+  @Get('empresa/:id_empresa')
+  findByEmpresa(
+    @Param('id_empresa', ParseIntPipe) id_empresa: number,
+  ) {
+    return this.postulacionService.findByEmpresa(id_empresa);
+  }
+
+  // =========================================================
   // OBTENER UNA POSTULACIÓN
   // =========================================================
 
@@ -72,6 +83,8 @@ export class PostulacionController {
   ) {
     return this.postulacionService.findOne(id);
   }
+
+
 
   // =========================================================
   // ACEPTAR

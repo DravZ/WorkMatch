@@ -14,57 +14,6 @@ export const Applications: React.FC = () => {
 
   const [postulaciones, setPostulaciones] = useState([])
 
-  const applicationsData: ApplicationData[] = [
-    {
-      id: '1',
-      title: 'Warehouse Picker & Packer',
-      company: 'Metro Logistics Co.',
-      location: 'Brooklyn, NY',
-      rate: '$22/hr',
-      jobDate: '2026-08-15',
-      appliedDate: '2026-08-10',
-      note: 'I have 6 years of warehouse experience and am forklift certified. Available for your start date.',
-      status: 'Accepted' as StatusType,
-      filterGroup: 'Accepted',
-    },
-    {
-      id: '2',
-      title: 'Event Setup Crew',
-      company: 'Prestige Events Group',
-      location: 'Manhattan, NY',
-      rate: '$25/hr',
-      jobDate: '2026-08-16',
-      appliedDate: '2026-08-11',
-      note: 'Available for the full Saturday shift. I have prior event setup experience.',
-      status: 'Accepted' as StatusType,
-      filterGroup: 'Accepted',
-    },
-    {
-      id: '3',
-      title: 'Restaurant Kitchen Helper',
-      company: 'Osteria Morandi',
-      location: 'West Village, NY',
-      rate: '$18/hr',
-      jobDate: '2026-08-15',
-      appliedDate: '2026-08-12',
-      note: 'I have kitchen safety training and can start immediately.',
-      status: 'Under review' as StatusType,
-      filterGroup: 'Pending',
-    },
-    {
-      id: '4',
-      title: 'Office Cleaning — Midtown',
-      company: 'CleanSpace Partners',
-      location: 'Midtown, NY',
-      rate: '$240 fixed',
-      jobDate: '2026-08-08',
-      appliedDate: '2026-08-05',
-      note: 'Experienced cleaner with commercial references.',
-      status: 'Not selected' as StatusType,
-      filterGroup: 'Not selected',
-    },
-  ];
-
   // Cálculo de conteos dinámicos
   const counts = {
     All: postulaciones.length,

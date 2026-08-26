@@ -91,6 +91,25 @@ export const usePostulacionController = () => {
       });
     }
   };
+  
+  // =========================================================
+  // OBTENER POR EMPRESA
+  // =========================================================
+  const getByEmpresa = async (id_empresa: number) => {
+    try {
+      const { data: response } =
+        await postulacionService.findByEmpresa(id_empresa);
+
+      return response;
+    } catch (error) {
+      showNotification({
+        type: "error",
+        title: "Error",
+        description:
+          "No se pudieron obtener las postulaciones de la empresa.",
+      });
+    }
+  };
 
   // =========================================================
   // OBTENER POR ID
@@ -260,6 +279,7 @@ export const usePostulacionController = () => {
     getAll,
     getByUsuario,
     getByVacante,
+    getByEmpresa,
     getById,
     aceptar,
     rechazar,

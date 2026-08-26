@@ -184,6 +184,34 @@ export class PostulacionService {
   }
 
   // =========================================================
+  // FIND BY EMPRESA
+  // =========================================================
+
+  async findByEmpresa(id_empresa: number) {
+    const postulaciones = await this.postulacionRepository.find({
+      where: {
+        vacante: {
+          empresa: {
+            id_empresa,
+          },
+        },
+      },
+      relations: {
+        usuario: {
+          trabajador: {
+            habilidades: true,
+          }
+        },
+        vacante: {
+          empresa: true,
+        },
+      },
+    });
+
+    return this.sincronizarEstadosPorFecha(postulaciones);
+  }
+
+  // =========================================================
   // SINCRONIZAR ESTADOS POR FECHA
   // =========================================================
 

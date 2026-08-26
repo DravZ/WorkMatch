@@ -1,6 +1,6 @@
 import React from 'react';
 
-type StatusType = 'accepted' | 'pending' | 'rejected' | 'verified';
+type StatusType = 'pending' | 'accepted' | 'rejected' | 'in-progress' | 'finalized' | 'verified';
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -11,6 +11,8 @@ const statusStyles: Record<StatusType, { bg: string; color: string; defaultLabel
   accepted: { bg: '#ecfdf5', color: '#10b981', defaultLabel: 'Accepted' },
   pending: { bg: '#fffbeb', color: '#d97706', defaultLabel: 'Under review' },
   rejected: { bg: '#f1f5f9', color: '#64748b', defaultLabel: 'Not selected' },
+  finalized: { bg: '#e6f7f4', color: '#0b9982', defaultLabel: 'Finalized' },
+  "in-progress": { bg: '#e6f7f4', color: '#0b9982', defaultLabel: 'In Progress' },
   verified: { bg: '#e6f7f4', color: '#0b9982', defaultLabel: 'Verified' },
 };
 

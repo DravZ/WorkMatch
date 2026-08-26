@@ -31,6 +31,13 @@ export const postulacionService = {
   },
 
   // =========================================================
+  // OBTENER POR EMPRESA
+  // =========================================================
+  findByEmpresa(id_empresa: number) {
+    return api.get<any>(`/postulacion/empresa/${id_empresa}`);
+  },
+
+  // =========================================================
   // OBTENER UNA POSTULACIÓN
   // =========================================================
   findById(id_postulacion: number) {

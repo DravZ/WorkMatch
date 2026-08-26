@@ -1,5 +1,10 @@
-import React from 'react';import { StatusBadgeApp } from '../StatusBadgeApp/StatusBadgeApp';
+import React from 'react'; import { StatusBadgeApp } from '../StatusBadgeApp/StatusBadgeApp';
 import { AvatarApp } from '../AvatarApp/AvatarApp';
+
+interface Skill {
+  id_habilidad: number,
+  nombre: string
+}
 
 export interface Application {
   id: string;
@@ -11,13 +16,13 @@ export interface Application {
   appliedJob: string;
   appliedDate: string;
   coverLetter: string;
-  skills: string[];
-  status: 'pending' | 'accepted' | 'rejected';
+  skills: Skill[];
+  status: 'pending' | 'accepted' | 'rejected' | 'in progress' | 'finalized';
 }
 
 interface ApplicationCardProps {
   app: Application;
-  onStatusChange: (id: string, newStatus: 'accepted' | 'rejected' | 'pending') => void;
+  onStatusChange: (id: string, newStatus: 'accepted' | 'rejected' | 'pending' | 'revoke' | 'finalize') => void;
 }
 
 export const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onStatusChange }) => {
@@ -32,23 +37,38 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onStatusC
             <h2 className="h6 fw-bold text-dark mb-1">{app.name}</h2>
 
             <div className="d-flex align-items-center gap-2 flex-wrap mb-1">
-              <div className="d-flex align-items-center text-teal extra-small">
+              {/*<div className="d-flex align-items-center text-teal extra-small">
                 {'★'.repeat(5)}
               </div>
               <span className="text-muted extra-small fw-medium">
                 {app.rating} · {app.jobsCompleted} jobs completed
-              </span>
+              </span> */}
               {app.isVerified && <StatusBadgeApp status="verified" />}
             </div>
 
             <div className="text-muted extra-small">
-              Applied for: {app.appliedJob} · {app.appliedDate}
+              <p className='text-muted extra-small'>Applied for: {app.appliedJob} </p>
+              <p className='text-muted extra-small'>{new Date(app.appliedDate).toLocaleString('es-MX', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}</p>
+
             </div>
           </div>
         </div>
 
-        {/* Badge superior derecho según el estado */}
-        <StatusBadgeApp status={app.status} />
+        {/* Badge superior derecho según el estado 
+        'pending' | 'accepted' | 'rejected' | 'in progress' | 'finalized';*/}
+
+        <StatusBadgeApp status={app.status == 'pending' ? 'pending' :
+          app.status == "accepted" ? 'accepted' :
+            app.status == "rejected" ? 'rejected' :
+              app.status == "in progress" ? 'in-progress' :
+                app.status == 'finalized' ? 'finalized' : 'pending'
+        } />
       </div>
 
       {/* Carta de presentación (Cover letter) */}
@@ -64,7 +84,7 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onStatusC
             className="badge fw-medium text-dark bg-light border-0 rounded-pill px-3 py-2 extra-small"
             style={{ fontSize: '0.7rem' }}
           >
-            {skill}
+            {skill.nombre}
           </span>
         ))}
       </div>
@@ -93,14 +113,24 @@ export const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onStatusC
         {/* CASO 2: ACEPTADO (Accepted) -> Revoke acceptance + View profile + Message */}
         {app.status === 'accepted' && (
           <button
-            onClick={() => onStatusChange(app.id, 'pending')}
+            onClick={() => onStatusChange(app.id, 'revoke')}
             className="btn btn-outline-secondary px-3 py-1.5 fw-semibold rounded-3 extra-small bg-white text-dark border-light-subtle"
           >
             Revoke acceptance
           </button>
         )}
 
-        {/* CASO 3: RECHAZADO (Not selected) -> No lleva botón primario, sólo pasa a las acciones de enlace */}
+        {/* CASO 3: EN PROGRESO (Accepted) -> Revoke acceptance + View profile + Message */}
+        {app.status === 'in progress' && (
+          <button
+            onClick={() => onStatusChange(app.id, 'finalize')}
+            className="btn btn-outline-secondary px-3 py-1.5 fw-semibold rounded-3 extra-small bg-white text-dark border-light-subtle"
+          >
+            Revoke acceptance
+          </button>
+        )}
+
+        {/* CASO 4: RECHAZADO (Not selected) -> No lleva botón primario, sólo pasa a las acciones de enlace */}
 
         {/* Acciones comunes a todos los estados (View profile y Message) */}
         <a

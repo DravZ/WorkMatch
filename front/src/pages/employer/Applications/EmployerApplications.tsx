@@ -1,61 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FilterTabs, type TabOption } from '../../../components/employer/Applications/FilterTabs/FilterTabs';
 import { ApplicationCard, type Application } from '../../../components/employer/Applications/ApplicationCard/ApplicationCard';
-
-const mockApplications: Application[] = [
-  {
-    id: '1',
-    initials: 'MT',
-    name: 'Marcus Thompson',
-    rating: 4.9,
-    jobsCompleted: 52,
-    isVerified: true,
-    appliedJob: 'Warehouse Picker & Packer',
-    appliedDate: '2026-08-10',
-    coverLetter:
-      'I have 6 years of warehouse experience and am forklift certified. Available for your start date.',
-    skills: ['Forklift certified', 'Inventory management', 'Heavy lifting'],
-    status: 'accepted',
-  },
-  {
-    id: '2',
-    initials: 'DC',
-    name: 'David Chen',
-    rating: 4.6,
-    jobsCompleted: 28,
-    isVerified: true,
-    appliedJob: 'Warehouse Picker & Packer',
-    appliedDate: '2026-08-10',
-    coverLetter:
-      'I worked at a fulfillment center for 2 years and have experience with RF scanners and pick systems.',
-    skills: ['RF scanner', 'Pick & pack', 'Pallet jack'],
-    status: 'pending',
-  },
-  {
-    id: '3',
-    initials: 'SR',
-    name: 'Sofia Ramirez',
-    rating: 4.4,
-    jobsCompleted: 15,
-    isVerified: true,
-    appliedJob: 'Warehouse Picker & Packer',
-    appliedDate: '2026-08-11',
-    coverLetter:
-      'Quick learner, physically fit, and available immediately. Eager to gain more warehouse experience.',
-    skills: ['Physical fitness', 'Fast learner', 'Team player'],
-    status: 'pending',
-  },
-];
+import { useUser } from '../../../context/UserContext/UserContext';
+import { usePostulacionController } from '../../../controllers/postulacion.controller';
+import { EstadoPostulacion } from '../../../types/estadoPostulacion';
 
 type TabType = 'all' | 'pending' | 'accepted' | 'rejected';
 
 export const EmployerApplications: React.FC = () => {
-  const [applications, setApplications] = useState<Application[]>(mockApplications);
-  const [activeTab, setActiveTab] = useState<TabType>('all');
+  const { user } = useUser();
+  const postulacionController = usePostulacionController();
 
-  const pendingCount = applications.filter((a) => a.status === 'pending').length;
-  const acceptedCount = applications.filter((a) => a.status === 'accepted').length;
-  const rejectedCount = applications.filter((a) => a.status === 'rejected').length;
+  const [activeTab, setActiveTab] = useState<TabType>('all');
+  const [postulaciones, setPostulaciones] = useState([]);
+
+  const pendingCount = postulaciones.filter((a: any) => a.estado === 'pendiente').length;
+  const acceptedCount = postulaciones.filter((a: any) => a.estado === 'aceptada' || a.estado === 'en_proceso').length;
+  const rejectedCount = postulaciones.filter((a: any) => a.estado === 'rechazada' || a.estado === 'revocada').length;
+
 
   const tabs: TabOption<TabType>[] = [
     { id: 'all', label: 'All' },
@@ -64,21 +26,102 @@ export const EmployerApplications: React.FC = () => {
     { id: 'rejected', label: 'Rejected', count: rejectedCount },
   ];
 
-  const filteredApplications = applications.filter((app) => {
-    if (activeTab === 'pending') return app.status === 'pending';
-    if (activeTab === 'accepted') return app.status === 'accepted';
-    if (activeTab === 'rejected') return app.status === 'rejected';
-    return true;
+
+
+  const filteredApplications = postulaciones.filter((app: any) => {
+    if (activeTab === 'all') return true;
+    else if (activeTab == 'pending' && (app.estado === "pendiente")) return true;
+    else if (activeTab == 'accepted' && (app.estado === "aceptada" || app.estado === "en_proceso")) return true;
+    else if (activeTab == 'rejected' && (app.estado === "revocada" || app.estado === "rechazada")) return true;
+    return false;
   });
+
+  const getInitials = (name?: string): string => {
+    if (!name) return '';
+    const words = name.trim().split(/\s+/);
+    if (words.length === 1) {
+      return words[0].charAt(0).toUpperCase();
+    }
+    return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
+  };
+
+  const aceptarPostulacion = async (id: number) =>{
+    try{
+      await postulacionController.aceptar(id);
+      await fetchData();
+    }catch(er){
+      console.log("ERROR: " + er)
+    }
+  }
+
+  const rechazarPostulacion = async (id: number) =>{
+    try{
+      await postulacionController.rechazar(id);
+      await fetchData();
+    }catch(er){
+      console.log("ERROR: " + er)
+    }
+  }
+
+  const revocarPostulacion = async (id: number) =>{
+    try{
+      await postulacionController.revocar(id);
+      await fetchData();
+    }catch(er){
+      console.log("ERROR: " + er)
+    }
+  }
+
+  const finalizarPostulacion = async (id: number) =>{
+    try{
+      await postulacionController.finalizar(id)
+      await fetchData();
+    }catch(er){
+      console.log("ERROR: " + er)
+    }
+  }
 
   const handleStatusChange = (
     id: string,
-    newStatus: 'accepted' | 'rejected' | 'pending'
+    newStatus: 'accepted' | 'rejected' | 'pending' | 'revoke' | 'finalize'
   ) => {
-    setApplications((prev) =>
-      prev.map((app) => (app.id === id ? { ...app, status: newStatus } : app))
-    );
+    console.log(newStatus + "for application id " + id)
+
+    if(newStatus == 'accepted'){
+      aceptarPostulacion(Number(id))
+    }
+    if(newStatus == 'rejected'){
+      rechazarPostulacion(Number(id))
+    }
+    if(newStatus == 'revoke'){
+      revocarPostulacion(Number(id))
+    }
+
+    if(newStatus == 'finalize'){
+      finalizarPostulacion(Number(id))
+    }
   };
+
+  const fetchData = async () => {
+    try {
+      if (!user || !user.empresaId) return;
+
+      const respPostulaciones =
+        await postulacionController.getByEmpresa(user.empresaId);
+      console.log(respPostulaciones)
+
+      setPostulaciones(respPostulaciones)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [user]);
+
+  useEffect(() => {
+  }, [postulaciones]);
 
   return (
     <div className="min-vh-100 bg-light py-5 px-3">
@@ -86,7 +129,7 @@ export const EmployerApplications: React.FC = () => {
         <header className="mb-4 text-start">
           <h1 className="h3 fw-bold text-dark mb-1">Applications received</h1>
           <p className="text-muted small mb-0">
-            {applications.length} total — {pendingCount} pending review
+            {postulaciones.length} total — {pendingCount} pending review
           </p>
         </header>
 
@@ -104,10 +147,28 @@ export const EmployerApplications: React.FC = () => {
               No applications found in this section.
             </div>
           ) : (
-            filteredApplications.map((app) => (
+            filteredApplications.map((app: any) => (
               <ApplicationCard
-                key={app.id}
-                app={app}
+                key={app.id_postulacion}
+                app={{
+                  id: app.id_postulacion,
+                  initials: getInitials(app.usuario.fullName),
+                  name: app.usuario.fullName,
+                  rating: app.vacante.salario,
+                  jobsCompleted: app.usuario.trabajos_completados,
+                  isVerified: app.usuario.trabajador.is_verified,
+                  appliedJob: app.vacante.titulo,
+                  appliedDate: app.fecha_postulacion,
+                  coverLetter: app.usuario.trabajador.acercaDe,
+                  skills: app.usuario.trabajador.habilidades,
+                  status: app.estado == EstadoPostulacion.ACEPTADA ? "accepted":
+                    app.estado == EstadoPostulacion.EN_PROCESO ? "in progress":
+                      app.estado == EstadoPostulacion.FINALIZADA ? "finalized":
+                        app.estado == EstadoPostulacion.PENDIENTE ? "pending":
+                          app.estado == EstadoPostulacion.RECHAZADA ? "rejected":
+                            app.estado == EstadoPostulacion.REVOCADA ? "rejected":
+                            "in progress",
+                }}
                 onStatusChange={handleStatusChange}
               />
             ))
